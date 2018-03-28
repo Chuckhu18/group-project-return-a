@@ -1,6 +1,29 @@
 import acm.graphics.*;
 
 public class Circle {
+	/**
+	 * @param letter
+	 * @param outSize
+	 * @param x
+	 * @param y
+	 * @param speed
+	 * @param good
+	 * @param innerCircle
+	 * @param outerCircle
+	 * @param text
+	 */
+	public Circle(char letter, int outSize, int x, int y, int speed, boolean good, GOval innerCircle, GOval outerCircle,
+			GLabel text) {
+		this.letter = letter;
+		this.outSize = outSize;
+		this.x = x;
+		this.y = y;
+		this.speed = speed;
+		this.good = good;
+		this.innerCircle = innerCircle;
+		this.outerCircle = outerCircle;
+		this.text = text;
+	}
 	private char letter;
 	private static int inSize;
 	private int outSize;
