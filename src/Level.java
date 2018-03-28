@@ -11,6 +11,7 @@ public class Level extends GraphicsProgram {
 	// Instance variables
 	int score, health;
 	Song song;
+	Circle circle;
 	ArrayList<Circle> circles;
 	ArrayList<Character> character;
 	AudioPlayer player;
@@ -19,23 +20,24 @@ public class Level extends GraphicsProgram {
 	String filename = "r2d2.mp3";
 	Timer timer = new Timer(2000, this);
 
+	public Circle createCircle() {
+		Circle temp = new Circle('a', 100, 20, 20, 10, true, null, null, null);
+		return temp;
+	}
+
 	public void run() {
 		player = AudioPlayer.getInstance();
+		circle = createCircle();
 		timer.start();
 	}
 
 	// member methods
-	public void createCirle() {
-		;
-	}
 	
 	public void actionPerformed(ActionEvent e) {
 		startAudioFile();
+		System.out.println(circle);
 	}//actionPerformed
 
-	public int getScore() {
-		return score;
-	}// getScore
 
 	public void startAudioFile() {
 		isPaused = false;
@@ -70,4 +72,8 @@ public class Level extends GraphicsProgram {
 		;
 	}
 
+	//getters
+	public int getScore() {
+		return score;
+	}// getScore
 }// Level
