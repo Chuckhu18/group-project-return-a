@@ -11,4 +11,22 @@ public class Circle {
 	private GOval outerCircle;
 	private GLabel text;
 	
+	
+	public char getLetter() {
+		return letter;
+	}
+	public static int getInSize() {
+		return inSize;
+	}
+	public int getOutSize() {
+		return outSize;
+	}
+	public int getX() {
+		return x;
+	}
+	public int getY() {
+		return y;
+	}
+	
+	
 }
