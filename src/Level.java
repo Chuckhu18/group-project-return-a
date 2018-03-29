@@ -1,14 +1,12 @@
 import java.awt.event.*;
 import java.awt.*;
 import java.util.ArrayList;
-
 import javax.swing.Timer;
-
 import acm.graphics.*;
 import acm.program.*;
 
 public class Level extends GraphicsProgram {
-	// Instance variables
+	// ***Instance variables***
 	int score, health;
 	Song song;
 	Circle circle;
@@ -17,8 +15,8 @@ public class Level extends GraphicsProgram {
 	AudioPlayer player;
 	boolean isPaused;
 	String folder = "sounds/";
-	String filename = "r2d2.mp3";
-	Timer timer = new Timer(2000, this);
+	String filename = "RainsItPours.mp3";
+	Timer timer = new Timer(500, this);
 
 	public Circle createCircle() {
 		Circle temp = new Circle('a', 100, 20, 20, 10, true, null, null, null);
@@ -28,52 +26,51 @@ public class Level extends GraphicsProgram {
 	public void run() {
 		player = AudioPlayer.getInstance();
 		circle = createCircle();
+		startAudioFile();
 		timer.start();
 	}
 
-	// member methods
-	
+	// ***member methods***
 	public void actionPerformed(ActionEvent e) {
-		startAudioFile();
 		System.out.println(circle);
-	}//actionPerformed
-
+	}// actionPerformed
 
 	public void startAudioFile() {
 		isPaused = false;
 		player.playSound(folder, filename);
 		System.out.println("SOUND PLAYED");
-	}//startAudioFile
+	}// startAudioFile
 
 	public void pauseAudio() {
-		// player.pauseSound(folder, filename);
+		player.pauseSound(folder, filename);
 		isPaused = true;
-	}//pause
+	}// pause
 
 	public void resumeAudio() {
 		if (isPaused) {
-			// player.playSound(folder, filename);
+			player.playSound(folder, filename);
 			isPaused = false;
 		}
-	}//resume
+	}// resume
 
 	public void restartAudio() {
-		 player.stopSound(folder, filename);
-		 player.playSound(folder, filename);
-	}//restart
+		player.stopSound(folder, filename);
+		player.playSound(folder, filename);
+	}// restart
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		;
-	}
+	}// keyPressed
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		;
-	}
+	}// mouseClicked
 
-	//getters
+	// ***getters***
 	public int getScore() {
 		return score;
 	}// getScore
+
 }// Level
