@@ -19,7 +19,7 @@ public class Level extends GraphicsProgram {
 	Timer timer = new Timer(500, this);
 
 	public Circle createCircle() {
-		Circle temp = new Circle('a', 100, 20, 20, 10, true, null, null, null);
+		Circle temp = new Circle('a', 100, 20, 20, 10, true);
 		return temp;
 	}
 
