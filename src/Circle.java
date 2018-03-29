@@ -2,10 +2,10 @@ import acm.graphics.*;
 
 public class Circle {
 	private char letter;
-	private static int inSize = 20; // Picking random number for testing, TODO: replace with real values
-	private int outSize;
-	private int x, y;
-	private int speed;
+	private static double inSize = 20.0; // Picking random number for testing, TODO: replace with real values
+	private double outSize;
+	private double x, y;
+	private double speed;
 	private boolean good;
 	private GOval innerCircle;
 	private GOval outerCircle;
@@ -20,13 +20,16 @@ public class Circle {
 	 * @param speed - How fast the circle shrinks
 	 * @param good - If the circle gives points or not
 	 */
-	public Circle(char letter, int outSize, int x, int y, int speed, boolean good) {
+	public Circle(char letter, double outSize, double x, double y, double speed, boolean good) {
 		this.letter = letter;
 		this.outSize = inSize+outSize;
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
 		this.good = good;
+		
+		innerCircle = new GOval(x-(inSize/2),y-(inSize/2),inSize,inSize);
+		outerCircle = new GOval(innerCircle.getX()-(outSize/2),innerCircle.getY()-(outSize/2),inSize+outSize,inSize+outSize);
 	}
 	
 	
@@ -44,7 +47,6 @@ public class Circle {
 		this.innerCircle = innerCircle;
 		this.outerCircle = outerCircle;
 		this.text = text;
-		draw();		
 	}
 	
 	
@@ -85,16 +87,16 @@ public class Circle {
 	public char getLetter() {
 		return letter;
 	}
-	public static int getInSize() {
+	public static double getInSize() {
 		return inSize;
 	}
-	public int getOutSize() {
+	public double getOutSize() {
 		return outSize;
 	}
-	public int getX() {
+	public double getX() {
 		return x;
 	}
-	public int getY() {
+	public double getY() {
 		return y;
 	}	
 }
