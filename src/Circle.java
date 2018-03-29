@@ -22,7 +22,7 @@ public class Circle {
 	 */
 	public Circle(char letter, double outSize, double x, double y, double speed, boolean good) {
 		this.letter = letter;
-		this.outSize = inSize+outSize;
+		this.outSize = outSize;
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
@@ -30,11 +30,15 @@ public class Circle {
 		
 		innerCircle = new GOval(x-(inSize/2),y-(inSize/2),inSize,inSize);
 		outerCircle = new GOval(innerCircle.getX()-(outSize/2),innerCircle.getY()-(outSize/2),inSize+outSize,inSize+outSize);
+		
+		// TODO: calculate center of circle to correctly center the text
+		text = new GLabel(Character.toString(letter),x-inSize/2,y-inSize/2);
 	}
 	
 	
 	/**
 	 * Full constructor - will never be used in practice
+	 * TODO: remove before final game is done, not sure if it might be needed to test later
 	 */
 	public Circle(char letter, int outSize, int x, int y, int speed, boolean good, GOval innerCircle, GOval outerCircle,
 			GLabel text) {
@@ -62,6 +66,13 @@ public class Circle {
 	 */
 	private void draw() {
 		// TODO: creates GOvals and draws them to the screen
+		
+		/* TODO: figure out why add(innerCircle); does not work in this function
+		 * it currently gives an error saying that add(GOval) is undefined for this class
+		 * it works perfectly in Level so I have no idea why it isn't working
+		 */
+		
+//		add(innerCircle);
 	}
 	
 	/**
@@ -78,7 +89,7 @@ public class Circle {
 	public String toString() {
 		String toReturn = "";
 		
-		toReturn += "Letter: "+letter+", Size (in,out): ("+inSize+","+outSize+"), ";
+		toReturn += "Letter: "+letter+", Size (in,out): ("+inSize+","+new Double(inSize+outSize)+"), ";
 		toReturn += "X/Y Location: ("+x+","+y+"), Speed: "+speed+", Good: "+good;
 		
 		return toReturn;
