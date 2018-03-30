@@ -5,18 +5,22 @@ import java.io.IOException;
 public class Song {
 // TODO: see how you can read from file the songs and hardcode it into this class
 	//look at the system design report on how to implement something like that
+	//make a constructor for song 
 	private String songName;
 	private int circleSize;
 	private int shrinkSpeed;
 	private int tempo;
-	private String circleList = "";
-	public Song(String s, int cS, int sS, int temp) {
+	private String circleList;
+	public Song(String s, int cS, int sS, int temp, String cL) {
 		songName = s;
 		circleSize = cS;
 		shrinkSpeed = sS;
 		tempo = temp;
+		circleList = cL;
 	}
-	
+	public Song(String fileName) throws IOException {
+		readSong(fileName);
+	}
 	public String getSongName() {
 		return songName;
 	}
