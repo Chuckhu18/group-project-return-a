@@ -1,3 +1,4 @@
+
 /**
  * File: Player
  * -------------------------
@@ -16,72 +17,80 @@ public class Player {
 	private String name;
 	private static ArrayList<String> scores;
 	public static final String FILENAME = "player.txt";
-	
-//	private static BufferedWriter bw = null;
-//	private static FileWriter fw = null;
-	
-	
+
+	// private static BufferedWriter bw = null;
+	// private static FileWriter fw = null;
+
 	public static void main(String[] args) {
-		
+
 		scores = new ArrayList<String>();
-		scores.add("chuck");
-		scores.add("1");
-		scores.add("123");
+		scores.add("chuck\n");
+		scores.add("1000\n");
+		scores.add("123\n");
 
 		saveScoreToFile();
-		
-		System.out.println(scores);
-		
+		ReadScoreToFile();
+
+		// System.out.println(scores);
 	}
-	
-//	public ArrayList<String> readFile(String file){
-//		try {
-//			Reader reader = new BufferedReader(reader);
-//			BufferedReader buffer = new BufferedReader(reader);
-//			
-//		}
-//	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
-	public ArrayList getScore(){
+
+	public ArrayList getScore() {
 		return scores;
 	}
-	
+
 	public static void saveScoreToFile() {
 		BufferedWriter bw = null;
 		FileWriter fw = null;
-		
-		System.out.println("Writing file...");
+
+		System.out.println("Writing file ...");
 		try {
 			fw = new FileWriter(FILENAME);
 			bw = new BufferedWriter(fw);
-			
-			for(String str: scores) {
-				  bw.write(str);
-				  System.out.println("writing: " + str);
-				}
-			System.out.println("Done");
 
-			} catch (IOException e) {
-				e.printStackTrace();
-				}finally {
-					try {
-						if (bw != null)
-							bw.close();
-						System.out.println("bw closed");
-						if (fw != null)
-							fw.close();
-						} catch (IOException ex) {
-							ex.printStackTrace();
-							}
-					}
+			for (String str : scores) {
+				bw.write(str);
+				System.out.println("writing: " + str);
+			}
+			System.out.println("Done writing");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (bw != null)
+					bw.close();
+				if (fw != null)
+					fw.close();
+				System.out.println("bw fw closed");
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	public static void ReadScoreToFile() {
+		try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
+
+			String sCurrentLine;
+			
+			System.out.println("Printing what's in the player.txt:");
+			
+			while ((sCurrentLine = br.readLine()) != null) {
+				System.out.println(sCurrentLine);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
-	public void addScore(Song song, int scoreAdd) {
-		
 	}
-	
+
+	public void addScore(Song song, int scoreAdd) {
+
+	}
+
 }
