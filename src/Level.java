@@ -28,6 +28,7 @@ public class Level extends GraphicsProgram {
 	}
 
 	public void run() {
+		song = new Song(filename, 10, 1.0, 5, "sdafhjfdakfdsaf");
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
 		
@@ -47,7 +48,6 @@ public class Level extends GraphicsProgram {
 	}
 
 	// ***member methods***
-	
 	/**
 	 * Timer function, executed every time the timer ticks
 	 */

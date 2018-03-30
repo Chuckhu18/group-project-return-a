@@ -11,6 +11,15 @@ public class Song {
 	private int shrinkSpeed;
 	private int tempo;
 	private String circleList;
+	
+	/**
+	 * 
+	 * @param s
+	 * @param cS
+	 * @param sS
+	 * @param temp
+	 * @param cL
+	 */
 	public Song(String s, int cS, int sS, int temp, String cL) {
 		songName = s;
 		circleSize = cS;
