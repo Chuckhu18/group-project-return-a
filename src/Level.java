@@ -23,7 +23,7 @@ public class Level extends GraphicsProgram {
 		if(characters.size()>0)
 			circles.add(new Circle(characters.remove(0), 10.0, 20.0, 20.0, 1.0, true));
 		else
-			circles.add(new Circle(Integer.toString(counter1).charAt(1), 10.0, 20.0, 20.0, 1.0, false));
+			circles.add(new Circle('7', 10.0, 20.0, 20.0, 1.0, false));
 		
 	}
 
@@ -54,9 +54,7 @@ public class Level extends GraphicsProgram {
 	public void actionPerformed(ActionEvent e) {
 		counter1++;
 		
-		if(counter1 % 9 == 0) { // execute every 9 ticks (demonstration number)
-			circles.remove(0); // remove first circle to test ArrayList
-		}else if(counter1 % 7 == 0) {
+		if(counter1 % 6 == 0) {
 			createCircle(); // Make a new circle every few ticks to test
 		}
 		
@@ -67,13 +65,19 @@ public class Level extends GraphicsProgram {
 		 *  time. Will talk about in class tomorrow and probably implement over the weekend.
 		 */
 		
-		
-		int count=0;
-		for(Circle circle:circles) {
-			System.out.println(count+": "+circle);
-			count++;
+		if(circles.size()>=1) {
+			int count=0;
+			for(Circle circle:circles) {
+				circle.shrink();
+				if(circle.getOutSize() <= 0) {
+					circles.remove(circle);
+				}else {			
+				System.out.println(count+": "+circle);
+				count++;
+				}
+			}
+			System.out.println();
 		}
-		System.out.println();
 	}// actionPerformed
 
 	public void startAudioFile() {
