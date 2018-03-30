@@ -57,8 +57,9 @@ public class Circle {
 	/**
 	 * Shrinks the circle by the amount specified by the speed variable in this class
 	 */
-	private void shrink(){
+	public void shrink(){
 		// TODO: makes circle shrink
+		outSize -= speed;
 	}
 	
 	/**
@@ -66,13 +67,8 @@ public class Circle {
 	 */
 	private void draw() {
 		// TODO: creates GOvals and draws them to the screen
+			
 		
-		/* TODO: figure out why add(innerCircle); does not work in this function
-		 * it currently gives an error saying that add(GOval) is undefined for this class
-		 * it works perfectly in Level so I have no idea why it isn't working
-		 */
-		
-//		add(innerCircle);
 	}
 	
 	/**
