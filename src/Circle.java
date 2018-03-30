@@ -96,4 +96,7 @@ public class Circle {
 	public GOval getOuterCircle() {
 		return outerCircle;
 	}	
+	public GLabel getLabel() {
+		return text;
+	}
 }
