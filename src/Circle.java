@@ -63,22 +63,6 @@ public class Circle {
 	}
 	
 	/**
-	 * Adds the circle to the screen at this object's X/Y coordinates
-	 */
-	private void draw() {
-		// TODO: creates GOvals and draws them to the screen
-			
-		
-	}
-	
-	/**
-	 * Removes the circle from the screen
-	 */
-	private void remove() {
-		// TODO: removes circle from the screen
-	}
-	
-	/**
 	 * For testing purposes display the contents of this circle as a string
 	 * @return
 	 */
@@ -105,5 +89,11 @@ public class Circle {
 	}
 	public double getY() {
 		return y;
+	}
+	public GOval getInnerCircle() {
+		return innerCircle;
+	}
+	public GOval getOuterCircle() {
+		return outerCircle;
 	}	
 }
