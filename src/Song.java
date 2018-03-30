@@ -7,11 +7,21 @@ public class Song {
 	//look at the system design report on how to implement something like that
 	//make a constructor for song 
 	private String songName;
-	private int circleSize;
-	private int shrinkSpeed;
+	private double circleSize;
+	private double shrinkSpeed;
 	private int tempo;
 	private String circleList;
-	public Song(String s, int cS, int sS, int temp, String cL) {
+	
+	
+	/***
+	 * 
+	 * @param s Song Name
+	 * @param cS Circle Size
+	 * @param sS Shrink Speed
+	 * @param temp Tempo
+	 * @param cL String of characters
+	 */
+	public Song(String s, double cS, double sS, int temp, String cL) {
 		songName = s;
 		circleSize = cS;
 		shrinkSpeed = sS;
@@ -24,13 +34,13 @@ public class Song {
 	public String getSongName() {
 		return songName;
 	}
-	public int getCirlceSize() {
+	public double getCirlceSize() {
 		return circleSize;
 	}
 	public String getCircleList() {
 		return circleList;
 	}
-	public int getShrinkSpeed() {
+	public double getShrinkSpeed() {
 		return shrinkSpeed;
 	}
 	public int getTempo() {
