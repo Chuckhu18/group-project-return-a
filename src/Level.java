@@ -1,79 +1,117 @@
 import java.awt.event.*;
 import java.awt.*;
 import java.util.ArrayList;
-
 import javax.swing.Timer;
-
 import acm.graphics.*;
 import acm.program.*;
 
 public class Level extends GraphicsProgram {
-	// Instance variables
-	int score, health;
+	// ***Instance variables***
+	int score, health, counter1=0;
 	Song song;
 	Circle circle;
 	ArrayList<Circle> circles;
-	ArrayList<Character> character;
+	ArrayList<Character> characters;
 	AudioPlayer player;
 	boolean isPaused;
 	String folder = "sounds/";
-	String filename = "r2d2.mp3";
-	Timer timer = new Timer(2000, this);
+	String filename = "hotelCali.mp3";
+	Timer timer = new Timer(500, this);
 
-	public Circle createCircle() {
-		Circle temp = new Circle('a', 100, 20, 20, 10, true, null, null, null);
-		return temp;
+	public void createCircle() {
+		// 
+		if(characters.size()>0)
+			circles.add(new Circle(characters.remove(0), 10.0, 20.0, 20.0, 1.0, true));
+		else
+			circles.add(new Circle(Integer.toString(counter1).charAt(1), 10.0, 20.0, 20.0, 1.0, false));
+		
 	}
 
 	public void run() {
+		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
+		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
+		
+		// Adds characters to the characters ArrayList
+		// TODO: generate characters ArrayList from incoming Song data
+		characters.add('a');
+		characters.add('b');
+		characters.add('c');
+		
+		// Adds circle to the board using hardcoded values
+		// TODO: randomize start position, get size and speed data from incoming Song data
+		createCircle();
+		
 		player = AudioPlayer.getInstance();
-		circle = createCircle();
+		startAudioFile();
 		timer.start();
 	}
 
-	// member methods
+	// ***member methods***
 	
+	/**
+	 * Timer function, executed every time the timer ticks
+	 */
 	public void actionPerformed(ActionEvent e) {
-		startAudioFile();
-		System.out.println(circle);
-	}//actionPerformed
-
+		counter1++;
+		
+		if(counter1 % 9 == 0) { // execute every 9 ticks (demonstration number)
+			circles.remove(0); // remove first circle to test ArrayList
+		}else if(counter1 % 7 == 0) {
+			createCircle(); // Make a new circle every few ticks to test
+		}
+		
+		/*
+		 *  TODO: Development note (Race, 03/29/18):
+		 *  I am thinking we might have been wrong to decide to have each circle with its own timer,
+		 *  I think in hindsight it's better to just call the shrink() function from this timer every
+		 *  time. Will talk about in class tomorrow and probably implement over the weekend.
+		 */
+		
+		
+		int count=0;
+		for(Circle circle:circles) {
+			System.out.println(count+": "+circle);
+			count++;
+		}
+		System.out.println();
+	}// actionPerformed
 
 	public void startAudioFile() {
 		isPaused = false;
 		player.playSound(folder, filename);
 		System.out.println("SOUND PLAYED");
-	}//startAudioFile
+	}// startAudioFile
 
 	public void pauseAudio() {
-		// player.pauseSound(folder, filename);
+		player.pauseSound(folder, filename);
 		isPaused = true;
-	}//pause
+	}// pause
 
 	public void resumeAudio() {
 		if (isPaused) {
-			// player.playSound(folder, filename);
+			player.playSound(folder, filename);
 			isPaused = false;
 		}
-	}//resume
+	}// resume
 
 	public void restartAudio() {
-		 player.stopSound(folder, filename);
-		 player.playSound(folder, filename);
-	}//restart
+		player.stopSound(folder, filename);
+		player.playSound(folder, filename);
+	}// restart
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		;
-	}
+	}// keyPressed
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		;
-	}
+	}// mouseClicked
 
-	//getters
+	// ***getters***
 	public int getScore() {
 		return score;
 	}// getScore
+
 }// Level
