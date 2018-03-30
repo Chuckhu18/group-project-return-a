@@ -10,6 +10,13 @@ public class Song {
 	private int shrinkSpeed =0;
 	private int tempo = 0;
 	private String circleList = "";
+	public Song(String s, int cS, int sS, int temp) {
+		s = songName;
+		cS = circleSize;
+		sS = shrinkSpeed;
+		temp = tempo;
+	}
+	
 	public String getSongName() {
 		return songName;
 	}
@@ -26,5 +33,34 @@ public class Song {
 		return tempo;
 	}
 	public void run() {
+		
 	}
+	public void readSong(String fileName) throws IOException {
+		
+	    FileReader file = new FileReader(fileName);
+	    BufferedReader reader = new BufferedReader(file);
+
+	    String line = reader.readLine();
+
+	    while (line != null) {
+	        songName += line;
+	        line = reader.readLine();
+	    }
+	    System.out.println(songName);
+	
+	
+	//implement read from file method 
+	//to test this write a function to have all the variables printed out to the console
+}
+//	public static void main(String [ ] args)
+//	{
+//		Song sing = new Song(circleList, circleSize, circleSize, circleSize);
+//		try {
+//			readSong("Song.txt");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			System.exit(0);
+//		}  
+//	}
 }
