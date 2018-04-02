@@ -1,6 +1,8 @@
+import java.text.DecimalFormat;
 import acm.graphics.*;
 
 public class Circle {
+	DecimalFormat df = new DecimalFormat("#.###"); // Used so the toString function prints nicer numbers for location
 	private char letter;
 	private static double inSize = 30.0; // Picking random number for testing, TODO: replace with real values
 	private double outSize;
@@ -55,11 +57,19 @@ public class Circle {
 	
 	
 	/**
-	 * Shrinks the circle by the amount specified by the speed variable in this class
+	 * Shrinks the circle by the amount specified by the speed variable in this class.
+	 * Also updates the outer GOval so it reflects this change
 	 */
 	public void shrink(){
 		// TODO: makes circle shrink
 		outSize -= speed;
+		
+		// Does math to keep the outer circle centered
+		double newX = innerCircle.getX() - outSize / 2;
+		double newY = innerCircle.getY() - outSize / 2;
+				
+		outerCircle.setLocation(newX, newY);
+		outerCircle.setSize(inSize+outSize, inSize+outSize);
 	}
 	
 	/**
@@ -70,7 +80,7 @@ public class Circle {
 		String toReturn = "";
 		
 		toReturn += "Letter: "+letter+", Size (in,out): ("+inSize+","+new Double(inSize+outSize)+"), ";
-		toReturn += "X/Y Location: ("+x+","+y+"), Speed: "+speed+", Good: "+good;
+		toReturn += "X/Y Location: ("+df.format(x)+","+df.format(y)+"), Speed: "+speed+", Good: "+good;
 		
 		return toReturn;
 	}
