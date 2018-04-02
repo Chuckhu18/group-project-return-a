@@ -19,7 +19,7 @@ public class Level extends GraphicsProgram {
 	AudioPlayer player;
 	boolean isPaused;
 	String folder = "sounds/";
-	String filename = "hotelCali.mp3";
+	String filename = "RainsItPours.mp3";
 	Timer timer = new Timer(50, this); // Timer ticks 20 times per second
 
 	public void createCircle() {
@@ -107,7 +107,7 @@ public class Level extends GraphicsProgram {
 					resultText.add(newlabel); // Adds miss label to the screen
 					add(newlabel);
 					
-					circle.removeCircle(circle);
+					circle.removeCircle();
 					circles.remove(circle);
 					// TODO: remove circles from display
 

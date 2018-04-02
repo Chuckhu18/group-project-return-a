@@ -99,13 +99,13 @@ public class Circle {
 		
 		return toReturn;
 	}
-	public void removeCircle(Circle circle) {
-		circle.innerCircle.setVisible(false);
-		circle.innerCircle = null;
-		circle.outerCircle.setVisible(false);
-		circle.outerCircle = null;
-		circle.text.setVisible(false);
-		circle.text = null;
+	public void removeCircle() {
+		innerCircle.setVisible(false);
+		innerCircle = null;
+		outerCircle.setVisible(false);
+		outerCircle = null;
+		text.setVisible(false);
+		text = null;
 	}
 	
 	public char getLetter() {
