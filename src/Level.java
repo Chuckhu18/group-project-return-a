@@ -83,6 +83,11 @@ public class Level extends GraphicsProgram {
 				if (circle.getOutSize() < 0) {
 					circles.remove(circle);
 					// TODO: remove circles from display
+				if(circle.getOutSize() <= Circle.getInSize()+20)
+				{
+					circles.remove(circle);
+					circle.removeCircle(circle);
+				}
 				} else {
 					if(counter1%20==0) { // Only display circles once per second
 						System.out.println(count + ": " + circle);
