@@ -51,6 +51,11 @@ public class Level extends GraphicsProgram {
 
 		// Adds characters to the characters ArrayList
 		// TODO: generate characters ArrayList from incoming Song data
+		for(int i =0; i < song.getCircleList().length(); i++)
+		{
+			characters.add(song.getCircleList().charAt(i));
+		}
+		
 		characters.add('a');
 		characters.add('b');
 		characters.add('c');
