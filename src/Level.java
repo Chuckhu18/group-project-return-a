@@ -19,7 +19,7 @@ public class Level extends GraphicsProgram {
 	boolean isPaused;
 	String folder = "sounds/";
 	String filename = "hotelCali.mp3";
-	Timer timer = new Timer(500, this);
+	Timer timer = new Timer(50, this); // Timer ticks 20 times per second
 
 	public void createCircle() {
 		//Generate random coordinate to put the circle at, don't care where yet
@@ -33,6 +33,7 @@ public class Level extends GraphicsProgram {
 		else // Make dummy circle object for testing
 			toAdd = new Circle('7', song.getCircleSize(), xloc, yloc, song.getShrinkSpeed(), false);
 
+		// Add shapes to screen from the Circle, then add the Circle to the ArrayList of Circles
 		add(toAdd.getInnerCircle());
 		add(toAdd.getOuterCircle());
 		add(toAdd.getLabel());
@@ -41,8 +42,10 @@ public class Level extends GraphicsProgram {
 	}
 
 	public void run() {
+		setSize(500,500); // Arbitrary numbers so far for screen size
 		rand = new Random();
-		song = new Song(filename, 15.0, 1.0, 9, "abcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical order for easy testing
+		// I picked random numbers that look nice for the timer values, will have to test more
+		song = new Song(filename, 15.0, 0.15, 25, "abcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical order for easy testing
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
 
@@ -66,24 +69,30 @@ public class Level extends GraphicsProgram {
 		counter1++;
 
 		if (counter1 % song.getTempo() == 0) {
-			createCircle(); // Make a new circle every few ticks to test
+			createCircle(); // Make a new circle
 		}
 
 		if (circles.size() >= 1) {
 			int count = 0;
-			for (Circle circle : circles) {
+			
+			// Have to use manual definition of for loop to avoid ConcurrentModificationException
+			for (int i = 0; i < circles.size(); i++) {
+				Circle circle = circles.get(i);
 				circle.shrink();
 				// TODO: make circles get smaller on display
 				if (circle.getOutSize() < 0) {
 					circles.remove(circle);
 					// TODO: remove circles from display
 				} else {
-					System.out.println(count + ": " + circle);
-					count++;
+					if(counter1%20==0) { // Only display circles once per second
+						System.out.println(count + ": " + circle);
+						count++;
+					}
 				}
 			}
-			System.out.println();
 		}
+		
+		if(counter1%20==0) System.out.println(); // Print a blank line after displaying current status of array
 	}// actionPerformed
 
 	public void startAudioFile() {

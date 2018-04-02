@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.text.DecimalFormat;
 import acm.graphics.*;
 
@@ -34,7 +35,20 @@ public class Circle {
 		outerCircle = new GOval(innerCircle.getX()-(outSize/2),innerCircle.getY()-(outSize/2),inSize+outSize,inSize+outSize);
 		
 		// TODO: calculate center of circle to correctly center the text
-		text = new GLabel(Character.toString(letter),x-inSize/2,y-inSize/2);
+		// Update 04/01: This is better but not ideal, will continue to experiment
+		text = new GLabel(Character.toString(letter),x+inSize/10,y+inSize/10);
+		
+		//Makes good circles blue and bad circles red
+		if(good) {
+			innerCircle.setColor(Color.BLUE);
+			outerCircle.setColor(Color.BLUE);
+			text.setColor(Color.BLUE);
+		} else {
+			innerCircle.setColor(Color.RED);
+			outerCircle.setColor(Color.RED);
+			text.setColor(Color.RED);
+		}
+			
 	}
 	
 	
@@ -79,7 +93,7 @@ public class Circle {
 	public String toString() {
 		String toReturn = "";
 		
-		toReturn += "Letter: "+letter+", Size (in,out): ("+inSize+","+new Double(inSize+outSize)+"), ";
+		toReturn += "Letter: "+letter+", Size (in,out): ("+inSize+","+df.format(new Double(inSize+outSize))+"), ";
 		toReturn += "X/Y Location: ("+df.format(x)+","+df.format(y)+"), Speed: "+speed+", Good: "+good;
 		
 		return toReturn;
