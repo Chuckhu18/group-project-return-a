@@ -1,6 +1,8 @@
 import java.awt.event.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
+
 import javax.swing.Timer;
 import acm.graphics.*;
 import acm.program.*;
@@ -8,6 +10,7 @@ import acm.program.*;
 public class Level extends GraphicsProgram {
 	// ***Instance variables***
 	int score, health, counter1 = 0;
+	Random rand;
 	Song song;
 	Circle circle;
 	ArrayList<Circle> circles;
@@ -19,16 +22,27 @@ public class Level extends GraphicsProgram {
 	Timer timer = new Timer(500, this);
 
 	public void createCircle() {
-		//
+		//Generate random coordinate to put the circle at, don't care where yet
+		// TODO: be smarter about where it spawns
+		double xloc = 500 * rand.nextDouble();
+		double yloc = 500 * rand.nextDouble();
+		
+		Circle toAdd;
 		if (characters.size() > 0)
-			circles.add(new Circle(characters.remove(0), 10.0, 20.0, 20.0, 1.0, true));
-		else
-			circles.add(new Circle('7', song.getCirlceSize(), song.getShrinkSpeed(), 20.0, 1.0, false));
+			toAdd = new Circle(characters.remove(0), song.getCircleSize(), xloc, yloc, song.getShrinkSpeed(), true);
+		else // Make dummy circle object for testing
+			toAdd = new Circle('7', song.getCircleSize(), xloc, yloc, song.getShrinkSpeed(), false);
 
+		add(toAdd.getInnerCircle());
+		add(toAdd.getOuterCircle());
+		add(toAdd.getLabel());
+		circles.add(toAdd);
+		
 	}
 
 	public void run() {
-		song = new Song(filename, 10, 1.0, 5, "sdafhjfdakfdsaf");
+		rand = new Random();
+		song = new Song(filename, 15.0, 1.0, 9, "abcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical order for easy testing
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
 
@@ -38,10 +52,7 @@ public class Level extends GraphicsProgram {
 		characters.add('b');
 		characters.add('c');
 
-		// Adds circle to the board using hardcoded values
-		// TODO: randomize start position, get size and speed data from incoming Song
-		// data
-		createCircle();
+		// start audio and timer
 		player = AudioPlayer.getInstance();
 		startAudioFile();
 		timer.start();
@@ -54,7 +65,7 @@ public class Level extends GraphicsProgram {
 	public void actionPerformed(ActionEvent e) {
 		counter1++;
 
-		if (counter1 % 6 == 0) {
+		if (counter1 % song.getTempo() == 0) {
 			createCircle(); // Make a new circle every few ticks to test
 		}
 
@@ -62,8 +73,10 @@ public class Level extends GraphicsProgram {
 			int count = 0;
 			for (Circle circle : circles) {
 				circle.shrink();
+				// TODO: make circles get smaller on display
 				if (circle.getOutSize() < 0) {
 					circles.remove(circle);
+					// TODO: remove circles from display
 				} else {
 					System.out.println(count + ": " + circle);
 					count++;

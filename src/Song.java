@@ -34,7 +34,7 @@ public class Song {
 	public String getSongName() {
 		return songName;
 	}
-	public double getCirlceSize() {
+	public double getCircleSize() {
 		return circleSize;
 	}
 	public String getCircleList() {

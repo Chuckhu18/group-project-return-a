@@ -2,7 +2,7 @@ import acm.graphics.*;
 
 public class Circle {
 	private char letter;
-	private static double inSize = 20.0; // Picking random number for testing, TODO: replace with real values
+	private static double inSize = 30.0; // Picking random number for testing, TODO: replace with real values
 	private double outSize;
 	private double x, y;
 	private double speed;
