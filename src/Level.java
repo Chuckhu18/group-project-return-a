@@ -41,6 +41,21 @@ public class Level extends GraphicsProgram {
 		circles.add(toAdd);
 		
 	}
+	
+	/**
+	 * Creates an ArrayListof characters from given string
+	 * @param str string to turn into ArrayList
+	 */
+	private void createCharArrList(String str) {
+		characters = new ArrayList<Character>(); // reset ArrayList so we start from scratch
+		
+		for(int i = 0; i < str.length(); i++) {
+			// if the current character in the string is a letter or number (ignores weird stuff)
+			if(Character.isLetter(str.charAt(i)) || Character.isDigit(str.charAt(i))) {
+				characters.add(str.charAt(i));
+			}
+		}
+	}
 
 	public void run() {
 		setSize(500,500); // Arbitrary numbers so far for screen size
@@ -51,11 +66,8 @@ public class Level extends GraphicsProgram {
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
 		resultText = new ArrayList<GLabel>(); // Initializes resultText ArrayList
 		
-		// Adds characters to the characters ArrayList
-		// TODO: generate characters ArrayList from incoming Song data
-		characters.add('a');
-		characters.add('b');
-		characters.add('c');
+		// Turns the string from Song into an ArrayList of characters to feed into the circles
+		createCharArrList(song.getCircleList());
 
 		// start audio and timer
 		player = AudioPlayer.getInstance();
@@ -64,24 +76,30 @@ public class Level extends GraphicsProgram {
 	}
 
 	// ***member methods***
+	
 	/**
 	 * Timer function, executed every time the timer ticks
 	 */
 	public void actionPerformed(ActionEvent e) {
 		counter1++;
 
+		// Create a new circle every interval of time specified by the song's Tempo
 		if (counter1 % song.getTempo() == 0) {
 			createCircle(); // Make a new circle
 		}
 
+		// If there are circles on the screen
 		if (circles.size() >= 1) {
 			int count = 0;
 			
 			// Have to use manual definition of for loop to avoid ConcurrentModificationException
 			for (int i = 0; i < circles.size(); i++) {
+				
+				// Shrink circle
 				Circle circle = circles.get(i);
 				circle.shrink();
-				// TODO: make circles get smaller on display
+				
+				// If circles have shrunk to be the same size in and out
 				if (circle.getOutSize() < 0) {
 					// Add the text displaying that you missed
 					GLabel newlabel = new GLabel("Miss!",circle.getX(),circle.getY());
@@ -90,7 +108,8 @@ public class Level extends GraphicsProgram {
 					
 					circles.remove(circle);
 					// TODO: remove circles from display
-				} else {
+				}
+				else { // If circles are still bigger out than in
 					if(counter1%20==0) { // Only display circles once per second
 						System.out.println(count + ": " + circle);
 						count++;
