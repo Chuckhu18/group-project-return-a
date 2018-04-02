@@ -23,15 +23,16 @@ public class Player {
 
 	public static void main(String[] args) {
 
+		//creating a score list
 		scores = new ArrayList<String>();
-		scores.add("chuck\n");
-		scores.add("1000\n");
-		scores.add("123\n");
-
+		scores.add("chuck");
+		scores.add("1000");
+		scores.add("123");
+		
+		//Save created array list to file "player.txt" with ; for each element.
 		saveScoreToFile();
-		ReadScoreToFile();
-
-		// System.out.println(scores);
+		//Read all elements from the player.txt file.
+		ReadScoreFromFile();
 	}
 
 	public String getName() {
@@ -52,7 +53,7 @@ public class Player {
 			bw = new BufferedWriter(fw);
 
 			for (String str : scores) {
-				bw.write(str);
+				bw.write(str+";");
 				System.out.println("writing: " + str);
 			}
 			System.out.println("Done writing");
@@ -72,7 +73,7 @@ public class Player {
 		}
 	}
 
-	public static void ReadScoreToFile() {
+	public static void ReadScoreFromFile() {
 		try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
 
 			String sCurrentLine;

@@ -64,6 +64,7 @@ public class Level extends GraphicsProgram {
 		song = new Song(filename, 15.0, 0.15, 30, "abcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical order for easy testing
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
+
 		resultText = new ArrayList<GLabel>(); // Initializes resultText ArrayList
 		
 		// Turns the string from Song into an ArrayList of characters to feed into the circles
@@ -106,10 +107,13 @@ public class Level extends GraphicsProgram {
 					resultText.add(newlabel); // Adds miss label to the screen
 					add(newlabel);
 					
+					circle.removeCircle(circle);
 					circles.remove(circle);
 					// TODO: remove circles from display
+
 				}
 				else { // If circles are still bigger out than in
+
 					if(counter1%20==0) { // Only display circles once per second
 						System.out.println(count + ": " + circle);
 						count++;

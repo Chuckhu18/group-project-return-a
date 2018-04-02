@@ -84,6 +84,7 @@ public class Circle {
 				
 		outerCircle.setLocation(newX, newY);
 		outerCircle.setSize(inSize+outSize, inSize+outSize);
+		
 	}
 	
 	/**
@@ -97,6 +98,14 @@ public class Circle {
 		toReturn += "X/Y Location: ("+df.format(x)+","+df.format(y)+"), Speed: "+speed+", Good: "+good;
 		
 		return toReturn;
+	}
+	public void removeCircle(Circle circle) {
+		circle.innerCircle.setVisible(false);
+		circle.innerCircle = null;
+		circle.outerCircle.setVisible(false);
+		circle.outerCircle = null;
+		circle.text.setVisible(false);
+		circle.text = null;
 	}
 	
 	public char getLetter() {
