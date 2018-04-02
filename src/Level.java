@@ -13,8 +13,9 @@ public class Level extends GraphicsProgram {
 	Random rand;
 	Song song;
 	Circle circle;
-	ArrayList<Circle> circles;
-	ArrayList<Character> characters;
+	ArrayList<Circle> circles; // Stores the circles being displayed on the screen
+	ArrayList<Character> characters; // Stores the characters to feed into the circles
+	ArrayList<GLabel> resultText; // Stores the labels that appear when you click on a circle
 	AudioPlayer player;
 	boolean isPaused;
 	String folder = "sounds/";
@@ -45,10 +46,11 @@ public class Level extends GraphicsProgram {
 		setSize(500,500); // Arbitrary numbers so far for screen size
 		rand = new Random();
 		// I picked random numbers that look nice for the timer values, will have to test more
-		song = new Song(filename, 15.0, 0.15, 25, "abcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical order for easy testing
+		song = new Song(filename, 15.0, 0.15, 30, "abcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical order for easy testing
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
-
+		resultText = new ArrayList<GLabel>(); // Initializes resultText ArrayList
+		
 		// Adds characters to the characters ArrayList
 		// TODO: generate characters ArrayList from incoming Song data
 		characters.add('a');
@@ -81,6 +83,11 @@ public class Level extends GraphicsProgram {
 				circle.shrink();
 				// TODO: make circles get smaller on display
 				if (circle.getOutSize() < 0) {
+					// Add the text displaying that you missed
+					GLabel newlabel = new GLabel("Miss!",circle.getX(),circle.getY());
+					resultText.add(newlabel); // Adds miss label to the screen
+					add(newlabel);
+					
 					circles.remove(circle);
 					// TODO: remove circles from display
 				} else {
@@ -92,7 +99,17 @@ public class Level extends GraphicsProgram {
 			}
 		}
 		
-		if(counter1%20==0) System.out.println(); // Print a blank line after displaying current status of array
+		
+		// TODO: make the labels get removed after the same amount of time
+		// currently the first one is removed once per second, which could result in a long wait
+		if(resultText.size() >= 1) { // if there are result labels on the screen
+			if(counter1%20 == 0) { // every second remove one label
+				resultText.get(0).setVisible(false);
+				resultText.remove(0);
+			}
+		}
+		
+		if(counter1%20==0) System.out.println(); // Print a blank line after displaying current status of circles ArrayList
 	}// actionPerformed
 
 	public void startAudioFile() {
