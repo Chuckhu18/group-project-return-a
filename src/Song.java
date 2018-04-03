@@ -1,6 +1,10 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Song {
 // TODO: see how you can read from file the songs and hardcode it into this class
@@ -28,9 +32,14 @@ public class Song {
 		tempo = temp;
 		circleList = cL;
 	}
-	public Song(String fileName) throws IOException {
-		readSong(fileName);
+	public Song() {
+		songName = "";
+		circleSize = 0.0;
+		shrinkSpeed = 0.0;
+		tempo = 0;
+		circleList = "";
 	}
+	
 	public String getSongName() {
 		return songName;
 	}
@@ -49,32 +58,54 @@ public class Song {
 	public void run() {
 		
 	}
+	//make this function outside of the class
 	public void readSong(String fileName) throws IOException {
 		
-	    FileReader file = new FileReader(fileName);
+		//File file = new File("src/Song.txt");
+		//for (String fileNames : file.list()) System.out.println(fileNames);
+	    FileReader file = new FileReader("src/"+fileName);
 	    BufferedReader reader = new BufferedReader(file);
-
 	    String line = reader.readLine();
-
+	    //System.out.println(line);
 	    while (line != null) {
-	        songName += line;
-	        line = reader.readLine();
+	    	SavingValues(line);
+	       // System.out.println(line);
+	        line = reader.readLine(); // what this does is updates the line
 	    }
-	    System.out.println(songName);
+	   // System.out.println("hi");
+	   
 	
 	
 	//implement read from file method 
 	//to test this write a function to have all the variables printed out to the console
 }
-//	public static void main(String [ ] args)
-//	{
-//		Song sing = new Song(circleList, circleSize, circleSize, circleSize);
-//		try {
-//			readSong("Song.txt");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			System.exit(0);
-//		}  
-//	}
+	
+	//create a constuctor for this partciular manner of input
+	// read from file outsdie of the class and create the song object within this class using the function below
+	//TODO make saving values a constructor
+	private void SavingValues(String lines) {
+		String[] stringArray = lines.split(";");
+		songName = stringArray[0];
+		double result = Double.parseDouble(stringArray[1]);			
+		circleSize = result;
+		double newSS = Double.parseDouble(stringArray[1]);
+		shrinkSpeed = newSS;
+		int newTempo = Integer.parseInt(stringArray[3]);
+		tempo = newTempo;
+		circleList = stringArray[4];
+		
+	}
+	
+	public static void main(String [ ] args)
+	{
+		Song sing = new Song(); //using default constructor
+		try {
+			sing.readSong("Song.txt");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(0);
+		}  
+		
+	}
 }
