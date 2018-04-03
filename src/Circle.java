@@ -4,6 +4,7 @@ import acm.graphics.*;
 
 public class Circle {
 	DecimalFormat df = new DecimalFormat("#.###"); // Used so the toString function prints nicer numbers for location
+	private int removeCounter;
 	private char letter;
 	private static double inSize = 30.0; // Picking random number for testing, TODO: replace with real values
 	private double outSize;
@@ -13,7 +14,8 @@ public class Circle {
 	private GOval innerCircle;
 	private GOval outerCircle;
 	private GLabel text;
-	
+
+
 	/**
 	 * Circle constructor
 	 * @param letter Letter that will be in the circle
@@ -99,13 +101,16 @@ public class Circle {
 		
 		return toReturn;
 	}
-	public void removeCircle(Circle circle) {
-		circle.innerCircle.setVisible(false);
-		circle.innerCircle = null;
-		circle.outerCircle.setVisible(false);
-		circle.outerCircle = null;
-		circle.text.setVisible(false);
-		circle.text = null;
+	public void removeCircles() {
+		innerCircle.setVisible(false);
+		outerCircle.setVisible(false);
+	}
+	
+	public void removeLabel() {
+		text.setVisible(false);
+		text = null;
+		innerCircle = null;
+		outerCircle = null;
 	}
 	
 	public char getLetter() {
@@ -131,5 +136,13 @@ public class Circle {
 	}	
 	public GLabel getLabel() {
 		return text;
+	}
+	public int getRemoveCounter() {
+		return removeCounter;
+	}
+	
+	
+	public void setRemoveCounter(int removeCounter) {
+		this.removeCounter = removeCounter;
 	}
 }
