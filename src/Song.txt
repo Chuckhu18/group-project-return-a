@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 Hotel California;2.0;5.0;3;diygfbhsdfnjfnrignjagkdksnhaksopnjjngnrfgjneijdkmmkfksnsjdkimvjfbrbihfnrujcfmfrnvguitemvoiefrkeflnfewhnnjfkjmfekmlfejnfewjnewfnjhefjnfjnfrkjlfrklfewkldenjdnmedbhkjirfjifrnjfrjnfrjnfrjnrfjkfrbhfrnjrfmklfrkmlfmklewfjkwfehrfhugjirejehbdehbhufjfrnkhsrgvdegjyeduhjfjfnwkhdqijodekfmklfrgvhbjfvuhikipjefwhb;
+=======
+Hotel California;2;
+>>>>>>> branch 'master' of https://github.com/comp55-spr18/group-project-return-a.git

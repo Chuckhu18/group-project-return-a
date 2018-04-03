@@ -19,7 +19,7 @@ public class Level extends GraphicsProgram {
 	AudioPlayer player;
 	boolean isPaused;
 	String folder = "sounds/";
-	String filename = "hotelCali.mp3";
+	String filename = "RainsItPours.mp3";
 	Timer timer = new Timer(50, this); // Timer ticks 20 times per second
 
 	public void createCircle() {
@@ -103,15 +103,16 @@ public class Level extends GraphicsProgram {
 				// If circles have shrunk to be the same size in and out
 				if (circle.getOutSize() < 0) {
 					// Add the text displaying that you missed
-					GLabel newlabel = new GLabel("Miss!",circle.getX(),circle.getY());
-					resultText.add(newlabel); // Adds miss label to the screen
-					add(newlabel);
-					
-					circle.removeCircle(circle);
-					circles.remove(circle);
-					// TODO: remove circles from display
-
+					circle.getLabel().setLabel("MISS");
+					circle.setRemoveCounter(circle.getRemoveCounter()+1);
+					circle.removeCircles();
 				}
+			
+				if (circle.getRemoveCounter() == 20) {
+					circles.remove(circle);
+					circle.removeLabel();
+				}
+					// TODO: remove circles from display
 				else { // If circles are still bigger out than in
 
 					if(counter1%20==0) { // Only display circles once per second
