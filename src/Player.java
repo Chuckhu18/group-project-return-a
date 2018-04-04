@@ -11,29 +11,61 @@
 import java.io.*;
 import java.util.ArrayList;
 import acm.graphics.*;
+import acm.program.GraphicsProgram;
 
-public class Player {
+public class Player extends GraphicsProgram{
+	public static final int WINDOW_WIDTH = 800;
+	public static final int WINDOW_HEIGHT = 600;
+	public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
+	
 	Song song;
 	private String name;
 	private static ArrayList<String> scores;
+	private static ArrayList<GLabel> labels;
+	private static GLabel label;
 	public static final String FILENAME = "player.txt";
 
 	// private static BufferedWriter bw = null;
 	// private static FileWriter fw = null;
 
-	public static void main(String[] args) {
-
-		//creating a score list
+	public void init() {
+		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	}
+	
+	public void run() {
+		GRect rect = new GRect(0, 0, 200, 200);
 		scores = new ArrayList<String>();
 		scores.add("chuck");
 		scores.add("1000");
-		scores.add("123");
+		//scores.add("2000");
 		
-		//Save created array list to file "player.txt" with ; for each element.
+		//GLabel labels = new GLabel("",0,0);
+		//System.out.print(scores.get(0));
+		for(int i = 0; i <scores.size() ; i++) {
+			GLabel label = new GLabel(scores.get(i), 100, i*10+10);
+			add(label);
+		}
+		
 		saveScoreToFile();
-		//Read all elements from the player.txt file.
 		ReadScoreFromFile();
+		add(rect);
+		
 	}
+	
+	
+//	public static void main(String[] args) {
+//
+//		//creating a score list
+//		scores = new ArrayList<String>();
+//		scores.add("chuck");
+//		scores.add("1000");
+//		scores.add("123");
+//		
+//		//Save created array list to file "player.txt" with ; for each element.
+//		saveScoreToFile();
+//		//Read all elements from the player.txt file.
+//		ReadScoreFromFile();
+//	}
 
 	public String getName() {
 		return name;
