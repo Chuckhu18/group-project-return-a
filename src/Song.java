@@ -88,7 +88,7 @@ public class Song {
 		songName = stringArray[0];
 		double result = Double.parseDouble(stringArray[1]);			
 		circleSize = result;
-		double newSS = Double.parseDouble(stringArray[1]);
+		double newSS = Double.parseDouble(stringArray[2]);
 		shrinkSpeed = newSS;
 		int newTempo = Integer.parseInt(stringArray[3]);
 		tempo = newTempo;
