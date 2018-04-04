@@ -72,24 +72,30 @@ public class Song {
 	}
 
 	// make this function outside of the class
-	public void readSong(String fileName) throws IOException {
-
-		// File file = new File("src/Song.txt");
-		// for (String fileNames : file.list()) System.out.println(fileNames);
-		FileReader file = new FileReader("src/" + fileName);
-		BufferedReader reader = new BufferedReader(file);
-		String line = reader.readLine();
-		// System.out.println(line);
-		SavingValues(line);
-		// System.out.println(line);
-
-		// System.out.println("hi");
-		reader.close();
-
-		// implement read from file method
-		// to test this write a function to have all the variables printed out to the
-		// console
-	}
+	public void readSong(String fileName) throws IOException {		
+		//File file = new File("src/Song.txt");
+		//for (String fileNames : file.list()) System.out.println(fileNames);
+	    FileReader file = new FileReader("src/"+fileName);
+	    BufferedReader reader = new BufferedReader(file);
+	    String line = reader.readLine();
+	    //System.out.println(line);
+	    while (line != null) {
+	    	SavingValues(line);
+	       // System.out.println(line);
+	        line = reader.readLine(); // what this does is updates the line
+	    }
+	   // System.out.println("hi");
+	   reader.close();
+	
+	
+	//implement read from file method 
+	//to test this write a function to have all the variables printed out to the console
+}
+	
+	//create a constuctor for this partciular manner of input
+	// read from file outsdie of the class and create the song object within this class using the function below
+	//TODO make saving values a constructor
+	
 
 	// create a constuctor for this partciular manner of input
 	// read from file outsdie of the class and create the song object within this
@@ -99,7 +105,7 @@ public class Song {
 		stringArray = lines.split(";");
 		songName = stringArray[0];
 		circleSize = Double.parseDouble(stringArray[1]);
-		shrinkSpeed = Double.parseDouble(stringArray[1]);
+		shrinkSpeed = Double.parseDouble(stringArray[2]);
 		tempo = Integer.parseInt(stringArray[3]);
 		circleList = stringArray[4];
 
