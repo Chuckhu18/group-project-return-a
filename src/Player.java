@@ -19,7 +19,7 @@ public class Player extends GraphicsProgram{
 	public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
 	
 	Song song;
-	private String name;
+	private static String name;
 	private static ArrayList<String> scores;
 	private static ArrayList<GLabel> labels;
 	private static GLabel label;
@@ -35,19 +35,23 @@ public class Player extends GraphicsProgram{
 	public void run() {
 		GRect rect = new GRect(0, 0, 200, 200);
 		scores = new ArrayList<String>();
-		scores.add("chuck");
+		name = "Chuck";
 		scores.add("1000");
-		//scores.add("2000");
+		scores.add("9999");
+		// scores.add("2000");
 		
-		//GLabel labels = new GLabel("",0,0);
-		//System.out.print(scores.get(0));
-		for(int i = 0; i <scores.size() ; i++) {
-			GLabel label = new GLabel(scores.get(i), 100, i*10+10);
-			add(label);
+		saveScoresToFile();
+		ReadScoreFromFile();
+
+		GLabel nameLabel = new GLabel(name, 100, 100);
+		add(nameLabel);
+		for (int i = 0; i < scores.size(); i++) {
+			GLabel scoreLabel = new GLabel(scores.get(i), 100, i * 50 + 150);
+			//label.setFont("Times");
+			add(scoreLabel);
 		}
 		
-		saveScoreToFile();
-		ReadScoreFromFile();
+		
 		add(rect);
 		
 	}
@@ -75,7 +79,7 @@ public class Player extends GraphicsProgram{
 		return scores;
 	}
 
-	public static void saveScoreToFile() {
+	public static void saveScoresToFile() {
 		BufferedWriter bw = null;
 		FileWriter fw = null;
 
@@ -83,9 +87,10 @@ public class Player extends GraphicsProgram{
 		try {
 			fw = new FileWriter(FILENAME);
 			bw = new BufferedWriter(fw);
-
+			
+			bw.write( name +";");
 			for (String str : scores) {
-				bw.write(str+";");
+				bw.write(str+",");
 				System.out.println("writing: " + str);
 			}
 			System.out.println("Done writing");
@@ -123,7 +128,7 @@ public class Player extends GraphicsProgram{
 	}
 
 	public void addScore(Song song, int scoreAdd) {
-
+		System.out.println("The song is " + song.getSongName());
 	}
 
 }

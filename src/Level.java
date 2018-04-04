@@ -20,12 +20,16 @@ public class Level extends GraphicsProgram {
 	String folder = "sounds/";
 	String filename = "RainsItPours.mp3";
 	Timer timer = new Timer(50, this); // Timer ticks 20 times per second
+	public static final int WINDOW_WIDTH = 800;
+	public static final int WINDOW_HEIGHT = 480;
+	
 
 	public void createCircle() {
 		// Generate random coordinate to put the circle at, don't care where yet
 		// TODO: be smarter about where it spawns
-		double xloc = 500 * rand.nextDouble();
-		double yloc = 500 * rand.nextDouble();
+		// keep circle created in side the screen by 100 pixel
+		double xloc = (WINDOW_WIDTH - 300)* rand.nextDouble();
+		double yloc = (WINDOW_HEIGHT -300)* rand.nextDouble();
 
 		Circle toAdd;
 		if (characters.size() > 0)
@@ -61,7 +65,7 @@ public class Level extends GraphicsProgram {
 	}
 
 	public void run() {
-		setSize(500, 500); // Arbitrary numbers so far for screen size
+		setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
 		rand = new Random();
 		// I picked random numbers that look nice for the timer values, will have to
 		// test more
