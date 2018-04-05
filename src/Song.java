@@ -93,7 +93,6 @@ public class Song {
 		int newTempo = Integer.parseInt(stringArray[3]);
 		tempo = newTempo;
 		circleList = stringArray[4];
-		
 	}
 	
 	public static void main(String [ ] args)
