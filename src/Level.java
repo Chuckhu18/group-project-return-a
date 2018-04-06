@@ -23,6 +23,8 @@ public class Level extends GraphicsProgram implements KeyListener {
 	String filename = "RainsItPours.mp3";
 	Timer timer = new Timer(50, this); // Timer ticks 20 times per second
 	
+	private GLabel scoreLabel; // holds the score for now
+	
 	private GRect testScreenRect;
 	private double lastXloc = 0;
 	private double lastYloc = 0;
@@ -127,6 +129,9 @@ public class Level extends GraphicsProgram implements KeyListener {
 		requestFocus();
 		addMouseListeners(this);
 		
+		scoreLabel = new GLabel(Integer.toString(score),15,30);
+		scoreLabel.setFont(new Font("Arial",0,20));
+		
 		testScreenRect = new GRect(10, 10, 800-20, 480-20);
 		
 		// Make the background grey to make colors stand out more
@@ -134,6 +139,8 @@ public class Level extends GraphicsProgram implements KeyListener {
 		testScreenRect.setFilled(true);
 		
 		add(testScreenRect);
+		add(scoreLabel);
+		
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
 		rand = new Random();
 		// I picked random numbers that look nice for the timer values, will have to
@@ -205,6 +212,9 @@ public class Level extends GraphicsProgram implements KeyListener {
 //				}
 			}
 		}
+		
+		scoreLabel.setLabel(Integer.toString(score)); // updates score label every tick
+		scoreLabel.sendToFront(); // makes sure this is always on top of circles
 
 
 //		if (counter1 % 20 == 0)
@@ -254,23 +264,28 @@ public class Level extends GraphicsProgram implements KeyListener {
 				if (size <= (init / 100)) { // If you press in the last hundredth of the timer
 					circle.getLabel().setLabel("PERFECT!");
 					circle.getLabel().setColor(Color.WHITE);
+					score+=100;
 				}
 				else if (size <= (init / 10)) { // If you press between 9/10 and 99/100
 					circle.getLabel().setLabel("AMAZING!");
 					circle.getLabel().setColor(Color.CYAN);
+					score+=50;
 				}
 				else if (size <= (init / 5)) {  // If you press between 4/5 and 9/10
 					circle.getLabel().setLabel("GREAT!");
 					circle.getLabel().setColor(Color.GREEN);
+					score+=25;
 				}
 				else if (size <= (init / 2)) { // If you press between 1/2 and 4/5
 					circle.getLabel().setLabel("GOOD!");
-					circle.getLabel().setColor(Color.BLUE);
+					circle.getLabel().setColor(Color.YELLOW);
+					score+=10;
 					
 				}
 				else { // If you press in the first half of the timer
 					circle.getLabel().setLabel("OK!");
-					circle.getLabel().setColor(Color.YELLOW);
+					circle.getLabel().setColor(Color.ORANGE);
+					score+=5;
 				}
 				
 				// hide the GOvals after updating the label
