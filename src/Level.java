@@ -11,7 +11,7 @@ public class Level extends GraphicsProgram implements KeyListener {
 	// ***Instance variables***
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
-	int score, health, counter1 = 0;
+	int score, health, numTicks = 0;
 	Random rand;
 	Song song;
 	Circle circle;
@@ -21,7 +21,7 @@ public class Level extends GraphicsProgram implements KeyListener {
 	boolean isPaused;
 	String folder = "sounds/";
 	String filename = "RainsItPours.mp3";
-	Timer timer = new Timer(50, this); // Timer ticks 20 times per second
+	Timer timer = new Timer(10, this); // Timer ticks 20 times per second
 	
 	private GLabel scoreLabel; // holds the score for now
 	
@@ -124,6 +124,7 @@ public class Level extends GraphicsProgram implements KeyListener {
 	}
 
 	public void run() {
+		setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
 		addKeyListeners();
 		setFocusable(true);
 		requestFocus();
@@ -141,11 +142,9 @@ public class Level extends GraphicsProgram implements KeyListener {
 		add(testScreenRect);
 		add(scoreLabel);
 		
-		setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
 		rand = new Random();
-		// I picked random numbers that look nice for the timer values, will have to
-		// test more
-		song = new Song(filename, 15.0, 0.25, 30, "abcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical
+		// I picked random numbers that look nice for the timer values, will have to test more
+		song = new Song(filename, 15.0, 0.075, 100, "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical
 																					// order for easy testing
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
@@ -166,10 +165,10 @@ public class Level extends GraphicsProgram implements KeyListener {
 	 * Timer function, executed every time the timer ticks
 	 */
 	public void actionPerformed(ActionEvent e) {
-		counter1++;
+		numTicks++;
 
 		// Create a new circle every interval of time specified by the song's Tempo
-		if (counter1 % song.getTempo() == 0) {
+		if (numTicks % song.getTempo() == 0) {
 			createCircle(); // Make a new circle
 		}
 
@@ -246,9 +245,7 @@ public class Level extends GraphicsProgram implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) { // using keyTyped to help ensure valid input
-		
-		// Confirm the key that was pressed in the console for testing
-		System.out.println(e.getKeyChar() + " pressed!");
+		boolean found = false; // tracks if we have found a matching circle
 		
 		// Iterate through all circles on the screen
 		for(Circle circle : circles) {
@@ -290,13 +287,16 @@ public class Level extends GraphicsProgram implements KeyListener {
 				
 				// hide the GOvals after updating the label
 				circle.removeCircles();
-			}
-			else { // if no match was found
-				System.out.println("No match!"); // Print to console no match was found
-				// TODO: remove lives once they are implemented
+				
+				found = true; // Remember that we found the circle
 			}
 		}
 		
+		if(!found) { // if no match was found
+			System.out.println("No match for "+e.getKeyChar()+"!"); // Print to console no match was found
+			// TODO: remove lives once they are implemented
+		}else // if found
+			System.out.println("Circle "+e.getKeyChar()+" removed!"); // Print to console no match was found
 	}// keyPressed
 
 	@Override
