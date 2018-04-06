@@ -1,10 +1,11 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.text.DecimalFormat;
 import acm.graphics.*;
 
 public class Circle {
 	DecimalFormat df = new DecimalFormat("#.###"); // Used so the toString function prints nicer numbers for location
-	private int removeCounter;
+	private int removeCounter = 0; // Initialize removeCounter to 0
 	private char letter;
 	private static double inSize = 30.0; // Picking random number for testing, TODO: replace with real values
 	private double outSize;
@@ -44,8 +45,9 @@ public class Circle {
 				inSize + outSize, inSize + outSize);
 
 		// TODO: calculate center of circle to correctly center the text
-		// Update 04/01: This is better but not ideal, will continue to experiment
-		text = new GLabel(Character.toString(letter), x + inSize / 10, y + inSize / 10);
+		// Update 04/06: Getting closer to good values
+		text = new GLabel(Character.toString(letter), x - (inSize / 20), (y + inSize / 5));
+		text.setFont(new Font("Arial",0,20)); // Makes text easier to read
 
 		// Makes good circles blue and bad circles red
 		if (good) {
@@ -112,6 +114,8 @@ public class Circle {
 	public void removeCircles() {
 		innerCircle.setVisible(false);
 		outerCircle.setVisible(false);
+		removeCounter++;
+		text.setFont(new Font("Arial",0,16)); // Makes font smaller when circles are removed
 	}
 
 	public void removeLabel() {
