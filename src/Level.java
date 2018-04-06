@@ -24,22 +24,49 @@ public class Level extends GraphicsProgram {
 	Timer timer = new Timer(50, this); // Timer ticks 20 times per second
 	
 	private GRect testScreenRect;
+	private double lastXloc = 0;
+	private double lastYloc = 0;
+	private double lastXloc2 = 0;
+	private double lastYloc2 = 0;
+	private double lastXloc3 = 0;
+	private double lastYloc3 = 0;
 	
+	private int temp = 1;
 	
 
 	public void createCircle() {
 		// Generate random coordinate to put the circle at, don't care where yet
 		// TODO: be smarter about where it spawns
-		// keep circle created in side the screen by 100*60 pixel
+		
 		double xloc = WINDOW_WIDTH * rand.nextDouble();
-		while(xloc <= 100 || xloc >= (WINDOW_WIDTH-100)) {
+		double yloc = WINDOW_HEIGHT * rand.nextDouble();
+		
+		// keep circle created in side the screen by 100*60 pixel
+		// make sure circles are not created outside the screen
+		// make sure circles are not overlapped
+		while(xloc <= 100 || xloc >= (WINDOW_WIDTH-100) || Math.abs(xloc - lastXloc) < 100 || Math.abs(xloc - lastXloc2) < 100 || Math.abs(xloc - lastXloc3) < 100) {
 			xloc = WINDOW_WIDTH * rand.nextDouble();
 		}
-		double yloc = WINDOW_HEIGHT * rand.nextDouble();
-		while(yloc <= 60 || yloc >= (WINDOW_HEIGHT-60)) {
+		while(yloc <= 60 || yloc >= (WINDOW_HEIGHT-60) || Math.abs(yloc - lastYloc) < 100 || Math.abs(yloc - lastYloc2) < 100 || Math.abs(xloc - lastYloc3) < 100) {
 			yloc = WINDOW_HEIGHT * rand.nextDouble();
 		}
-
+		if(temp == 1) {
+			lastXloc = xloc;
+			lastYloc = yloc;
+		}
+		else if(temp == 2){
+			lastXloc2 = xloc;
+			lastYloc2 = yloc;
+		}
+		else {
+			lastXloc3 = xloc;
+			lastYloc3 = yloc;
+		}
+		
+		temp++;
+		if(temp == 4) { temp = 1;}
+		
+		
 		Circle toAdd;
 		if (characters.size() > 0)
 			toAdd = new Circle(characters.remove(0), song.getCircleSize(), xloc, yloc, song.getShrinkSpeed(), true);
