@@ -3,7 +3,8 @@ import java.awt.Component;
 
 import acm.graphics.*;
 import acm.program.*;
-public class MainMenu extends GraphicsProgram{
+public class MainMenu extends GraphicsPane{
+	private MainApplication program;
 	Player player = new Player();
 	GButton play = new GButton("Play", 300, 200, 50, 30);
 	
@@ -11,11 +12,21 @@ public class MainMenu extends GraphicsProgram{
 		GButton play = new GButton("Play", 300, 200, 50, 30, Color.CYAN);
 	}
 	public void display() {
-		setSize(500, 500);
+		program.setSize(500, 500);
 		play.Add(play);
 	}
 	public void run() {
 		
+	}
+	@Override
+	public void showContents() {
+		// TODO Auto-generated method stub
+		program.add(play);
+	}
+	@Override
+	public void hideContents() {
+		// TODO Auto-generated method stub
+		program.remove(play);
 	}
 
 }
