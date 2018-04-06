@@ -126,6 +126,7 @@ public class Level extends GraphicsProgram implements KeyListener {
 	public void run() {
 		addKeyListeners();
 		setFocusable(true);
+		requestFocus();
 		addMouseListeners(this);
 		
 		testScreenRect = new GRect(10, 10, 800-20, 480-20);
