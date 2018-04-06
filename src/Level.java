@@ -7,7 +7,7 @@ import javax.swing.Timer;
 import acm.graphics.*;
 import acm.program.*;
 
-public class Level extends GraphicsProgram {
+public class Level extends GraphicsProgram implements KeyListener {
 	// ***Instance variables***
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
@@ -44,12 +44,35 @@ public class Level extends GraphicsProgram {
 		// keep circle created in side the screen by 100*60 pixel
 		// make sure circles are not created outside the screen
 		// make sure circles are not overlapped
-		while(xloc <= 100 || xloc >= (WINDOW_WIDTH-100) || Math.abs(xloc - lastXloc) < 100 || Math.abs(xloc - lastXloc2) < 100 || Math.abs(xloc - lastXloc3) < 100) {
+		
+		/*
+		 *  TODO: This function keeps giving infinite loops on execution,
+		 *  I fixed it so that it just accepts whatever number is given to it after 10 failed attempts
+		 *  There is probably a more elegant solution but this works for now
+		 *  Look into more about how the rand.nextDouble() function works for a solution
+		 *  -- Race
+		 */
+		int tries = 0;
+		while(xloc <= 100 || xloc >= (WINDOW_WIDTH-100) || 
+				Math.abs(xloc - lastXloc) < 100 || Math.abs(xloc - lastXloc2) < 100 || 
+				Math.abs(xloc - lastXloc3) < 100) {
 			xloc = WINDOW_WIDTH * rand.nextDouble();
+			
+			tries+=1;
+			if(tries>10) break;
 		}
-		while(yloc <= 60 || yloc >= (WINDOW_HEIGHT-60) || Math.abs(yloc - lastYloc) < 100 || Math.abs(yloc - lastYloc2) < 100 || Math.abs(xloc - lastYloc3) < 100) {
+		System.out.println("xloc generated in "+tries+" tries");
+		tries = 0;
+		while(yloc <= 60 || yloc >= (WINDOW_HEIGHT-60) || 
+				Math.abs(yloc - lastYloc) < 100 || Math.abs(yloc - lastYloc2) < 100 || 
+				Math.abs(xloc - lastYloc3) < 100) {
 			yloc = WINDOW_HEIGHT * rand.nextDouble();
+			
+			tries+=1;
+			if(tries>10) break;
 		}
+		System.out.println("yloc generated in "+tries+" tries");
+		
 		if(temp == 1) {
 			lastXloc = xloc;
 			lastYloc = yloc;
@@ -101,6 +124,10 @@ public class Level extends GraphicsProgram {
 	}
 
 	public void run() {
+		addKeyListeners();
+		setFocusable(true);
+		addMouseListeners(this);
+		
 		testScreenRect = new GRect(10, 10, 800-20, 480-20);
 		add(testScreenRect);
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
@@ -160,19 +187,19 @@ public class Level extends GraphicsProgram {
 					circles.remove(circle);
 					circle.removeLabel();
 				}
-				else { // If circles are still bigger out than in
-
-					if (counter1 % 20 == 0) { // Only display circles once per second
-						System.out.println(count + ": " + circle);
-						count++;
-					}
-				}
+//				else { // If circles are still bigger out than in
+//
+//					if (counter1 % 20 == 0) { // Only display circles once per second
+//						System.out.println(count + ": " + circle);
+//						count++;
+//					}
+//				}
 			}
 		}
 
 
-		if (counter1 % 20 == 0)
-			System.out.println(); // Print a blank line after displaying current status of circles ArrayList
+//		if (counter1 % 20 == 0)
+//			System.out.println(); // Print a blank line after displaying current status of circles ArrayList
 	}// actionPerformed
 
 	public void startAudioFile() {
@@ -199,13 +226,13 @@ public class Level extends GraphicsProgram {
 	}// restart
 
 	@Override
-	public void keyPressed(KeyEvent e) {
-		;
+	public void keyTyped(KeyEvent e) { // using keyTyped to help ensure valid input
+		System.out.println(e.getKeyChar() + " pressed!");
 	}// keyPressed
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		;
+	public void mousePressed(MouseEvent e) {
+		System.out.println("Mouse clicked at ("+e.getX()+","+e.getY()+")!");
 	}// mouseClicked
 
 	// ***getters***
