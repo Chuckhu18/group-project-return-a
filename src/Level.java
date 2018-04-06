@@ -9,6 +9,8 @@ import acm.program.*;
 
 public class Level extends GraphicsProgram {
 	// ***Instance variables***
+	public static final int WINDOW_WIDTH = 800;
+	public static final int WINDOW_HEIGHT = 480;
 	int score, health, counter1 = 0;
 	Random rand;
 	Song song;
@@ -20,16 +22,23 @@ public class Level extends GraphicsProgram {
 	String folder = "sounds/";
 	String filename = "RainsItPours.mp3";
 	Timer timer = new Timer(50, this); // Timer ticks 20 times per second
-	public static final int WINDOW_WIDTH = 800;
-	public static final int WINDOW_HEIGHT = 480;
+	
+	private GRect testScreenRect;
+	
 	
 
 	public void createCircle() {
 		// Generate random coordinate to put the circle at, don't care where yet
 		// TODO: be smarter about where it spawns
-		// keep circle created in side the screen by 100 pixel
-		double xloc = (WINDOW_WIDTH - 300)* rand.nextDouble();
-		double yloc = (WINDOW_HEIGHT -300)* rand.nextDouble();
+		// keep circle created in side the screen by 100*60 pixel
+		double xloc = WINDOW_WIDTH * rand.nextDouble();
+		while(xloc <= 100 || xloc >= (WINDOW_WIDTH-100)) {
+			xloc = WINDOW_WIDTH * rand.nextDouble();
+		}
+		double yloc = WINDOW_HEIGHT * rand.nextDouble();
+		while(yloc <= 60 || yloc >= (WINDOW_HEIGHT-60)) {
+			yloc = WINDOW_HEIGHT * rand.nextDouble();
+		}
 
 		Circle toAdd;
 		if (characters.size() > 0)
@@ -65,6 +74,8 @@ public class Level extends GraphicsProgram {
 	}
 
 	public void run() {
+		testScreenRect = new GRect(10, 10, 800-20, 480-20);
+		add(testScreenRect);
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
 		rand = new Random();
 		// I picked random numbers that look nice for the timer values, will have to
