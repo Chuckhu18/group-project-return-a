@@ -32,18 +32,19 @@ public class Level extends GraphicsProgram implements KeyListener {
 	private double lastYloc = 0;
 	private double lastXloc2 = 0;
 	private double lastYloc2 = 0;
-	private double lastXloc3 = 0;
-	private double lastYloc3 = 0;
+	//private double lastXloc3 = 0;
+	//private double lastYloc3 = 0;
 	
 	private int temp = 1;
+	private double rangeMin = 0.9;
+	private double rangeMax = 0.1;
 	
 
 	public void createCircle() {
 		// Generate random coordinate to put the circle at, don't care where yet
 		// TODO: be smarter about where it spawns
-		
-		double xloc = WINDOW_WIDTH * rand.nextDouble();
-		double yloc = WINDOW_HEIGHT * rand.nextDouble();
+		double xloc = WINDOW_WIDTH * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
+		double yloc = WINDOW_HEIGHT *(rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 		
 		// keep circle created in side the screen by 100*60 pixel
 		// make sure circles are not created outside the screen
@@ -56,40 +57,34 @@ public class Level extends GraphicsProgram implements KeyListener {
 		 *  Look into more about how the rand.nextDouble() function works for a solution
 		 *  -- Race
 		 */
+		
 		int tries = 0;
-		while(xloc <= 100 || xloc >= (WINDOW_WIDTH-100) || 
-				Math.abs(xloc - lastXloc) < 100 || Math.abs(xloc - lastXloc2) < 100 || 
-				Math.abs(xloc - lastXloc3) < 100) {
-			xloc = WINDOW_WIDTH * rand.nextDouble();
+		while(Math.abs(xloc - lastXloc) < 100 || Math.abs(xloc - lastXloc2) < 100) {
+			xloc = WINDOW_WIDTH * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 			
 			tries+=1;
-			if(tries>10) break;
+			System.out.println(tries);
+			//if(tries>10) break;
 		}
 		tries = 0;
-		while(yloc <= 60 || yloc >= (WINDOW_HEIGHT-60) || 
-				Math.abs(yloc - lastYloc) < 100 || Math.abs(yloc - lastYloc2) < 100 || 
-				Math.abs(xloc - lastYloc3) < 100) {
-			yloc = WINDOW_HEIGHT * rand.nextDouble();
+		while(Math.abs(yloc - lastYloc) < 100 || Math.abs(yloc - lastYloc2) < 100 ) {
+			yloc = WINDOW_HEIGHT *(rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 			
 			tries+=1;
-			if(tries>10) break;
+			System.out.println(tries);
+			//if(tries>10) break;
 		}
 		
 		if(temp == 1) {
 			lastXloc = xloc;
 			lastYloc = yloc;
 		}
-		else if(temp == 2){
+		else{
 			lastXloc2 = xloc;
 			lastYloc2 = yloc;
 		}
-		else {
-			lastXloc3 = xloc;
-			lastYloc3 = yloc;
-		}
 		
-		temp++;
-		if(temp == 4) { temp = 1;}
+		temp = temp*-1;
 		
 		
 		Circle toAdd;
@@ -132,7 +127,7 @@ public class Level extends GraphicsProgram implements KeyListener {
 		requestFocus();
 		addMouseListeners(this);
 		
-		scoreLabel = new GLabel(Integer.toString(score),15,30);
+		scoreLabel = new GLabel("Your Score:" + Integer.toString(score),15,30);
 		scoreLabel.setFont(new Font("Arial",0,20));
 		healthBar = new GRect(WINDOW_WIDTH-(health)-10,10,(health),25);
 		healthBar.setFilled(true);
@@ -222,7 +217,7 @@ public class Level extends GraphicsProgram implements KeyListener {
 			}
 		}
 		
-		scoreLabel.setLabel(Integer.toString(score)); // updates score label every tick
+		scoreLabel.setLabel("Your Score:" + Integer.toString(score)); // updates score label every tick
 		scoreLabel.sendToFront(); // makes sure this is always on top of circles
 		
 		// Updates health bar every tick

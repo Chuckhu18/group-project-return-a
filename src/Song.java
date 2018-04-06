@@ -94,7 +94,6 @@ public class Song {
 	
 	//create a constuctor for this partciular manner of input
 	// read from file outsdie of the class and create the song object within this class using the function below
-	//TODO make saving values a constructor
 	
 
 	// create a constuctor for this partciular manner of input
@@ -108,13 +107,8 @@ public class Song {
 		shrinkSpeed = Double.parseDouble(stringArray[2]);
 		tempo = Integer.parseInt(stringArray[3]);
 		circleList = stringArray[4];
-
-		for (String string : stringArray) {
-
-			System.out.println(string);
-		}
 	}
-
+		
 	public static void main(String[] args) {
 		Song sing = new Song(); // using default constructor
 		try {

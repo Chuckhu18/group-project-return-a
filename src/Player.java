@@ -8,6 +8,7 @@
  * @author Chuck
  */
 
+import java.awt.Font;
 import java.io.*;
 import java.util.ArrayList;
 import acm.graphics.*;
@@ -15,10 +16,11 @@ import acm.program.GraphicsProgram;
 
 public class Player extends GraphicsProgram{
 	public static final int WINDOW_WIDTH = 800;
-	public static final int WINDOW_HEIGHT = 600;
+	public static final int WINDOW_HEIGHT = 480;
 	public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
 	
 	Song song;
+	Level s;
 	private static String name;
 	private static ArrayList<String> scores;
 	private static ArrayList<GLabel> labels;
@@ -33,21 +35,24 @@ public class Player extends GraphicsProgram{
 	}
 	
 	public void run() {
-		GRect rect = new GRect(0, 0, 200, 200);
+		GRect rect = new GRect(10, 10, 800-20, 480-20);
 		scores = new ArrayList<String>();
 		name = "Chuck";
-		scores.add("1000");
+		//scores.add(Integer.toString(s.getScore()));
 		scores.add("9999");
-		// scores.add("2000");
+		//scores.add("99");
 		
 		saveScoresToFile();
 		ReadScoreFromFile();
 
 		GLabel nameLabel = new GLabel(name, 100, 100);
+		nameLabel.setFont(new Font("Arial",0,30));
 		add(nameLabel);
+		
+		
 		for (int i = 0; i < scores.size(); i++) {
-			GLabel scoreLabel = new GLabel(scores.get(i), 100, i * 50 + 150);
-			//label.setFont("Times");
+			GLabel scoreLabel = new GLabel(scores.get(i), 100, i * 80 + 200);
+			scoreLabel.setFont(new Font("Arial",0,30));
 			add(scoreLabel);
 		}
 		
