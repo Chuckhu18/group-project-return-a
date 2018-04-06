@@ -14,6 +14,8 @@ public class MainMenu extends GraphicsProgram{
 		setSize(500, 500);
 		play.Add(play);
 	}
-	
+	public void run() {
+		
+	}
 
 }

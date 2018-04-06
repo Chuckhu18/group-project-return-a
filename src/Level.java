@@ -7,26 +7,88 @@ import javax.swing.Timer;
 import acm.graphics.*;
 import acm.program.*;
 
-public class Level extends GraphicsProgram {
+public class Level extends GraphicsProgram implements KeyListener {
 	// ***Instance variables***
+	public static final int WINDOW_WIDTH = 800;
+	public static final int WINDOW_HEIGHT = 480;
 	int score, health, counter1 = 0;
 	Random rand;
 	Song song;
 	Circle circle;
 	ArrayList<Circle> circles; // Stores the circles being displayed on the screen
 	ArrayList<Character> characters; // Stores the characters to feed into the circles
-	ArrayList<GLabel> resultText; // Stores the labels that appear when you click on a circle
 	AudioPlayer player;
 	boolean isPaused;
 	String folder = "sounds/";
 	String filename = "RainsItPours.mp3";
 	Timer timer = new Timer(50, this); // Timer ticks 20 times per second
+	
+	private GLabel scoreLabel; // holds the score for now
+	
+	private GRect testScreenRect;
+	private double lastXloc = 0;
+	private double lastYloc = 0;
+	private double lastXloc2 = 0;
+	private double lastYloc2 = 0;
+	private double lastXloc3 = 0;
+	private double lastYloc3 = 0;
+	
+	private int temp = 1;
+	
 
 	public void createCircle() {
-		//Generate random coordinate to put the circle at, don't care where yet
+		// Generate random coordinate to put the circle at, don't care where yet
 		// TODO: be smarter about where it spawns
-		double xloc = 500 * rand.nextDouble();
-		double yloc = 500 * rand.nextDouble();
+		
+		double xloc = WINDOW_WIDTH * rand.nextDouble();
+		double yloc = WINDOW_HEIGHT * rand.nextDouble();
+		
+		// keep circle created in side the screen by 100*60 pixel
+		// make sure circles are not created outside the screen
+		// make sure circles are not overlapped
+		
+		/*
+		 *  TODO: This function keeps giving infinite loops on execution,
+		 *  I fixed it so that it just accepts whatever number is given to it after 10 failed attempts
+		 *  There is probably a more elegant solution but this works for now
+		 *  Look into more about how the rand.nextDouble() function works for a solution
+		 *  -- Race
+		 */
+		int tries = 0;
+		while(xloc <= 100 || xloc >= (WINDOW_WIDTH-100) || 
+				Math.abs(xloc - lastXloc) < 100 || Math.abs(xloc - lastXloc2) < 100 || 
+				Math.abs(xloc - lastXloc3) < 100) {
+			xloc = WINDOW_WIDTH * rand.nextDouble();
+			
+			tries+=1;
+			if(tries>10) break;
+		}
+		tries = 0;
+		while(yloc <= 60 || yloc >= (WINDOW_HEIGHT-60) || 
+				Math.abs(yloc - lastYloc) < 100 || Math.abs(yloc - lastYloc2) < 100 || 
+				Math.abs(xloc - lastYloc3) < 100) {
+			yloc = WINDOW_HEIGHT * rand.nextDouble();
+			
+			tries+=1;
+			if(tries>10) break;
+		}
+		
+		if(temp == 1) {
+			lastXloc = xloc;
+			lastYloc = yloc;
+		}
+		else if(temp == 2){
+			lastXloc2 = xloc;
+			lastYloc2 = yloc;
+		}
+		else {
+			lastXloc3 = xloc;
+			lastYloc3 = yloc;
+		}
+		
+		temp++;
+		if(temp == 4) { temp = 1;}
+		
 		
 		Circle toAdd;
 		if (characters.size() > 0)
@@ -34,40 +96,62 @@ public class Level extends GraphicsProgram {
 		else // Make dummy circle object for testing
 			toAdd = new Circle('7', song.getCircleSize(), xloc, yloc, song.getShrinkSpeed(), false);
 
-		// Add shapes to screen from the Circle, then add the Circle to the ArrayList of Circles
+		// Add shapes to screen from the Circle, then add the Circle to the ArrayList of
+		// Circles
 		add(toAdd.getInnerCircle());
 		add(toAdd.getOuterCircle());
 		add(toAdd.getLabel());
 		circles.add(toAdd);
-		
+
 	}
-	
+
 	/**
 	 * Creates an ArrayListof characters from given string
-	 * @param str string to turn into ArrayList
+	 * 
+	 * @param str
+	 *            string to turn into ArrayList
 	 */
 	private void createCharArrList(String str) {
 		characters = new ArrayList<Character>(); // reset ArrayList so we start from scratch
-		
-		for(int i = 0; i < str.length(); i++) {
-			// if the current character in the string is a letter or number (ignores weird stuff)
-			if(Character.isLetter(str.charAt(i)) || Character.isDigit(str.charAt(i))) {
+
+		for (int i = 0; i < str.length(); i++) {
+			// if the current character in the string is a letter or number (ignores weird
+			// stuff)
+			if (Character.isLetter(str.charAt(i)) || Character.isDigit(str.charAt(i))) {
 				characters.add(str.charAt(i));
 			}
 		}
 	}
 
 	public void run() {
-		setSize(500,500); // Arbitrary numbers so far for screen size
+		addKeyListeners();
+		setFocusable(true);
+		requestFocus();
+		addMouseListeners(this);
+		
+		scoreLabel = new GLabel(Integer.toString(score),15,30);
+		scoreLabel.setFont(new Font("Arial",0,20));
+		
+		testScreenRect = new GRect(10, 10, 800-20, 480-20);
+		
+		// Make the background grey to make colors stand out more
+		testScreenRect.setFillColor(Color.GRAY);
+		testScreenRect.setFilled(true);
+		
+		add(testScreenRect);
+		add(scoreLabel);
+		
+		setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
 		rand = new Random();
-		// I picked random numbers that look nice for the timer values, will have to test more
-		song = new Song(filename, 15.0, 0.15, 30, "abcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical order for easy testing
+		// I picked random numbers that look nice for the timer values, will have to
+		// test more
+		song = new Song(filename, 15.0, 0.25, 30, "abcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical
+																					// order for easy testing
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
 
-		resultText = new ArrayList<GLabel>(); // Initializes resultText ArrayList
-		
-		// Turns the string from Song into an ArrayList of characters to feed into the circles
+		// Turns the string from Song into an ArrayList of characters to feed into the
+		// circles
 		createCharArrList(song.getCircleList());
 
 		// start audio and timer
@@ -77,7 +161,7 @@ public class Level extends GraphicsProgram {
 	}
 
 	// ***member methods***
-	
+
 	/**
 	 * Timer function, executed every time the timer ticks
 	 */
@@ -92,48 +176,49 @@ public class Level extends GraphicsProgram {
 		// If there are circles on the screen
 		if (circles.size() >= 1) {
 			int count = 0;
-			
-			// Have to use manual definition of for loop to avoid ConcurrentModificationException
+
+			// Have to use manual definition of for loop to avoid
+			// ConcurrentModificationException
 			for (int i = 0; i < circles.size(); i++) {
-				
+
 				// Shrink circle
 				Circle circle = circles.get(i);
 				circle.shrink();
-				
+
 				// If circles have shrunk to be the same size in and out
 				if (circle.getOutSize() < 0) {
-					// Add the text displaying that you missed
-					circle.getLabel().setLabel("MISS");
-					circle.setRemoveCounter(circle.getRemoveCounter()+1);
-					circle.removeCircles();
+					if(circle.getRemoveCounter() == 0) {
+						// Add the text displaying that you missed
+						circle.getLabel().setLabel("MISS");
+						circle.getLabel().setColor(Color.BLACK);
+						circle.removeCircles();
+					}
+					else {
+						circle.setRemoveCounter(circle.getRemoveCounter() + 1);
+					}
 				}
-			
-				if (circle.getRemoveCounter() == 20) {
+
+				if (circle.getRemoveCounter() >= 20) {
 					circles.remove(circle);
 					circle.removeLabel();
 				}
-					// TODO: remove circles from display
-				else { // If circles are still bigger out than in
+				
+//				else { // If circles are still bigger out than in
+//
+//					if (counter1 % 20 == 0) { // Only display circles once per second
+//						System.out.println(count + ": " + circle);
+//						count++;
+//					}
+//				}
+			}
+		}
+		
+		scoreLabel.setLabel(Integer.toString(score)); // updates score label every tick
+		scoreLabel.sendToFront(); // makes sure this is always on top of circles
 
-					if(counter1%20==0) { // Only display circles once per second
-						System.out.println(count + ": " + circle);
-						count++;
-					}
-				}
-			}
-		}
-		
-		
-		// TODO: make the labels get removed after the same amount of time
-		// currently the first one is removed once per second, which could result in a long wait
-		if(resultText.size() >= 1) { // if there are result labels on the screen
-			if(counter1%20 == 0) { // every second remove one label
-				resultText.get(0).setVisible(false);
-				resultText.remove(0);
-			}
-		}
-		
-		if(counter1%20==0) System.out.println(); // Print a blank line after displaying current status of circles ArrayList
+
+//		if (counter1 % 20 == 0)
+//			System.out.println(); // Print a blank line after displaying current status of circles ArrayList
 	}// actionPerformed
 
 	public void startAudioFile() {
@@ -160,13 +245,63 @@ public class Level extends GraphicsProgram {
 	}// restart
 
 	@Override
-	public void keyPressed(KeyEvent e) {
-		;
+	public void keyTyped(KeyEvent e) { // using keyTyped to help ensure valid input
+		
+		// Confirm the key that was pressed in the console for testing
+		System.out.println(e.getKeyChar() + " pressed!");
+		
+		// Iterate through all circles on the screen
+		for(Circle circle : circles) {
+			// if you pressed a key matching a circle who is still shrinking
+			if(e.getKeyChar() == circle.getLetter() && circle.getRemoveCounter() == 0) { 
+				// Add the text displaying that you pressed it right
+				// Pick which text based on how small the outer circle was
+				// TODO: update score on press based on difference too
+				double size = circle.getOutSize(); // store outer size to a variable for efficiency
+				double init = song.getCircleSize(); // store initial size for math
+				
+				// Note: all numbers are subject to change
+				if (size <= (init / 100)) { // If you press in the last hundredth of the timer
+					circle.getLabel().setLabel("PERFECT!");
+					circle.getLabel().setColor(Color.WHITE);
+					score+=100;
+				}
+				else if (size <= (init / 10)) { // If you press between 9/10 and 99/100
+					circle.getLabel().setLabel("AMAZING!");
+					circle.getLabel().setColor(Color.CYAN);
+					score+=50;
+				}
+				else if (size <= (init / 5)) {  // If you press between 4/5 and 9/10
+					circle.getLabel().setLabel("GREAT!");
+					circle.getLabel().setColor(Color.GREEN);
+					score+=25;
+				}
+				else if (size <= (init / 2)) { // If you press between 1/2 and 4/5
+					circle.getLabel().setLabel("GOOD!");
+					circle.getLabel().setColor(Color.YELLOW);
+					score+=10;
+					
+				}
+				else { // If you press in the first half of the timer
+					circle.getLabel().setLabel("OK!");
+					circle.getLabel().setColor(Color.ORANGE);
+					score+=5;
+				}
+				
+				// hide the GOvals after updating the label
+				circle.removeCircles();
+			}
+			else { // if no match was found
+				System.out.println("No match!"); // Print to console no match was found
+				// TODO: remove lives once they are implemented
+			}
+		}
+		
 	}// keyPressed
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		;
+	public void mousePressed(MouseEvent e) {
+		System.out.println("Mouse clicked at ("+e.getX()+","+e.getY()+")!");
 	}// mouseClicked
 
 	// ***getters***
