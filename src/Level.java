@@ -61,7 +61,6 @@ public class Level extends GraphicsProgram implements KeyListener {
 			tries+=1;
 			if(tries>10) break;
 		}
-		System.out.println("xloc generated in "+tries+" tries");
 		tries = 0;
 		while(yloc <= 60 || yloc >= (WINDOW_HEIGHT-60) || 
 				Math.abs(yloc - lastYloc) < 100 || Math.abs(yloc - lastYloc2) < 100 || 
@@ -71,7 +70,6 @@ public class Level extends GraphicsProgram implements KeyListener {
 			tries+=1;
 			if(tries>10) break;
 		}
-		System.out.println("yloc generated in "+tries+" tries");
 		
 		if(temp == 1) {
 			lastXloc = xloc;
@@ -130,12 +128,17 @@ public class Level extends GraphicsProgram implements KeyListener {
 		addMouseListeners(this);
 		
 		testScreenRect = new GRect(10, 10, 800-20, 480-20);
+		
+		// Make the background grey to make colors stand out more
+		testScreenRect.setFillColor(Color.GRAY);
+		testScreenRect.setFilled(true);
+		
 		add(testScreenRect);
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
 		rand = new Random();
 		// I picked random numbers that look nice for the timer values, will have to
 		// test more
-		song = new Song(filename, 15.0, 0.15, 30, "abcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical
+		song = new Song(filename, 15.0, 0.25, 30, "abcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical
 																					// order for easy testing
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
@@ -233,7 +236,51 @@ public class Level extends GraphicsProgram implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) { // using keyTyped to help ensure valid input
+		
+		// Confirm the key that was pressed in the console for testing
 		System.out.println(e.getKeyChar() + " pressed!");
+		
+		// Iterate through all circles on the screen
+		for(Circle circle : circles) {
+			// if you pressed a key matching a circle who is still shrinking
+			if(e.getKeyChar() == circle.getLetter() && circle.getRemoveCounter() == 0) { 
+				// Add the text displaying that you pressed it right
+				// Pick which text based on how small the outer circle was
+				// TODO: update score on press based on difference too
+				double size = circle.getOutSize(); // store outer size to a variable for efficiency
+				double init = song.getCircleSize(); // store initial size for math
+				
+				// Note: all numbers are subject to change
+				if (size <= (init / 100)) { // If you press in the last hundredth of the timer
+					circle.getLabel().setLabel("PERFECT!");
+					circle.getLabel().setColor(Color.WHITE);
+				}
+				else if (size <= (init / 10)) { // If you press between 9/10 and 99/100
+					circle.getLabel().setLabel("AMAZING!");
+					circle.getLabel().setColor(Color.CYAN);
+				}
+				else if (size <= (init / 5)) {  // If you press between 4/5 and 9/10
+					circle.getLabel().setLabel("GREAT!");
+					circle.getLabel().setColor(Color.GREEN);
+				}
+				else if (size <= (init / 2)) { // If you press between 1/2 and 4/5
+					circle.getLabel().setLabel("GOOD!");
+					circle.getLabel().setColor(Color.BLUE);
+					
+				}
+				else { // If you press in the first half of the timer
+					circle.getLabel().setLabel("OK!");
+					circle.getLabel().setColor(Color.YELLOW);
+				}
+				
+				// hide the GOvals after updating the label
+				circle.removeCircles();
+			}
+			else { // if no match was found
+				System.out.println("No match!"); // Print to console no match was found
+				// TODO: remove lives once they are implemented
+			}
+		}
 		
 	}// keyPressed
 
