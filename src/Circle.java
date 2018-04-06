@@ -4,7 +4,7 @@ import acm.graphics.*;
 
 public class Circle {
 	DecimalFormat df = new DecimalFormat("#.###"); // Used so the toString function prints nicer numbers for location
-	private int removeCounter;
+	private int removeCounter = 0; // Initialize removeCounter to 0
 	private char letter;
 	private static double inSize = 30.0; // Picking random number for testing, TODO: replace with real values
 	private double outSize;
@@ -112,6 +112,7 @@ public class Circle {
 	public void removeCircles() {
 		innerCircle.setVisible(false);
 		outerCircle.setVisible(false);
+		removeCounter++;
 	}
 
 	public void removeLabel() {

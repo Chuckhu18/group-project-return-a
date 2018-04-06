@@ -177,17 +177,22 @@ public class Level extends GraphicsProgram implements KeyListener {
 
 				// If circles have shrunk to be the same size in and out
 				if (circle.getOutSize() < 0) {
-					// Add the text displaying that you missed
-					circle.getLabel().setLabel("MISS");
-					circle.getLabel().setColor(Color.BLACK);
-					circle.setRemoveCounter(circle.getRemoveCounter() + 1);
-					circle.removeCircles();
+					if(circle.getRemoveCounter() == 0) {
+						// Add the text displaying that you missed
+						circle.getLabel().setLabel("MISS");
+						circle.getLabel().setColor(Color.BLACK);
+						circle.removeCircles();
+					}
+					else {
+						circle.setRemoveCounter(circle.getRemoveCounter() + 1);
+					}
 				}
 
-				if (circle.getRemoveCounter() == 20) {
+				if (circle.getRemoveCounter() >= 20) {
 					circles.remove(circle);
 					circle.removeLabel();
 				}
+				
 //				else { // If circles are still bigger out than in
 //
 //					if (counter1 % 20 == 0) { // Only display circles once per second
@@ -229,6 +234,7 @@ public class Level extends GraphicsProgram implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) { // using keyTyped to help ensure valid input
 		System.out.println(e.getKeyChar() + " pressed!");
+		
 	}// keyPressed
 
 	@Override
