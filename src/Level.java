@@ -11,7 +11,7 @@ public class Level extends GraphicsProgram implements KeyListener {
 	// ***Instance variables***
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
-	int score, health, counter1 = 0;
+	int score, health = 100, numTicks = 0;
 	Random rand;
 	Song song;
 	Circle circle;
@@ -21,27 +21,30 @@ public class Level extends GraphicsProgram implements KeyListener {
 	boolean isPaused;
 	String folder = "sounds/";
 	String filename = "RainsItPours.mp3";
-	Timer timer = new Timer(50, this); // Timer ticks 20 times per second
+	Timer timer = new Timer(10, this); // Timer ticks 20 times per second
 	
 	private GLabel scoreLabel; // holds the score for now
+	private GRect healthBar; // displays HP percentage
+	private GRect emptyHPBar; // Empty HP Bar to show full
 	
 	private GRect testScreenRect;
 	private double lastXloc = 0;
 	private double lastYloc = 0;
 	private double lastXloc2 = 0;
 	private double lastYloc2 = 0;
-	private double lastXloc3 = 0;
-	private double lastYloc3 = 0;
+	//private double lastXloc3 = 0;
+	//private double lastYloc3 = 0;
 	
 	private int temp = 1;
+	private double rangeMin = 0.9;
+	private double rangeMax = 0.1;
 	
 
 	public void createCircle() {
 		// Generate random coordinate to put the circle at, don't care where yet
 		// TODO: be smarter about where it spawns
-		
-		double xloc = WINDOW_WIDTH * rand.nextDouble();
-		double yloc = WINDOW_HEIGHT * rand.nextDouble();
+		double xloc = WINDOW_WIDTH * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
+		double yloc = WINDOW_HEIGHT *(rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 		
 		// keep circle created in side the screen by 100*60 pixel
 		// make sure circles are not created outside the screen
@@ -54,40 +57,34 @@ public class Level extends GraphicsProgram implements KeyListener {
 		 *  Look into more about how the rand.nextDouble() function works for a solution
 		 *  -- Race
 		 */
+		
 		int tries = 0;
-		while(xloc <= 100 || xloc >= (WINDOW_WIDTH-100) || 
-				Math.abs(xloc - lastXloc) < 100 || Math.abs(xloc - lastXloc2) < 100 || 
-				Math.abs(xloc - lastXloc3) < 100) {
-			xloc = WINDOW_WIDTH * rand.nextDouble();
+		while(Math.abs(xloc - lastXloc) < 100 || Math.abs(xloc - lastXloc2) < 100) {
+			xloc = WINDOW_WIDTH * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 			
 			tries+=1;
-			if(tries>10) break;
+			System.out.println(tries);
+			//if(tries>10) break;
 		}
 		tries = 0;
-		while(yloc <= 60 || yloc >= (WINDOW_HEIGHT-60) || 
-				Math.abs(yloc - lastYloc) < 100 || Math.abs(yloc - lastYloc2) < 100 || 
-				Math.abs(xloc - lastYloc3) < 100) {
-			yloc = WINDOW_HEIGHT * rand.nextDouble();
+		while(Math.abs(yloc - lastYloc) < 100 || Math.abs(yloc - lastYloc2) < 100 ) {
+			yloc = WINDOW_HEIGHT *(rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 			
 			tries+=1;
-			if(tries>10) break;
+			System.out.println(tries);
+			//if(tries>10) break;
 		}
 		
 		if(temp == 1) {
 			lastXloc = xloc;
 			lastYloc = yloc;
 		}
-		else if(temp == 2){
+		else{
 			lastXloc2 = xloc;
 			lastYloc2 = yloc;
 		}
-		else {
-			lastXloc3 = xloc;
-			lastYloc3 = yloc;
-		}
 		
-		temp++;
-		if(temp == 4) { temp = 1;}
+		temp = temp*-1;
 		
 		
 		Circle toAdd;
@@ -124,13 +121,19 @@ public class Level extends GraphicsProgram implements KeyListener {
 	}
 
 	public void run() {
+		setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
 		addKeyListeners();
 		setFocusable(true);
 		requestFocus();
 		addMouseListeners(this);
 		
-		scoreLabel = new GLabel(Integer.toString(score),15,30);
+		scoreLabel = new GLabel("Your Score:" + Integer.toString(score),15,30);
 		scoreLabel.setFont(new Font("Arial",0,20));
+		healthBar = new GRect(WINDOW_WIDTH-(health)-10,10,(health),25);
+		healthBar.setFilled(true);
+		healthBar.setFillColor(Color.GREEN);
+		emptyHPBar = new GRect(WINDOW_WIDTH-(health)-10,10,(health),25);
+		
 		
 		testScreenRect = new GRect(10, 10, 800-20, 480-20);
 		
@@ -140,12 +143,12 @@ public class Level extends GraphicsProgram implements KeyListener {
 		
 		add(testScreenRect);
 		add(scoreLabel);
+		add(healthBar);
+		add(emptyHPBar);
 		
-		setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
 		rand = new Random();
-		// I picked random numbers that look nice for the timer values, will have to
-		// test more
-		song = new Song(filename, 15.0, 0.25, 30, "abcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical
+		// I picked random numbers that look nice for the timer values, will have to test more
+		song = new Song(filename, 15.0, 0.075, 100, "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical
 																					// order for easy testing
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
@@ -166,10 +169,10 @@ public class Level extends GraphicsProgram implements KeyListener {
 	 * Timer function, executed every time the timer ticks
 	 */
 	public void actionPerformed(ActionEvent e) {
-		counter1++;
+		numTicks++;
 
 		// Create a new circle every interval of time specified by the song's Tempo
-		if (counter1 % song.getTempo() == 0) {
+		if (numTicks % song.getTempo() == 0) {
 			createCircle(); // Make a new circle
 		}
 
@@ -192,6 +195,7 @@ public class Level extends GraphicsProgram implements KeyListener {
 						circle.getLabel().setLabel("MISS");
 						circle.getLabel().setColor(Color.BLACK);
 						circle.removeCircles();
+						health-=10;
 					}
 					else {
 						circle.setRemoveCounter(circle.getRemoveCounter() + 1);
@@ -213,8 +217,23 @@ public class Level extends GraphicsProgram implements KeyListener {
 			}
 		}
 		
-		scoreLabel.setLabel(Integer.toString(score)); // updates score label every tick
+		scoreLabel.setLabel("Your Score:" + Integer.toString(score)); // updates score label every tick
 		scoreLabel.sendToFront(); // makes sure this is always on top of circles
+		
+		// Updates health bar every tick
+		if (health > 100) health = 100; // Stop HP from growing above 100
+		healthBar.setSize((health),25);
+		healthBar.setLocation(WINDOW_WIDTH-(health)-10,10);
+		
+		// Changes HP bar color based on health
+		if (health > 75)
+			healthBar.setFillColor(Color.GREEN);
+		else if (health > 50)
+			healthBar.setFillColor(Color.ORANGE);
+		else if (health > 25)
+			healthBar.setFillColor(Color.YELLOW);
+		else
+			healthBar.setFillColor(Color.RED);
 
 
 //		if (counter1 % 20 == 0)
@@ -246,9 +265,7 @@ public class Level extends GraphicsProgram implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) { // using keyTyped to help ensure valid input
-		
-		// Confirm the key that was pressed in the console for testing
-		System.out.println(e.getKeyChar() + " pressed!");
+		boolean found = false; // tracks if we have found a matching circle
 		
 		// Iterate through all circles on the screen
 		for(Circle circle : circles) {
@@ -265,21 +282,24 @@ public class Level extends GraphicsProgram implements KeyListener {
 					circle.getLabel().setLabel("PERFECT!");
 					circle.getLabel().setColor(Color.WHITE);
 					score+=100;
+					health+=20;
 				}
 				else if (size <= (init / 10)) { // If you press between 9/10 and 99/100
 					circle.getLabel().setLabel("AMAZING!");
 					circle.getLabel().setColor(Color.CYAN);
 					score+=50;
+					health+=10;
 				}
 				else if (size <= (init / 5)) {  // If you press between 4/5 and 9/10
 					circle.getLabel().setLabel("GREAT!");
 					circle.getLabel().setColor(Color.GREEN);
 					score+=25;
+					health+=5;
 				}
 				else if (size <= (init / 2)) { // If you press between 1/2 and 4/5
 					circle.getLabel().setLabel("GOOD!");
 					circle.getLabel().setColor(Color.YELLOW);
-					score+=10;
+					score+=1;
 					
 				}
 				else { // If you press in the first half of the timer
@@ -290,13 +310,17 @@ public class Level extends GraphicsProgram implements KeyListener {
 				
 				// hide the GOvals after updating the label
 				circle.removeCircles();
-			}
-			else { // if no match was found
-				System.out.println("No match!"); // Print to console no match was found
-				// TODO: remove lives once they are implemented
+				
+				found = true; // Remember that we found the circle
 			}
 		}
 		
+		if(!found) { // if no match was found
+			System.out.println("No match for "+e.getKeyChar()+"!"); // Print to console no match was found
+			health-=10;
+			// TODO: remove lives once they are implemented
+		}else // if found
+			System.out.println("Circle "+e.getKeyChar()+" removed!"); // Print to console no match was found
 	}// keyPressed
 
 	@Override
