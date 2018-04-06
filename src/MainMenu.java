@@ -14,15 +14,6 @@ public class MainMenu extends GraphicsProgram{
 		setSize(500, 500);
 		play.Add(play);
 	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		//play = GButton("Play", 300, 200, 50, 30);
-		Player player = new Player();
-		MainMenu main = new MainMenu(player);
-		main.display();
-		
-	}
 	
 
 }
