@@ -4,7 +4,7 @@ import java.awt.event.MouseEvent;
 
 import acm.graphics.*;
 import acm.program.*;
-public class MainMenu extends GraphicsPane{
+public class MainMenuPane extends GraphicsPane{
 	private MainApplication program; // a way to put things on the screen
 	Player player = new Player();
 	GButton play;
@@ -14,7 +14,7 @@ public class MainMenu extends GraphicsPane{
 	GParagraph howtoPlay = new GParagraph("", 400, 240);
 	//TODO: implement the settingsmenu object
 	//private SettingsMenu settings = new SettingsMenu(program);
-	public MainMenu(MainApplication app){ //always call this app
+	public MainMenuPane(MainApplication app){ //always call this app
 		play = new GButton("GO", 500, 300, 50, 30, Color.CYAN); //this is going to create another button and then filling it in with information
 		howTo = new GButton("Play", 300, 200, 50, 30); //instiating, an object is an instance of a clas, initialize the object in the 
 	}
