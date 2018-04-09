@@ -203,6 +203,23 @@ public class Level extends GraphicsPane implements KeyListener {
 				Circle circle = circles.get(i);
 				circle.shrink();
 
+				// Change the color of the circle when you are in "AMAZING" and "PERFECT" range
+				/*
+				 * TODO:
+				 * Change this to have the circle dynamically change colors as it shrinks
+				 */
+				if(circle.getRemoveCounter() == 0) { // If the circle has not been removed from the screen
+					Color cirColor = circle.getLabel().getColor(); // Default to no change
+					if (circle.getOutSize() <= song.getCircleSize()/100) { // PERFECT
+						cirColor = Color.WHITE;
+					} else if(circle.getOutSize() <= song.getCircleSize()/10) { // AMAZING
+						cirColor = Color.CYAN;
+					}
+					circle.getOuterCircle().setColor(cirColor);
+					circle.getInnerCircle().setColor(cirColor);
+					circle.getLabel().setColor(cirColor);
+				}
+				
 				// If circles have shrunk to be the same size in and out
 				if (circle.getOutSize() < 0) {
 					if(circle.getRemoveCounter() == 0) {
