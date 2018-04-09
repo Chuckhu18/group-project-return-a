@@ -10,6 +10,7 @@ public class MainApplication extends GraphicsApplication {
 
 	private SomePane somePane;
 	private MainMenuPane menu;
+	private EndOfGamePane end;
 	private Level level;
 	private int count;
 	
@@ -25,6 +26,7 @@ public class MainApplication extends GraphicsApplication {
 		time = new Timer(10, this);
 		level = new Level(this);
 		menu = new MainMenuPane(this);
+		end = new EndOfGamePane(this);
 		switchToMenu();
 		
 	}
@@ -61,7 +63,7 @@ public class MainApplication extends GraphicsApplication {
 	public void switchToMenu() {
 		//playRandomSound();
 		count++;
-		switchToScreen(menu);
+		switchToScreen(end);
 	}
 
 	public void switchToSome() {
