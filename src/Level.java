@@ -70,7 +70,7 @@ public class Level extends GraphicsPane implements KeyListener {
 			xloc = WINDOW_WIDTH * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 			
 			tries+=1;
-			System.out.println(tries);
+			//System.out.println(tries);
 			//if(tries>10) break;
 		}
 		tries = 0;
@@ -78,7 +78,7 @@ public class Level extends GraphicsPane implements KeyListener {
 			yloc = WINDOW_HEIGHT *(rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 			
 			tries+=1;
-			System.out.println(tries);
+			//System.out.println(tries);
 			//if(tries>10) break;
 		}
 		
@@ -129,10 +129,10 @@ public class Level extends GraphicsPane implements KeyListener {
 
 	public void run() {
 		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
-		program.addKeyListeners();
+		//program.addKeyListeners(); // Taken out to prevent double execution of events
 		program.setFocusable(true);
 		program.requestFocus();
-		program.addMouseListeners(program);
+		//program.addMouseListeners(program); // Taken out to prevent double execution of events
 		
 		scoreLabel = new GLabel("Your Score:" + Integer.toString(score),15,30);
 		scoreLabel.setFont(new Font("Arial",0,20));
@@ -155,13 +155,12 @@ public class Level extends GraphicsPane implements KeyListener {
 		
 		rand = new Random();
 		// I picked random numbers that look nice for the timer values, will have to test more
-		song = new Song(filename, 15.0, 0.075, 100, "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"); // using all characters in alphabetical
-																					// order for easy testing
+		// using all characters in alphabetical order for easy testing
+		song = new Song(filename, 15.0, 0.075, 100, "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"); 
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
 
-		// Turns the string from Song into an ArrayList of characters to feed into the
-		// circles
+		// Turns the string from Song into an ArrayList of characters to feed into the circles
 		createCharArrList(song.getCircleList());
 
 		// start audio and timer
@@ -177,7 +176,7 @@ public class Level extends GraphicsPane implements KeyListener {
 	 */
 	public void action() {
 		numTicks++;
-		System.out.println(numTicks);
+		//System.out.println(numTicks);
 
 		// Create a new circle every interval of time specified by the song's Tempo
 		if (numTicks % song.getTempo() == 0) {
@@ -214,14 +213,6 @@ public class Level extends GraphicsPane implements KeyListener {
 					circles.remove(circle);
 					circle.removeLabel();
 				}
-				
-//				else { // If circles are still bigger out than in
-//
-//					if (counter1 % 20 == 0) { // Only display circles once per second
-//						System.out.println(count + ": " + circle);
-//						count++;
-//					}
-//				}
 			}
 		}
 		
@@ -242,10 +233,7 @@ public class Level extends GraphicsPane implements KeyListener {
 			healthBar.setFillColor(Color.YELLOW);
 		else
 			healthBar.setFillColor(Color.RED);
-
-
-//		if (counter1 % 20 == 0)
-//			System.out.println(); // Print a blank line after displaying current status of circles ArrayList
+		
 	}// actionPerformed
 
 	public void startAudioFile() {
@@ -322,13 +310,14 @@ public class Level extends GraphicsPane implements KeyListener {
 				found = true; // Remember that we found the circle
 			}
 		}
+		System.out.println(found);
 		
-		if(!found) { // if no match was found
-			System.out.println("No match for "+e.getKeyChar()+"!"); // Print to console no match was found
-			health-=10;
-			// TODO: remove lives once they are implemented
-		}else // if found
+		if(found) { // if match was found
 			System.out.println("Circle "+e.getKeyChar()+" removed!"); // Print to console no match was found
+		}else { // if not found
+			System.out.println("No match for "+e.getKeyChar()+"!"); // Print to console no match was found
+			health-=5;
+		}
 	}// keyPressed
 
 	@Override
