@@ -25,7 +25,7 @@ public class MainMenuPane extends GraphicsPane {
 															// filling it in with information
 		howTo = new GButton("HOW TO PLAY", 120, 300, 100, 30,Color.GRAY); // instiating, an object is an instance of a clas, initialize the
 														// object in the
-		howToBack = new GButton("BACK",20,170,50,30);
+		howToBack = new GButton("BACK",20,190,50,30,Color.GRAY);
 		
 		mainMenu = new GImage("theAGame.png", 150,100);
 	}
@@ -62,12 +62,12 @@ public class MainMenuPane extends GraphicsPane {
 		}
 		if (obj == howTo) {
 			hideContents();
-			howtoPlay.setText("Press GO to play. \n\n"
+			howtoPlay.setText("Press GO to play from the main menu. \n\n"
 					+ "*** You must click on the program at the beginning to play (we are working on it) ***\n\n"
-					+ "Press the corresponding key on the keyboard to the ones on the screen. \n"
+					+ "Press the key on the keyboard corresponding to the letters on the screen. \n\n"
 					+ "For maximum points "
 					+ "press the letter when the outside circle's diameter is the same as \n"
-					+ " the inside's.");
+					+ "the inside's. The closer you are, the more points you get!\n ");
 			// howtoPlay.add();
 			howtoPlay.setFont("Arial-18");
 			program.add(howtoPlay);
