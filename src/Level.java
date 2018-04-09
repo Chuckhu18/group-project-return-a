@@ -27,7 +27,7 @@ public class Level extends GraphicsPane implements KeyListener {
 	
 	// Used to load song from file to play
 	String folder = "sounds/";
-	String filename = "HotelCali.mp3";
+	String filename = "gucciGang.mp3";
 	//Timer timer = new Timer(10, this); // Timer now executed from MainApplication
 	
 	// UI elements

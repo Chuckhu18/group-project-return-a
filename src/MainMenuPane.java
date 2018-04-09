@@ -9,25 +9,25 @@ public class MainMenuPane extends GraphicsPane {
 	private MainApplication program; // a way to put things on the screen
 	Player player = new Player();
 	GButton play;
-	GLabel mainMenu;
+	GImage mainMenu;
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
 	GButton howTo;
 	GParagraph howtoPlay = new GParagraph("", 20, 20);
 	GButton howToBack;
 
-	// TODO: implement the settingsmenu object
+	// TODO: implement the settings menu object
 	// private SettingsMenu settings = new SettingsMenu(program);
 	public MainMenuPane(MainApplication app) { // always call this app
 		super();
 		program = app;
-		play = new GButton("GO", 500, 300, 50, 30, Color.CYAN); // this is going to create another button and then
+		play = new GButton("GO", 600, 300, 50, 30, Color.CYAN); // this is going to create another button and then
 															// filling it in with information
-		howTo = new GButton("HOW TO PLAY", 20, 300, 100, 30); // instiating, an object is an instance of a clas, initialize the
+		howTo = new GButton("HOW TO PLAY", 120, 300, 100, 30,Color.GRAY); // instiating, an object is an instance of a clas, initialize the
 														// object in the
-		howToBack = new GButton("BACK", 100,100,50,30);
-		mainMenu = new GLabel("MAIN MENU", 165,100);
-		mainMenu.setFont("Arial-50");
+		howToBack = new GButton("BACK",20,170,50,30);
+		
+		mainMenu = new GImage("theAGame.png", 150,100);
 	}
 
 	@Override
@@ -62,11 +62,14 @@ public class MainMenuPane extends GraphicsPane {
 		}
 		if (obj == howTo) {
 			hideContents();
-			howtoPlay.setText("Press GO to play: \n"
-					+ "You must click on the program at the beginning to play (we are working on it)\n\n"
-					+ "Press the corresponding key on the keeyboard to the ones on the screen. For maximum points \n"
-					+ "press the letter when the outside circle's diameter is the same as the inside's");
+			howtoPlay.setText("Press GO to play. \n\n"
+					+ "*** You must click on the program at the beginning to play (we are working on it) ***\n\n"
+					+ "Press the corresponding key on the keyboard to the ones on the screen. \n"
+					+ "For maximum points "
+					+ "press the letter when the outside circle's diameter is the same as \n"
+					+ " the inside's.");
 			// howtoPlay.add();
+			howtoPlay.setFont("Arial-18");
 			program.add(howtoPlay);
 			program.add(howToBack);
 		}
