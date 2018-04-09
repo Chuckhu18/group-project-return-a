@@ -12,7 +12,8 @@ public class Level extends GraphicsPane implements KeyListener {
 	// ***Instance variables***
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
-	int score, health = 100, numTicks = 0;
+	public static final int MAX_HEALTH = 10000; // Never set to less than 2000 or casual HP loss breaks
+	int score, health = MAX_HEALTH, numTicks = 0;
 	MainApplication program;
 	Random rand;
 	Song song;
@@ -22,7 +23,7 @@ public class Level extends GraphicsPane implements KeyListener {
 	AudioPlayer player;
 	boolean isPaused;
 	private boolean hasWon = false; // is set to true when the player has won the game
-	private int countdown = 0; // Used to delay certain actions from happening
+	private int vicCount = 0; // Used to stop the game from immediately ending after last circle
 	
 	// Used to load song from file to play
 	String folder = "sounds/";
@@ -103,12 +104,12 @@ public class Level extends GraphicsPane implements KeyListener {
 		}
 		else { // No more characters left to add
 			if (circles.size() <= 0) { // If there are no more circles on screen
-				if(countdown > 1) { // If the timer is counting down
-					countdown--;
-				} else if (countdown == 1) { // If the countdown has counted down all the way
+				if(vicCount > 1) { // If the timer is counting down
+					vicCount--;
+				} else if (vicCount == 1) { // If the countdown has counted down all the way
 					hasWon = true; // Declare that the user has won
 				} else { // If countdown has not been started
-					countdown = 2; // game will wait 2 spawn ticks before ending
+					vicCount = 2; // game will wait 2 spawn ticks before ending
 				}
 			}
 		}
@@ -149,9 +150,6 @@ public class Level extends GraphicsPane implements KeyListener {
 		scoreLabel.setFont(new Font("Arial",0,20));
 		
 		// Initializes bottom-of-screen health bar
-		// Old values for small bar in corner
-//		emptyHPBar = new GRect(WINDOW_WIDTH-(health)-10,10,(health),10);
-//		healthBar = new GRect(WINDOW_WIDTH-(health)-10,10,(health),10);
 		emptyHPBar = new GRect(10,backRect.getY()+backRect.getHeight(),backRect.getWidth(),10);
 		healthBar = new GRect(emptyHPBar.getX(),emptyHPBar.getY(),emptyHPBar.getWidth(),emptyHPBar.getHeight());
 		emptyHPBar.setFilled(true);
@@ -187,7 +185,6 @@ public class Level extends GraphicsPane implements KeyListener {
 	 */
 	public void action() {
 		numTicks++;
-		//System.out.println(numTicks);
 
 		// Create a new circle every interval of time specified by the song's Tempo
 		if (numTicks % song.getTempo() == 0) {
@@ -206,6 +203,23 @@ public class Level extends GraphicsPane implements KeyListener {
 				Circle circle = circles.get(i);
 				circle.shrink();
 
+				// Change the color of the circle when you are in "AMAZING" and "PERFECT" range
+				/*
+				 * TODO:
+				 * Change this to have the circle dynamically change colors as it shrinks
+				 */
+				if(circle.getRemoveCounter() == 0) { // If the circle has not been removed from the screen
+					Color cirColor = circle.getLabel().getColor(); // Default to no change
+					if (circle.getOutSize() <= song.getCircleSize()/100) { // PERFECT
+						cirColor = Color.WHITE;
+					} else if(circle.getOutSize() <= song.getCircleSize()/10) { // AMAZING
+						cirColor = Color.CYAN;
+					}
+					circle.getOuterCircle().setColor(cirColor);
+					circle.getInnerCircle().setColor(cirColor);
+					circle.getLabel().setColor(cirColor);
+				}
+				
 				// If circles have shrunk to be the same size in and out
 				if (circle.getOutSize() < 0) {
 					if(circle.getRemoveCounter() == 0) {
@@ -213,7 +227,7 @@ public class Level extends GraphicsPane implements KeyListener {
 						circle.getLabel().setLabel("MISS");
 						circle.getLabel().setColor(Color.BLACK);
 						circle.removeCircles();
-						health-=10;
+						health-=(MAX_HEALTH/10);
 					}
 					else {
 						circle.setRemoveCounter(circle.getRemoveCounter() + 1);
@@ -227,20 +241,24 @@ public class Level extends GraphicsPane implements KeyListener {
 			}
 		}
 		
+		if(numTicks % 3 == 0 && vicCount == 0) // Every 2 ticks of the timer take some health off
+			health-=MAX_HEALTH/2000;
+		
 		scoreLabel.setLabel("Your Score:" + Integer.toString(score)); // updates score label every tick
 		scoreLabel.sendToFront(); // makes sure this is always on top of circles
 		
-		// Updates health bar every tick
-		if (health > 100) health = 100; // Stop HP from growing above 100
-		healthBar.setSize(emptyHPBar.getWidth() * (health/100.0),emptyHPBar.getHeight());
+		if (health > MAX_HEALTH) health = MAX_HEALTH; // Stop HP from growing above 100
+		
+		// Updates health bar display every tick
+		healthBar.setSize(emptyHPBar.getWidth() * (health/(double) MAX_HEALTH),emptyHPBar.getHeight());
 		healthBar.setLocation(emptyHPBar.getX() + (emptyHPBar.getWidth() - healthBar.getWidth()),emptyHPBar.getY());
 		
 		// Changes HP bar color based on health
-		if (health > 75)
+		if (health > MAX_HEALTH / 75)
 			healthBar.setFillColor(Color.GREEN);
-		else if (health > 50)
+		else if (health > MAX_HEALTH / 50)
 			healthBar.setFillColor(Color.ORANGE);
-		else if (health > 25)
+		else if (health > MAX_HEALTH / 25)
 			healthBar.setFillColor(Color.YELLOW);
 		else
 			healthBar.setFillColor(Color.RED);
@@ -280,7 +298,7 @@ public class Level extends GraphicsPane implements KeyListener {
 			if(e.getKeyChar() == circle.getLetter() && circle.getRemoveCounter() == 0) { 
 				// Add the text displaying that you pressed it right
 				// Pick which text based on how small the outer circle was
-				// TODO: update score on press based on difference too
+
 				double size = circle.getOutSize(); // store outer size to a variable for efficiency
 				double init = song.getCircleSize(); // store initial size for math
 				
@@ -289,30 +307,32 @@ public class Level extends GraphicsPane implements KeyListener {
 					circle.getLabel().setLabel("PERFECT!");
 					circle.getLabel().setColor(Color.WHITE);
 					score+=100;
-					health+=20;
+					health+=MAX_HEALTH/5;
 				}
 				else if (size <= (init / 10)) { // If you press between 9/10 and 99/100
 					circle.getLabel().setLabel("AMAZING!");
 					circle.getLabel().setColor(Color.CYAN);
 					score+=50;
-					health+=10;
+					health+=MAX_HEALTH/10;
 				}
 				else if (size <= (init / 5)) {  // If you press between 4/5 and 9/10
 					circle.getLabel().setLabel("GREAT!");
 					circle.getLabel().setColor(Color.GREEN);
 					score+=25;
-					health+=5;
+					health+=MAX_HEALTH/15;
 				}
 				else if (size <= (init / 2)) { // If you press between 1/2 and 4/5
 					circle.getLabel().setLabel("GOOD!");
 					circle.getLabel().setColor(Color.YELLOW);
-					score+=1;
+					score+=5;
+					health+=MAX_HEALTH/75;
 					
 				}
 				else { // If you press in the first half of the timer
 					circle.getLabel().setLabel("OK!");
 					circle.getLabel().setColor(Color.ORANGE);
-					score+=5;
+					score+=1;
+					health+=MAX_HEALTH/250;
 				}
 				
 				// hide the GOvals after updating the label
@@ -321,13 +341,12 @@ public class Level extends GraphicsPane implements KeyListener {
 				found = true; // Remember that we found the circle
 			}
 		}
-		System.out.println(found);
 		
 		if(found) { // if match was found
 			System.out.println("Circle "+e.getKeyChar()+" removed!"); // Print to console no match was found
 		}else { // if not found
 			System.out.println("No match for "+e.getKeyChar()+"!"); // Print to console no match was found
-			health-=5;
+			if(vicCount==0) health-=MAX_HEALTH/20; // Take health off if the game is still running
 		}
 	}// keyPressed
 
