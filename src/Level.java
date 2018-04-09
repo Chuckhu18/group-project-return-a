@@ -22,7 +22,7 @@ public class Level extends GraphicsPane implements KeyListener {
 	AudioPlayer player;
 	boolean isPaused;
 	String folder = "sounds/";
-	String filename = "RainsItPours.mp3";
+	String filename = "HotelCali.mp3";
 	//Timer timer = new Timer(10, this); // Timer ticks 20 times per second
 	
 	private GLabel scoreLabel; // holds the score for now

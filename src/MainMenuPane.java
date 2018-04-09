@@ -21,7 +21,7 @@ public class MainMenuPane extends GraphicsPane {
 		program = app;
 		play = new GButton("GO", 500, 300, 50, 30, Color.CYAN); // this is going to create another button and then
 																// filling it in with information
-		howTo = new GButton("Play", 300, 200, 50, 30); // instiating, an object is an instance of a clas, initialize the
+		howTo = new GButton("HOW TO PLAY", 300, 200, 50, 30); // instiating, an object is an instance of a clas, initialize the
 														// object in the
 	}
 
@@ -31,6 +31,7 @@ public class MainMenuPane extends GraphicsPane {
 		// TODO Auto-generated method stub
 		// 800 x 480
 		program.add(play);
+		program.add(howTo);
 		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // the size of the applet is:
 	}
 
@@ -38,6 +39,7 @@ public class MainMenuPane extends GraphicsPane {
 	public void hideContents() {
 		// TODO Auto-generated method stub
 		program.remove(play);
+		program.remove(howTo);
 	}
 
 	@Override
