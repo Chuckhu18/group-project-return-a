@@ -7,11 +7,13 @@ import javax.swing.Timer;
 import acm.graphics.*;
 import acm.program.*;
 
-public class Level extends GraphicsProgram implements KeyListener {
+public class Level extends GraphicsPane implements KeyListener {
+	
 	// ***Instance variables***
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
 	int score, health = 100, numTicks = 0;
+	MainApplication program;
 	Random rand;
 	Song song;
 	Circle circle;
@@ -21,7 +23,7 @@ public class Level extends GraphicsProgram implements KeyListener {
 	boolean isPaused;
 	String folder = "sounds/";
 	String filename = "RainsItPours.mp3";
-	Timer timer = new Timer(10, this); // Timer ticks 20 times per second
+	//Timer timer = new Timer(10, this); // Timer ticks 20 times per second
 	
 	private GLabel scoreLabel; // holds the score for now
 	private GRect healthBar; // displays HP percentage
@@ -39,6 +41,11 @@ public class Level extends GraphicsProgram implements KeyListener {
 	private double rangeMin = 0.9;
 	private double rangeMax = 0.1;
 	
+	public Level(MainApplication app) {
+		super();
+		program = app;
+		//run();
+	}
 
 	public void createCircle() {
 		// Generate random coordinate to put the circle at, don't care where yet
@@ -95,9 +102,9 @@ public class Level extends GraphicsProgram implements KeyListener {
 
 		// Add shapes to screen from the Circle, then add the Circle to the ArrayList of
 		// Circles
-		add(toAdd.getInnerCircle());
-		add(toAdd.getOuterCircle());
-		add(toAdd.getLabel());
+		program.add(toAdd.getInnerCircle());
+		program.add(toAdd.getOuterCircle());
+		program.add(toAdd.getLabel());
 		circles.add(toAdd);
 
 	}
@@ -121,11 +128,11 @@ public class Level extends GraphicsProgram implements KeyListener {
 	}
 
 	public void run() {
-		setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
-		addKeyListeners();
-		setFocusable(true);
-		requestFocus();
-		addMouseListeners(this);
+		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
+		program.addKeyListeners();
+		program.setFocusable(true);
+		program.requestFocus();
+		program.addMouseListeners(program);
 		
 		scoreLabel = new GLabel("Your Score:" + Integer.toString(score),15,30);
 		scoreLabel.setFont(new Font("Arial",0,20));
@@ -141,10 +148,10 @@ public class Level extends GraphicsProgram implements KeyListener {
 		testScreenRect.setFillColor(Color.GRAY);
 		testScreenRect.setFilled(true);
 		
-		add(testScreenRect);
-		add(scoreLabel);
-		add(healthBar);
-		add(emptyHPBar);
+		program.add(testScreenRect);
+		program.add(scoreLabel);
+		program.add(healthBar);
+		program.add(emptyHPBar);
 		
 		rand = new Random();
 		// I picked random numbers that look nice for the timer values, will have to test more
@@ -160,7 +167,7 @@ public class Level extends GraphicsProgram implements KeyListener {
 		// start audio and timer
 		player = AudioPlayer.getInstance();
 		startAudioFile();
-		timer.start();
+		program.time.start();
 	}
 
 	// ***member methods***
@@ -168,8 +175,9 @@ public class Level extends GraphicsProgram implements KeyListener {
 	/**
 	 * Timer function, executed every time the timer ticks
 	 */
-	public void actionPerformed(ActionEvent e) {
+	public void action() {
 		numTicks++;
+		System.out.println(numTicks);
 
 		// Create a new circle every interval of time specified by the song's Tempo
 		if (numTicks % song.getTempo() == 0) {
@@ -332,5 +340,17 @@ public class Level extends GraphicsProgram implements KeyListener {
 	public int getScore() {
 		return score;
 	}// getScore
+
+	@Override
+	public void showContents() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void hideContents() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }// Level
