@@ -30,7 +30,27 @@ public class MainApplication extends GraphicsApplication {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		//Execute the timer functions from level
 		level.action();
+		
+		/*
+		 * These check to see if the player has won or lost
+		 * TODO: 
+		 * gracefully close Level and send the important
+		 * data to the score display screen instead of
+		 * instantly closing the game
+		 */
+		
+		// Player has run out of health before end of song
+		if(level.getHealth() <= 0) {
+			System.exit(0);
+		}
+		
+		// Player has cleared all of the defined circles
+		if(level.getHasWon()) {
+			System.exit(0);
+		}	
+		
 	}
 	public void switchToMenu() {
 		//playRandomSound();

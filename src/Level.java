@@ -21,15 +21,21 @@ public class Level extends GraphicsPane implements KeyListener {
 	ArrayList<Character> characters; // Stores the characters to feed into the circles
 	AudioPlayer player;
 	boolean isPaused;
+	private boolean hasWon = false; // is set to true when the player has won the game
+	private int countdown = 0; // Used to delay certain actions from happening
+	
+	// Used to load song from file to play
 	String folder = "sounds/";
 	String filename = "HotelCali.mp3";
-	//Timer timer = new Timer(10, this); // Timer ticks 20 times per second
+	//Timer timer = new Timer(10, this); // Timer now executed from MainApplication
 	
+	// UI elements
 	private GLabel scoreLabel; // holds the score for now
 	private GRect healthBar; // displays HP percentage
 	private GRect emptyHPBar; // Empty HP Bar to show full
+	private GRect backRect; // Grey box the circles spawn inside of
 	
-	private GRect testScreenRect;
+	// Used for circle generation to prevent overlapping
 	private double lastXloc = 0;
 	private double lastYloc = 0;
 	private double lastXloc2 = 0;
@@ -37,6 +43,7 @@ public class Level extends GraphicsPane implements KeyListener {
 	//private double lastXloc3 = 0;
 	//private double lastYloc3 = 0;
 	
+	// Used to generate circles inside of bounds
 	private int temp = 1;
 	private double rangeMin = 0.9;
 	private double rangeMax = 0.1;
@@ -48,22 +55,14 @@ public class Level extends GraphicsPane implements KeyListener {
 	}
 
 	public void createCircle() {
-		// Generate random coordinate to put the circle at, don't care where yet
-		// TODO: be smarter about where it spawns
+		// Generate random coordinate to put the circle at within the bounds of the screen
 		double xloc = WINDOW_WIDTH * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 		double yloc = WINDOW_HEIGHT *(rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 		
 		// keep circle created in side the screen by 100*60 pixel
 		// make sure circles are not created outside the screen
 		// make sure circles are not overlapped
-		
-		/*
-		 *  TODO: This function keeps giving infinite loops on execution,
-		 *  I fixed it so that it just accepts whatever number is given to it after 10 failed attempts
-		 *  There is probably a more elegant solution but this works for now
-		 *  Look into more about how the rand.nextDouble() function works for a solution
-		 *  -- Race
-		 */
+
 		
 		int tries = 0;
 		while(Math.abs(xloc - lastXloc) < 100 || Math.abs(xloc - lastXloc2) < 100) {
@@ -94,19 +93,25 @@ public class Level extends GraphicsPane implements KeyListener {
 		temp = temp*-1;
 		
 		
-		Circle toAdd;
-		if (characters.size() > 0)
-			toAdd = new Circle(characters.remove(0), song.getCircleSize(), xloc, yloc, song.getShrinkSpeed(), true);
-		else // Make dummy circle object for testing
-			toAdd = new Circle('7', song.getCircleSize(), xloc, yloc, song.getShrinkSpeed(), false);
-
-		// Add shapes to screen from the Circle, then add the Circle to the ArrayList of
-		// Circles
-		program.add(toAdd.getInnerCircle());
-		program.add(toAdd.getOuterCircle());
-		program.add(toAdd.getLabel());
-		circles.add(toAdd);
-
+		if (characters.size() > 0) {
+			Circle toAdd = new Circle(characters.remove(0), song.getCircleSize(), xloc, yloc, song.getShrinkSpeed(), true);
+			// Add shapes to screen from the Circle, then add the Circle to the ArrayList
+			program.add(toAdd.getInnerCircle());
+			program.add(toAdd.getOuterCircle());
+			program.add(toAdd.getLabel());
+			circles.add(toAdd);
+		}
+		else { // No more characters left to add
+			if (circles.size() <= 0) { // If there are no more circles on screen
+				if(countdown > 1) { // If the timer is counting down
+					countdown--;
+				} else if (countdown == 1) { // If the countdown has counted down all the way
+					hasWon = true; // Declare that the user has won
+				} else { // If countdown has not been started
+					countdown = 2; // game will wait 2 spawn ticks before ending
+				}
+			}
+		}
 	}
 
 	/**
@@ -134,29 +139,35 @@ public class Level extends GraphicsPane implements KeyListener {
 		program.requestFocus();
 		//program.addMouseListeners(program); // Taken out to prevent double execution of events
 		
+		// Initializes background rectangle
+		backRect = new GRect(10, 10, WINDOW_WIDTH-20, WINDOW_HEIGHT-20);
+		backRect.setFillColor(Color.GRAY);
+		backRect.setFilled(true);
+		
+		// Initializes score label
 		scoreLabel = new GLabel("Your Score:" + Integer.toString(score),15,30);
 		scoreLabel.setFont(new Font("Arial",0,20));
-		healthBar = new GRect(WINDOW_WIDTH-(health)-10,10,(health),25);
+		
+		// Initializes bottom-of-screen health bar
+		// Old values for small bar in corner
+//		emptyHPBar = new GRect(WINDOW_WIDTH-(health)-10,10,(health),10);
+//		healthBar = new GRect(WINDOW_WIDTH-(health)-10,10,(health),10);
+		emptyHPBar = new GRect(10,backRect.getY()+backRect.getHeight(),backRect.getWidth(),10);
+		healthBar = new GRect(emptyHPBar.getX(),emptyHPBar.getY(),emptyHPBar.getWidth(),emptyHPBar.getHeight());
+		emptyHPBar.setFilled(true);
 		healthBar.setFilled(true);
 		healthBar.setFillColor(Color.GREEN);
-		emptyHPBar = new GRect(WINDOW_WIDTH-(health)-10,10,(health),25);
 		
-		
-		testScreenRect = new GRect(10, 10, 800-20, 480-20);
-		
-		// Make the background grey to make colors stand out more
-		testScreenRect.setFillColor(Color.GRAY);
-		testScreenRect.setFilled(true);
-		
-		program.add(testScreenRect);
+		// Adds everything to the screen
+		program.add(backRect);
 		program.add(scoreLabel);
-		program.add(healthBar);
 		program.add(emptyHPBar);
+		program.add(healthBar);
 		
 		rand = new Random();
 		// I picked random numbers that look nice for the timer values, will have to test more
 		// using all characters in alphabetical order for easy testing
-		song = new Song(filename, 15.0, 0.075, 100, "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"); 
+		song = new Song(filename, 15.0, 0.075, 100, "abcdefghijklmnopqrstuvwxyza"); 
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
 
@@ -221,8 +232,8 @@ public class Level extends GraphicsPane implements KeyListener {
 		
 		// Updates health bar every tick
 		if (health > 100) health = 100; // Stop HP from growing above 100
-		healthBar.setSize((health),25);
-		healthBar.setLocation(WINDOW_WIDTH-(health)-10,10);
+		healthBar.setSize(emptyHPBar.getWidth() * (health/100.0),emptyHPBar.getHeight());
+		healthBar.setLocation(emptyHPBar.getX() + (emptyHPBar.getWidth() - healthBar.getWidth()),emptyHPBar.getY());
 		
 		// Changes HP bar color based on health
 		if (health > 75)
@@ -329,6 +340,14 @@ public class Level extends GraphicsPane implements KeyListener {
 	public int getScore() {
 		return score;
 	}// getScore
+	
+	public int getHealth() {
+		return health;
+	}// getHealth
+	
+	public boolean getHasWon() {
+		return hasWon;
+	}
 
 	@Override
 	public void showContents() {
