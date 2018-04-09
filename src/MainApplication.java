@@ -43,11 +43,17 @@ public class MainApplication extends GraphicsApplication {
 		
 		// Player has run out of health before end of song
 		if(level.getHealth() <= 0) {
+			System.out.println("\nYou lost!\nFinal score   : " + level.getScore());
+			System.out.println("\n~~Score References~~\nPerfect score : 2700\nAmazing score : 1350");
+			System.out.println("Great score   : 675\nGood score    : 270\nBad score     : 27");
 			System.exit(0);
 		}
 		
 		// Player has cleared all of the defined circles
 		if(level.getHasWon()) {
+			System.out.println("\nYou won! Final score : " + level.getScore());
+			System.out.println("\n~~Score References~~\nPerfect score : 2700\nAmazing score : 1350");
+			System.out.println("Great score   : 675\nGood score    : 270\nBad score     : 27");
 			System.exit(0);
 		}	
 		
