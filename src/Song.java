@@ -14,6 +14,7 @@ public class Song {
 	private String songName;
 	private double circleSize;
 	private double shrinkSpeed;
+
 	private int tempo;
 	private String circleList;
 	private String[] stringArray;
@@ -31,6 +32,9 @@ public class Song {
 	 * @param cL
 	 *            String of characters
 	 */
+	public void setTempo(int tempo) {
+		this.tempo = tempo;
+	}
 	public Song(String s, double cS, double sS, int temp, String cL) {
 		songName = s;
 		circleSize = cS;

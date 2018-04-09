@@ -165,7 +165,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		rand = new Random();
 		// I picked random numbers that look nice for the timer values, will have to test more
 		// using all characters in alphabetical order for easy testing
-		song = new Song(filename, 15.0, 0.075, 100, "abcdefghijklmnopqrstuvwxyza"); 
+		song = new Song(filename, 15.0, 0.075, 100, "abcdefghijklmnopqrstuvwxyzabheinalpib"); 
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
 
@@ -185,7 +185,10 @@ public class Level extends GraphicsPane implements KeyListener {
 	 */
 	public void action() {
 		numTicks++;
-
+		
+		if(numTicks == 1550) {
+			song.setTempo(50);
+		}
 		// Create a new circle every interval of time specified by the song's Tempo
 		if (numTicks % song.getTempo() == 0) {
 			createCircle(); // Make a new circle
