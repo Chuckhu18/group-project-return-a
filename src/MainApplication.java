@@ -66,6 +66,7 @@ public class MainApplication extends GraphicsApplication {
 		//playRandomSound();
 		count++;
 		switchToScreen(menu); //should be main changing for tests
+		//switchToScreen(end);//test for EndOfGamePane class
 	}
 	
 	public void switchToSettings() {

@@ -26,10 +26,19 @@ public class Player extends GraphicsProgram{
 	private static ArrayList<GLabel> labels;
 	private static GLabel label;
 	public static final String FILENAME = "player.txt";
+	
+	public Player() {
+		name = "Chuck";
+		//creating a score list
+		scores = new ArrayList<String>();
+		scores.add("Chuck");
+		scores.add("1000");
+		scores.add("9999");
+	}
 
 	// private static BufferedWriter bw = null;
 	// private static FileWriter fw = null;
-
+/*
 	public void init() {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	}
@@ -60,28 +69,28 @@ public class Player extends GraphicsProgram{
 		add(rect);
 		
 	}
+	*/
 	
-	
-//	public static void main(String[] args) {
-//
-//		//creating a score list
-//		scores = new ArrayList<String>();
-//		scores.add("chuck");
-//		scores.add("1000");
-//		scores.add("123");
-//		
-//		//Save created array list to file "player.txt" with ; for each element.
-//		saveScoreToFile();
-//		//Read all elements from the player.txt file.
-//		ReadScoreFromFile();
-//	}
+	public static void main(String[] args) {
+		name = "Chuck";
+		//creating a score list
+		scores = new ArrayList<String>();
+		scores.add("Chuck");
+		scores.add("1000");
+		scores.add("9999");
+		
+		//Save created array list to file "player.txt" with ; for each element.
+		saveScoresToFile();
+		//Read all elements from the player.txt file.
+		ReadScoreFromFile();
+	}
 
 	public String getName() {
 		return name;
 	}
 
-	public ArrayList getScore() {
-		return scores;
+	public ArrayList<String> getScore() {
+		return this.scores;
 	}
 
 	public static void saveScoresToFile() {
@@ -93,7 +102,7 @@ public class Player extends GraphicsProgram{
 			fw = new FileWriter(FILENAME);
 			bw = new BufferedWriter(fw);
 			
-			bw.write( name +";");
+			//bw.write( name +";");
 			for (String str : scores) {
 				bw.write(str+",");
 				System.out.println("writing: " + str);
@@ -115,7 +124,7 @@ public class Player extends GraphicsProgram{
 		}
 	}
 
-	public static void ReadScoreFromFile() {
+/*	public static void ReadScoreFromFile() {
 		try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
 
 			String sCurrentLine;
@@ -131,9 +140,32 @@ public class Player extends GraphicsProgram{
 		}
 
 	}
+	*/
+	public static String ReadScoreFromFile() {
+		String sCurrentLine = "";
+		try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
+			System.out.println("Printing what's in the player.txt:");
+			
+			while ((sCurrentLine = br.readLine()) != null) {
+				System.out.println(sCurrentLine);
+				sCurrentLine += sCurrentLine;
+			}
 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return sCurrentLine;
+	}
+	
+/*
 	public void addScore(Song song, int scoreAdd) {
 		System.out.println("The song is " + song.getSongName());
+	}
+	*/
+	
+	public void addScore(String scoreAdd) {
+		scores.add(scoreAdd);
 	}
 
 }
