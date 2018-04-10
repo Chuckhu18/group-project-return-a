@@ -12,6 +12,7 @@ public class MainApplication extends GraphicsApplication {
 	private MainMenuPane menu;
 	private EndOfGamePane end;
 	private Level level;
+	private SettingsPane settings;
 	private int count;
 	
 	
@@ -23,6 +24,7 @@ public class MainApplication extends GraphicsApplication {
 	}
 
 	public void run() {
+		settings = new SettingsPane(this);
 		time = new Timer(10, this);
 		level = new Level(this);
 		menu = new MainMenuPane(this);
@@ -63,7 +65,11 @@ public class MainApplication extends GraphicsApplication {
 	public void switchToMenu() {
 		//playRandomSound();
 		count++;
-		switchToScreen(end);
+		switchToScreen(menu); //should be main changing for tests
+	}
+	
+	public void switchToSettings() {
+		switchToScreen(settings);
 	}
 
 	public void switchToSome() {

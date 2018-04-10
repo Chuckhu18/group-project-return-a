@@ -19,9 +19,10 @@ public class EndOfGamePane extends GraphicsPane{
 	
 	public EndOfGamePane(MainApplication app) {
 		program = app;
-		playAgain = new GButton("PLAY AGAIN", 200, 400, 80, 30, Color.CYAN);
-		mainMenu = new GButton("MAIN MENU", 500, 400, 80, 30, Color.CYAN);
-		socreRect = new GRect (200,100,400,300);
+		playAgain = new GButton("PLAY AGAIN", 190, 410, 80, 30, Color.GRAY);
+		
+		mainMenu = new GButton("MAIN MENU", 510, 410, 80, 30, Color.CYAN);
+		socreRect = new GRect (200,100,380,300);
 		
 		
 	}

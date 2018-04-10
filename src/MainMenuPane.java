@@ -8,7 +8,7 @@ import acm.program.*;
 public class MainMenuPane extends GraphicsPane {
 	private MainApplication program; // a way to put things on the screen
 	Player player = new Player();
-	GButton play;
+	GButton toSettings;
 	GImage mainMenu;
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
@@ -21,7 +21,7 @@ public class MainMenuPane extends GraphicsPane {
 	public MainMenuPane(MainApplication app) { // always call this app
 		super();
 		program = app;
-		play = new GButton("GO", 600, 300, 50, 30, Color.CYAN); // this is going to create another button and then
+		toSettings = new GButton("GO", 600, 300, 50, 30, Color.CYAN); // this is going to create another button and then
 															// filling it in with information
 		howTo = new GButton("HOW TO PLAY", 120, 300, 100, 30,Color.GRAY); // instiating, an object is an instance of a clas, initialize the
 														// object in the
@@ -36,7 +36,7 @@ public class MainMenuPane extends GraphicsPane {
 		// TODO Auto-generated method stub
 		// 800 x 480
 		program.add(mainMenu);
-		program.add(play);
+		program.add(toSettings);
 		program.add(howTo);
 		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // the size of the applet is:
 	}
@@ -44,7 +44,7 @@ public class MainMenuPane extends GraphicsPane {
 	@Override
 	public void hideContents() {
 		// TODO Auto-generated method stub
-		program.remove(play);
+		program.remove(toSettings);
 		program.remove(howTo);
 		program.remove(howtoPlay);
 		program.remove(howToBack);
@@ -54,9 +54,9 @@ public class MainMenuPane extends GraphicsPane {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		GObject obj = program.getElementAt(e.getX(), e.getY());
-		if (obj == play) {
+		if (obj == toSettings) {
 			hideContents();
-			program.switchToLevel();
+			program.switchToSettings();
 			// TODO: uncomment this line below
 			// program.switchToMenu(SettingsMenu);
 		}
