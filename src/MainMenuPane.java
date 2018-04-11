@@ -8,26 +8,26 @@ import acm.program.*;
 public class MainMenuPane extends GraphicsPane {
 	private MainApplication program; // a way to put things on the screen
 	Player player = new Player();
-	GButton toSettings;
+	GImage toSettings;
 	GImage mainMenu;
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
-	GButton howTo;
+	GImage howTo;
 	GParagraph howtoPlay = new GParagraph("", 20, 20);
-	GButton howToBack;
+	GImage howToBack;
 
 	// TODO: implement the settings menu object
 	// private SettingsMenu settings = new SettingsMenu(program);
 	public MainMenuPane(MainApplication app) { // always call this app
 		super();
 		program = app;
-		toSettings = new GButton("GO", 600, 300, 50, 30, Color.CYAN); // this is going to create another button and then
-															// filling it in with information
-		howTo = new GButton("HOW TO PLAY", 120, 300, 100, 30,Color.GRAY); // instiating, an object is an instance of a clas, initialize the
+		toSettings = new GImage("playbutton.png", 600, 300); // this is going to create another button and then
+		toSettings.setSize(toSettings.getWidth()/3, toSettings.getHeight()/3);													// filling it in with information
+		howTo = new GImage("howTobutton.png", 120, 300); // instiating, an object is an instance of a clas, initialize the
 														// object in the
-		howToBack = new GButton("BACK",20,170,50,30);
+		howToBack = new GImage("leftArrowbutton copy.png",20,170);
 		
-		mainMenu = new GImage("theAGame.png", 150,100);
+		mainMenu = new GImage("LOGO.png", 150,100);
 	}
 
 	@Override
