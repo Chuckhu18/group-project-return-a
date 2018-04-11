@@ -17,12 +17,13 @@ private GButton medium;
 private GButton hard;
 private GButton hotelCalifornia;
 private GButton gucciGang;
-private GLabel back;
-private GLabel next;
+//private GLabel back;
+//private GLabel next;
 private ArrayList<GButton> difficultyChoices = new ArrayList<GButton>();
 private ArrayList<GButton> songChoices = new ArrayList<GButton>();
 private String songChoice;
 private GLabel settingsHeading;
+private GButton back;
 private int difficultyChoice = 0;
 
 	public SettingsPane(MainApplication app) {
@@ -42,7 +43,7 @@ private int difficultyChoice = 0;
 		prevDiff = new GButton("<", 170, 208, 25, 25, Color.GRAY);
 		
 		play = new GButton("PLAY", 350, 350, 50, 25, Color.CYAN);
-		
+		back = new GButton("BACK", 350, 400, 50, 25, Color.GRAY);
 		song = new GLabel("Song: ",67,195);
 		song.setFont("Arial-24");
 		hotelCalifornia = new GButton ("Hotel California", 200, 180, 100,25);
@@ -70,6 +71,7 @@ private int difficultyChoice = 0;
 		program.add(medium);
 		program.add(hotelCalifornia);
 		program.add(play);
+		program.add(back);
 		
 	}
 
@@ -79,12 +81,14 @@ private int difficultyChoice = 0;
 		program.remove(song);
 		program.remove(difficulty);
 		program.remove(settingsHeading);
+		program.remove(hotelCalifornia);
 		program.remove(easy);
 		program.remove(medium);
 		program.remove(hard);
 		program.remove(nextDiff);
 		program.remove(prevDiff);
 		program.remove(play);
+		program.remove(back);
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -109,6 +113,10 @@ private int difficultyChoice = 0;
 			else {
 				difficultyChoice--;
 			}
+		}
+		if (obj == back) {
+			hideContents();
+			program.switchToMenu();
 		}
 		difficultyChoices.get(difficultyChoice).sendToFront();
 	}
