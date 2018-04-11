@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.MouseEvent;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -94,7 +95,18 @@ public class EndOfGamePane extends GraphicsPane{
 		program.remove(mainMenu);
 		program.remove(scoreRect);
 		program.remove(highScores);
-		
+		program.remove(background);
+//		program.remove(scoreRect);
+//		program.remove(scoresLabels);
 	}
-
+//	@Override
+//	public void mousePressed(MouseEvent e) {
+//		GObject obj = program.getElementAt(e.getX(), e.getY());
+//	if (obj == mainMenu) {
+//		program.switchToMenu();
+//	}
+//	if (obj == playAgain) {
+//		program.switchToLevel();
+//	}
+//	}
 }

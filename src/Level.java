@@ -165,7 +165,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		rand = new Random();
 		// I picked random numbers that look nice for the timer values, will have to test more
 		// using all characters in alphabetical order for easy testing
-		song = new Song(filename, 15.0, 0.075, 100, "abcdefghijklmnopqrstuvwxyza"); 
+		song = new Song(filename, 15.0, 0.075, 100, "abc");//defghijklmnopqrstuvwxyza"); 
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
 
@@ -193,8 +193,6 @@ public class Level extends GraphicsPane implements KeyListener {
 
 		// If there are circles on the screen
 		if (circles.size() >= 1) {
-			int count = 0;
-
 			// Have to use manual definition of for loop to avoid
 			// ConcurrentModificationException
 			for (int i = 0; i < circles.size(); i++) {
@@ -377,7 +375,10 @@ public class Level extends GraphicsPane implements KeyListener {
 	@Override
 	public void hideContents() {
 		// TODO Auto-generated method stub
-		
+		program.remove(backRect);
+		program.remove(emptyHPBar);
+		program.remove(healthBar);
+		program.remove(scoreLabel);
 	}
 
 }// Level
