@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 import acm.graphics.*;
 
 public class Circle {
-	DecimalFormat df = new DecimalFormat("#.###"); // Used so the toString function prints nicer numbers for location
+	private DecimalFormat df = new DecimalFormat("#.###"); // Used so the toString function prints nicer numbers for location
 	private int removeCounter = 0; // Initialize removeCounter to 0
 	private char letter;
 	private static double inSize = 30.0; // Picking random number for testing, TODO: replace with real values
@@ -163,5 +163,29 @@ public class Circle {
 
 	public void setRemoveCounter(int removeCounter) {
 		this.removeCounter = removeCounter;
+	}
+	
+	/**
+	 * Updates color of circle as it shrinks
+	 * @param origSize Original size of circles
+	 */
+	public void updateColor(double origSize) {
+		Color cirColor = text.getColor(); // Default to no change
+		if (outSize <= origSize/100) { // PERFECT
+			cirColor = Color.WHITE;
+		} else if(outSize <= origSize/10) { // AMAZING
+			cirColor = Color.CYAN;
+		}
+		setColor(cirColor);
+	}
+	
+	/**
+	 * Sets the different parts of the circle to be a new color
+	 * @param color Color to set them to
+	 */
+	public void setColor(Color color) {
+		innerCircle.setColor(color);
+		outerCircle.setColor(color);
+		text.setColor(color);
 	}
 }
