@@ -165,27 +165,47 @@ public class Circle {
 		this.removeCounter = removeCounter;
 	}
 	
+	public boolean isGood() {
+		return good;
+	}
+	
 	/**
 	 * Updates color of circle as it shrinks
 	 * @param origSize Original size of circles
 	 */
 	public void updateColor(double origSize) {
+		/*
+		 * TODO: Make color changing smoother
+		 */
+		
 		Color cirColor = text.getColor(); // Default to no change
-		if (outSize <= origSize/100) { // PERFECT
-			cirColor = Color.WHITE;
-		} else if(outSize <= origSize/10) { // AMAZING
-			cirColor = Color.CYAN;
+		if(good) {
+			if (outSize <= origSize/100) { // PERFECT
+				cirColor = Color.WHITE;
+			} else if(outSize <= origSize/10) { // AMAZING
+				cirColor = Color.CYAN;
+			}
 		}
 		setColor(cirColor);
 	}
 	
 	/**
 	 * Sets the different parts of the circle to be a new color
-	 * @param color Color to set them to
+	 * @param color Color to set everything to
 	 */
 	public void setColor(Color color) {
 		innerCircle.setColor(color);
 		outerCircle.setColor(color);
+		text.setColor(color);
+	}
+	
+	/**
+	 * Updates the text of the label
+	 * @param text Text to use as the label
+	 * @param color Color to make the text
+	 */
+	public void updateLabel(String str, Color color) {
+		text.setLabel(str);
 		text.setColor(color);
 	}
 }

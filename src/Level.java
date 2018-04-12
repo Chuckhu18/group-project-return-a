@@ -20,7 +20,7 @@ public class Level extends GraphicsPane implements KeyListener {
 	Circle circle;
 	ArrayList<Circle> circles; // Stores the circles being displayed on the screen
 	ArrayList<Character> characters; // Stores the characters to feed into the circles
-	AudioPlayer player;
+	AudioPlayer audioPlayer;
 	boolean isPaused;
 	private boolean hasWon = false; // is set to true when the player has won the game
 	private int vicCount = 0; // Used to stop the game from immediately ending after last circle
@@ -28,7 +28,6 @@ public class Level extends GraphicsPane implements KeyListener {
 	// Used to load song from file to play
 	String folder = "sounds/";
 	String filename = "gucciGang.mp3";
-	//Timer timer = new Timer(10, this); // Timer now executed from MainApplication
 	
 	// UI elements
 	private GLabel scoreLabel; // holds the score for now
@@ -64,7 +63,6 @@ public class Level extends GraphicsPane implements KeyListener {
 		// make sure circles are not created outside the screen
 		// make sure circles are not overlapped
 
-		
 		int tries = 0;
 		while(Math.abs(xloc - lastXloc) < 100 || Math.abs(xloc - lastXloc2) < 100) {
 			xloc = WINDOW_WIDTH * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
@@ -93,9 +91,22 @@ public class Level extends GraphicsPane implements KeyListener {
 		
 		temp = temp*-1;
 		
+		/*
+		 * Makes some circles randomly "bad"
+		 * TODO:
+		 * Make a better implementation
+		 */
+		
+		boolean cirGood = true;
+		
+		if(rand.nextInt(4) == 0) {
+			cirGood = false;
+			System.out.println("Bad circle generated");
+		}
+		
 		
 		if (characters.size() > 0) {
-			Circle toAdd = new Circle(characters.remove(0), song.getCircleSize(), xloc, yloc, song.getShrinkSpeed(), true);
+			Circle toAdd = new Circle(characters.remove(0), song.getCircleSize(), xloc, yloc, song.getShrinkSpeed(), cirGood);
 			// Add shapes to screen from the Circle, then add the Circle to the ArrayList
 			program.add(toAdd.getInnerCircle());
 			program.add(toAdd.getOuterCircle());
@@ -117,9 +128,7 @@ public class Level extends GraphicsPane implements KeyListener {
 
 	/**
 	 * Creates an ArrayListof characters from given string
-	 * 
-	 * @param str
-	 *            string to turn into ArrayList
+	 * @param str string to turn into ArrayList
 	 */
 	private void createCharArrList(String str) {
 		characters = new ArrayList<Character>(); // reset ArrayList so we start from scratch
@@ -165,7 +174,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		rand = new Random();
 		// I picked random numbers that look nice for the timer values, will have to test more
 		// using all characters in alphabetical order for easy testing
-		song = new Song(filename, 15.0, 0.075, 100, "abc");//defghijklmnopqrstuvwxyza"); 
+		song = new Song(filename, 15.0, 0.075, 100, "abcdefghijklmnopqrstuvwxyza"); 
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
 
@@ -173,7 +182,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		createCharArrList(song.getCircleList());
 
 		// start audio and timer
-		player = AudioPlayer.getInstance();
+		audioPlayer = AudioPlayer.getInstance();
 		startAudioFile();
 		program.time.start();
 	}
@@ -202,10 +211,6 @@ public class Level extends GraphicsPane implements KeyListener {
 				circle.shrink();
 
 				// Change the color of the circle when you are in "AMAZING" and "PERFECT" range
-				/*
-				 * TODO:
-				 * Change this to have the circle dynamically change colors as it shrinks
-				 */
 				if(circle.getRemoveCounter() == 0) { // If the circle has not been removed from the screen
 					circle.updateColor(song.getCircleSize());
 				}
@@ -213,11 +218,19 @@ public class Level extends GraphicsPane implements KeyListener {
 				// If circles have shrunk to be the same size in and out
 				if (circle.getOutSize() < 0) {
 					if(circle.getRemoveCounter() == 0) {
-						// Add the text displaying that you missed
-						circle.getLabel().setLabel("MISS");
-						circle.getLabel().setColor(Color.BLACK);
-						circle.removeCircles();
-						health-=(MAX_HEALTH/10);
+						if(circle.isGood()) { // If it is a good circle
+							// Add the text displaying that you missed
+							circle.getLabel().setLabel("MISS");
+							circle.getLabel().setColor(Color.BLACK);
+							circle.removeCircles();
+							health-=(MAX_HEALTH/10);
+						}
+						else { // Bad circles
+							circle.getLabel().setLabel("NICE");
+							circle.getLabel().setColor(Color.BLUE);
+							circle.removeCircles();
+							health+=MAX_HEALTH/15;
+						}
 					}
 					else {
 						circle.setRemoveCounter(circle.getRemoveCounter() + 1);
@@ -257,30 +270,33 @@ public class Level extends GraphicsPane implements KeyListener {
 
 	public void startAudioFile() {
 		isPaused = false;
-		player.playSound(folder, filename);
+		audioPlayer.playSound(folder, filename);
 		System.out.println("SOUND PLAYED");
 	}// startAudioFile
 
 	public void pauseAudio() {
-		player.pauseSound(folder, filename);
+		audioPlayer.pauseSound(folder, filename);
 		isPaused = true;
 	}// pause
 
 	public void resumeAudio() {
 		if (isPaused) {
-			player.playSound(folder, filename);
+			audioPlayer.playSound(folder, filename);
 			isPaused = false;
 		}
 	}// resume
 
 	public void restartAudio() {
-		player.stopSound(folder, filename);
-		player.playSound(folder, filename);
+		audioPlayer.stopSound(folder, filename);
+		audioPlayer.playSound(folder, filename);
 	}// restart
 
 	@Override
 	public void keyTyped(KeyEvent e) { // using keyTyped to help ensure valid input
 		boolean found = false; // tracks if we have found a matching circle
+		
+		String text = "";
+		Color cirColor = Color.BLACK;
 		
 		// Iterate through all circles on the screen
 		for(Circle circle : circles) {
@@ -293,39 +309,48 @@ public class Level extends GraphicsPane implements KeyListener {
 				double init = song.getCircleSize(); // store initial size for math
 				
 				// Note: all numbers are subject to change
-				if (size <= (init / 100)) { // If you press in the last hundredth of the timer
-					circle.getLabel().setLabel("PERFECT!");
-					circle.getLabel().setColor(Color.WHITE);
-					score+=100;
-					health+=MAX_HEALTH/5;
-				}
-				else if (size <= (init / 10)) { // If you press between 9/10 and 99/100
-					circle.getLabel().setLabel("AMAZING!");
-					circle.getLabel().setColor(Color.CYAN);
-					score+=50;
-					health+=MAX_HEALTH/10;
-				}
-				else if (size <= (init / 5)) {  // If you press between 4/5 and 9/10
-					circle.getLabel().setLabel("GREAT!");
-					circle.getLabel().setColor(Color.GREEN);
+				if(circle.isGood()) { // Do this if the match is good
+					if (size <= (init / 100)) { // If you press in the last hundredth of the timer
+						text = "PERFECT!";
+						cirColor = Color.WHITE;
+						score+=100;
+						health+=MAX_HEALTH/5;
+					}
+					else if (size <= (init / 10)) { // If you press between 9/10 and 99/100
+						text = "AMAZING!";
+						cirColor = Color.CYAN;
+						score+=50;
+						health+=MAX_HEALTH/10;
+					}
+					else if (size <= (init / 5)) {  // If you press between 4/5 and 9/10
+						text = "GREAT";
+						cirColor = Color.GREEN;
+						score+=25;
+						health+=MAX_HEALTH/15;
+					}
+					else if (size <= (init / 2)) { // If you press between 1/2 and 4/5
+						text = "GOOD";
+						cirColor = Color.YELLOW;
+						score+=5;
+						health+=MAX_HEALTH/75;
+						
+					}
+					else { // If you press in the first half of the timer
+						text = "OK";
+						cirColor = Color.ORANGE;
+						score+=1;
+						health+=MAX_HEALTH/250;
+					}
+				} // End of good circle code
+				else { // You clicked on a "bad" circle
+					text = "BAD";
+					cirColor = Color.RED;
 					score+=25;
-					health+=MAX_HEALTH/15;
-				}
-				else if (size <= (init / 2)) { // If you press between 1/2 and 4/5
-					circle.getLabel().setLabel("GOOD!");
-					circle.getLabel().setColor(Color.YELLOW);
-					score+=5;
-					health+=MAX_HEALTH/75;
-					
-				}
-				else { // If you press in the first half of the timer
-					circle.getLabel().setLabel("OK!");
-					circle.getLabel().setColor(Color.ORANGE);
-					score+=1;
-					health+=MAX_HEALTH/250;
+					health-=MAX_HEALTH/15;
 				}
 				
 				// hide the GOvals after updating the label
+				circle.updateLabel(text, cirColor);
 				circle.removeCircles();
 				
 				found = true; // Remember that we found the circle
