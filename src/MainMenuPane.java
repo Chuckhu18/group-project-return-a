@@ -22,12 +22,14 @@ public class MainMenuPane extends GraphicsPane {
 		super();
 		program = app;
 		toSettings = new GImage("playbutton.png", 600, 300); // this is going to create another button and then
-		toSettings.setSize(toSettings.getWidth()/3, toSettings.getHeight()/3);													// filling it in with information
+		toSettings.setSize(toSettings.getWidth()/2, toSettings.getHeight()/2);													// filling it in with information
 		howTo = new GImage("howTobutton.png", 120, 300); // instiating, an object is an instance of a clas, initialize the
 														// object in the
 		howToBack = new GImage("leftArrowbutton copy.png",20,170);
-		
+		howToBack.setSize(howToBack.getWidth()/2, howToBack.getHeight()/2);
+		howTo.setSize(howTo.getWidth()/2, howTo.getHeight()/2);
 		mainMenu = new GImage("LOGO.png", 150,100);
+		mainMenu.setSize(mainMenu.getWidth()/5, mainMenu.getHeight()/5);
 	}
 
 	@Override
@@ -65,10 +67,8 @@ public class MainMenuPane extends GraphicsPane {
 			howtoPlay.setText("Press GO to play. \n\n"
 					+ "*** You must click on the program at the beginning to play (we are working on it) ***\n\n"
 					+ "Press the corresponding key on the keyboard to the ones on the screen. \n"
-					+ "For maximum points "
-					+ "press the letter when the outside circle's diameter is the same as \n"
+					+ "For maximum points press the letter when the outside circle's diameter is the same as \n"
 					+ " the inside's.");
-			// howtoPlay.add();
 			howtoPlay.setFont("Arial-18");
 			program.add(howtoPlay);
 			program.add(howToBack);

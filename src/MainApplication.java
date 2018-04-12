@@ -13,7 +13,7 @@ public class MainApplication extends GraphicsApplication {
 
 	private MainMenuPane menu;
 	private EndOfGamePane end;
-	private Level level;
+	public Level level;
 	private SettingsPane settings;
 	private int count;
 	private GLabel youWin = new GLabel("YOU WIN", 100, 100);
@@ -68,8 +68,8 @@ public class MainApplication extends GraphicsApplication {
 			System.out.println("\nYou won! Final score : " + level.getScore());
 			System.out.println("\n~~Score References~~\nPerfect score : 2700\nAmazing score : 1350");
 			System.out.println("Great score   : 675\nGood score    : 270\nBad score     : 27");
-			add(youWin);
-			youWin.sendToFront();
+			//add(youWin);
+			//youWin.sendToFront();
 			switchToEndofGame();
 		}	
 		
@@ -89,6 +89,7 @@ public class MainApplication extends GraphicsApplication {
 		switchToScreen(end);
 	}
 	public void switchToLevel() {
+		level = new Level(this);
 		switchToScreen(level);
 		level.run();
 		time.restart();

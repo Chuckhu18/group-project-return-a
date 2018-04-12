@@ -99,14 +99,15 @@ public class EndOfGamePane extends GraphicsPane{
 //		program.remove(scoreRect);
 //		program.remove(scoresLabels);
 	}
-//	@Override
-//	public void mousePressed(MouseEvent e) {
-//		GObject obj = program.getElementAt(e.getX(), e.getY());
-//	if (obj == mainMenu) {
-//		program.switchToMenu();
-//	}
-//	if (obj == playAgain) {
-//		program.switchToLevel();
-//	}
-//	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		GObject obj = program.getElementAt(e.getX(), e.getY());
+	if (obj == mainMenu) {
+		program.switchToMenu();
+	}
+	if (obj == playAgain) {
+		//program.level = new Level(program);
+		program.switchToLevel();
+	}
+	}
 }
