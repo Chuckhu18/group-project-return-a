@@ -8,15 +8,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Song {
-	// TODO: see how you can read from file the songs and hardcode it into this
-	// class
-	// look at the system design report on how to implement something like that
-	// make a constructor for song
 	private String songName; // Name of song
 	private double circleSize; // Starting size of the outside circles
 	private double shrinkSpeed; // How fast the circles shrink
 	private int tempo; // How often circles are created
 	private String circleList; // list of characters that will appear on the screen
+	private int startDelay; // How many ticks to delay the music starting
 	private ArrayList<Integer> tempoChangeTimes =  new ArrayList<Integer>(); // timestamps when we should change tempo
 	private ArrayList<Integer> tempoChangeValues =  new ArrayList<Integer>(); // amount to change tempo by
 	
@@ -77,6 +74,10 @@ public class Song {
 		return tempoChangeValues;
 	}
 	
+	public int getStartDelay() {
+		return startDelay;
+	}
+	
 	public Song(String filename) {
 		try {
 			readSong("songs/"+filename+".txt");
@@ -97,7 +98,9 @@ public class Song {
 	    circleSize = Double.parseDouble(reader.readLine());
 	    shrinkSpeed = Double.parseDouble(reader.readLine());
 	    tempo = Integer.parseInt(reader.readLine());
+	    startDelay = Integer.parseInt(reader.readLine());
 	    circleList = reader.readLine();
+	    
 	    
 	    // Read in parts that might not be in every song
 	    String line = reader.readLine();
@@ -114,22 +117,6 @@ public class Song {
 	    }
 
 	   reader.close();
-	   
-	   // Print values entered for testing
-	   
-	   System.out.println(songName);
-	   System.out.println(circleSize);
-	   System.out.println(shrinkSpeed);
-	   System.out.println(tempo);
-	   System.out.println(circleList);
-	   for(int i = 0; i < tempoChangeTimes.size(); i++)
-		   System.out.print(tempoChangeTimes.get(i)+" ");
-	   for(int i = 0; i < tempoChangeValues.size(); i++)
-		   System.out.print(tempoChangeValues.get(i)+" ");
-	
-	
-	//implement read from file method 
-	//to test this write a function to have all the variables printed out to the console
 }
 	
 	//create a constuctor for this partciular manner of input

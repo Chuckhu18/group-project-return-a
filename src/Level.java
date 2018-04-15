@@ -28,10 +28,18 @@ public class Level extends GraphicsPane implements KeyListener {
 	private ArrayList<Integer> tempoChangeValues; // how much to change tempo by
 	private int circleCount; // counts how many circles have spawned since the last important event
 	private int tempo;
+	private int nextCircleSpawn; // saves when to spawn the next circle
+
 	
 	// Used to load song from file to play
+	
+	/*
+	 * Valid song names:
+	 * ToHellAndBack
+	 * hotelCali
+	 */
 	String folder = "sounds/";
-	String filename = "hotelCali.mp3";
+	String filename = "hotelCali";
 	
 	// UI elements
 	private GLabel scoreLabel; // holds the score for now
@@ -103,7 +111,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		
 		boolean cirGood = true;
 		
-		if(rand.nextInt(4) == 0) {
+		if(rand.nextInt(10) == 0) {
 			cirGood = false;
 			System.out.println("Bad circle generated");
 		}
@@ -174,15 +182,21 @@ public class Level extends GraphicsPane implements KeyListener {
 		program.add(healthBar);
 		
 		rand = new Random();
-		// I picked random numbers that look nice for the timer values, will have to test more
-		// using all characters in alphabetical order for easy testing
-		// song = new Song(filename, 15.0, 0.075, 100, "abcdefghijklmnopqrstuvwxyza"); 
-		song = new Song("Song");
+
+		// loads file for song we want to play
+		/*
+		 * TODO:
+		 * Make it load the difficulty from the previous screen
+		 */
+		song = new Song(filename+"1"); 
+		
+		
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
 		tempoChangeTimes = song.getTempoChangeTimes();
 		tempoChangeValues = song.getTempoChangeValues();
 		tempo = song.getTempo();
+		nextCircleSpawn = song.getStartDelay();
 		// Turns the string from Song into an ArrayList of characters to feed into the circles
 		createCharArrList(song.getCircleList());
 
@@ -201,9 +215,13 @@ public class Level extends GraphicsPane implements KeyListener {
 		numTicks++;
 
 		// Create a new circle every interval of time specified by the song's Tempo
-		if (numTicks % tempo == 0) {
+		/*
+		 * TODO: Fix the slow drift over the course of the song where it gets slowly out of sync
+		 */
+		if (numTicks == nextCircleSpawn) {
 			createCircle(); // Make a new circle
 			circleCount++;
+			nextCircleSpawn+=tempo;
 		}
 		
 		// If there are tempo changes ahead in the song
@@ -269,7 +287,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		scoreLabel.setLabel("Your Score:" + Integer.toString(score)); // updates score label every tick
 		scoreLabel.sendToFront(); // makes sure this is always on top of circles
 		
-		if (health > MAX_HEALTH) health = MAX_HEALTH; // Stop HP from growing above 100
+		if (health < MAX_HEALTH) health = MAX_HEALTH; // Stop HP from growing above 100
 		
 		// Updates health bar display every tick
 		healthBar.setSize(emptyHPBar.getWidth() * (health/(double) MAX_HEALTH),emptyHPBar.getHeight());
@@ -289,8 +307,7 @@ public class Level extends GraphicsPane implements KeyListener {
 
 	public void startAudioFile() {
 		isPaused = false;
-		audioPlayer.playSound(folder, filename);
-		System.out.println("SOUND PLAYED");
+		audioPlayer.playSound(folder, filename+".mp3");
 	}// startAudioFile
 
 	public void pauseAudio() {
