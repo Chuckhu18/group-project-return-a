@@ -17,8 +17,9 @@ public class Song {
 	private double shrinkSpeed; // How fast the circles shrink
 	private int tempo; // How often circles are created
 	private String circleList; // list of characters that will appear on the screen
-	private ArrayList<Integer> tempoChanges =  new ArrayList<Integer>(); // timestamps when we should change tempo
-
+	private ArrayList<Integer> tempoChangeTimes =  new ArrayList<Integer>(); // timestamps when we should change tempo
+	private ArrayList<Integer> tempoChangeValues =  new ArrayList<Integer>(); // amount to change tempo by
+	
 	/***
 	 * 
 	 * @param s
@@ -68,8 +69,12 @@ public class Song {
 		return tempo;
 	}
 	
-	private ArrayList<Integer> getTempoChanges() {
-		return tempoChanges;
+	public ArrayList<Integer> getTempoChangeTimes() {
+		return tempoChangeTimes;
+	}
+	
+	public ArrayList<Integer> getTempoChangeValues() {
+		return tempoChangeValues;
 	}
 	
 	public Song(String filename) {
@@ -98,11 +103,14 @@ public class Song {
 	    String line = reader.readLine();
 	    if(line!=null) {
 	    	String[] list = line.split(";");
-	    	for(int i = 0; i < list.length; i++) {
-	    		tempoChanges.add(Integer.parseInt(list[i]));
-	    		//System.out.println(tempoChanges.get(i));
-	    	}
-	    	
+	    	for(int i = 0; i < list.length; i++)
+	    		tempoChangeTimes.add(Integer.parseInt(list[i]));
+	    	line = reader.readLine();
+	    }
+	    if(line!=null) {
+	    	String[] list = line.split(";");
+	    	for(int i = 0; i < list.length; i++)
+	    		tempoChangeValues.add(Integer.parseInt(list[i]));
 	    }
 
 	   reader.close();
@@ -114,8 +122,10 @@ public class Song {
 	   System.out.println(shrinkSpeed);
 	   System.out.println(tempo);
 	   System.out.println(circleList);
-	   for(int i = 0; i < tempoChanges.size(); i++)
-		   System.out.print(tempoChanges.get(i)+" ");
+	   for(int i = 0; i < tempoChangeTimes.size(); i++)
+		   System.out.print(tempoChangeTimes.get(i)+" ");
+	   for(int i = 0; i < tempoChangeValues.size(); i++)
+		   System.out.print(tempoChangeValues.get(i)+" ");
 	
 	
 	//implement read from file method 

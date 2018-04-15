@@ -15,19 +15,23 @@ public class Level extends GraphicsPane implements KeyListener {
 	public static final int MAX_HEALTH = 10000; // Never set to less than 2000 or casual HP loss breaks
 	int score, health = MAX_HEALTH, numTicks = 0;
 	MainApplication program;
-	Random rand;
-	Song song;
-	Circle circle;
-	ArrayList<Circle> circles; // Stores the circles being displayed on the screen
-	ArrayList<Character> characters; // Stores the characters to feed into the circles
-	AudioPlayer audioPlayer;
-	boolean isPaused;
+	private Random rand;
+	private Song song;
+	private Circle circle;
+	private ArrayList<Circle> circles; // Stores the circles being displayed on the screen
+	private ArrayList<Character> characters; // Stores the characters to feed into the circles
+	private AudioPlayer audioPlayer;
+	private boolean isPaused;
 	private boolean hasWon = false; // is set to true when the player has won the game
 	private int vicCount = 0; // Used to stop the game from immediately ending after last circle
+	private ArrayList<Integer> tempoChangeTimes; // times to change tempo
+	private ArrayList<Integer> tempoChangeValues; // how much to change tempo by
+	private int circleCount; // counts how many circles have spawned since the last important event
+	private int tempo;
 	
 	// Used to load song from file to play
 	String folder = "sounds/";
-	String filename = "gucciGang.mp3";
+	String filename = "hotelCali.mp3";
 	
 	// UI elements
 	private GLabel scoreLabel; // holds the score for now
@@ -144,10 +148,8 @@ public class Level extends GraphicsPane implements KeyListener {
 
 	public void run() {
 		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
-		//program.addKeyListeners(); // Taken out to prevent double execution of events
 		program.setFocusable(true);
 		program.requestFocus();
-		//program.addMouseListeners(program); // Taken out to prevent double execution of events
 		
 		// Initializes background rectangle
 		backRect = new GRect(10, 10, WINDOW_WIDTH-20, WINDOW_HEIGHT-20);
@@ -174,10 +176,13 @@ public class Level extends GraphicsPane implements KeyListener {
 		rand = new Random();
 		// I picked random numbers that look nice for the timer values, will have to test more
 		// using all characters in alphabetical order for easy testing
-		song = new Song(filename, 15.0, 0.075, 100, "abcdefghijklmnopqrstuvwxyza"); 
+		// song = new Song(filename, 15.0, 0.075, 100, "abcdefghijklmnopqrstuvwxyza"); 
+		song = new Song("Song");
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
-
+		tempoChangeTimes = song.getTempoChangeTimes();
+		tempoChangeValues = song.getTempoChangeValues();
+		tempo = song.getTempo();
 		// Turns the string from Song into an ArrayList of characters to feed into the circles
 		createCharArrList(song.getCircleList());
 
@@ -196,8 +201,22 @@ public class Level extends GraphicsPane implements KeyListener {
 		numTicks++;
 
 		// Create a new circle every interval of time specified by the song's Tempo
-		if (numTicks % song.getTempo() == 0) {
+		if (numTicks % tempo == 0) {
 			createCircle(); // Make a new circle
+			circleCount++;
+		}
+		
+		// If there are tempo changes ahead in the song
+		if(tempoChangeTimes.size()>0 && tempoChangeValues.size()>0) {
+			if(circleCount == tempoChangeTimes.get(0)) {
+				if(tempoChangeValues.get(0)>0) // If the tempo change is positive
+					tempo = tempo / tempoChangeValues.remove(0);
+				else
+					tempo = tempo * Math.abs(tempoChangeValues.remove(0));
+				tempoChangeTimes.remove(0);
+				System.out.println(tempo);
+				circleCount = 0;
+			}
 		}
 
 		// If there are circles on the screen
