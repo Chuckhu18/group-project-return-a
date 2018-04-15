@@ -1,0 +1,6 @@
+Hotel California
+15.0
+0.075
+100
+abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+10;5;10
