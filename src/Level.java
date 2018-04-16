@@ -176,10 +176,12 @@ public class Level extends GraphicsPane implements KeyListener {
 		program.setFocusable(true);
 		program.requestFocus();
 		
-		restart = new GButton("Restart", 200, 300, 100, 40);
-		change = new GButton("Change Settings", 200, 350, 100, 40);
+		restart = new GButton("Restart", 235, 300, 100, 40);
+		restart.setFillColor(Color.GRAY);
+		restart.setColor(Color.CYAN);
+		change = new GButton("Change Settings", 335, 300, 100, 40);
 		pause = new GButton("Pause <space>", 675, 15,100,30);
-		cont = new GButton("Resume [Esc]", 200, 250, 100, 40);
+		cont = new GButton("Resume [Esc]", 435, 300, 100, 40);
 		cont.setColor(Color.CYAN);
 		cont.setFillColor(Color.BLACK);
 		paused = new GLabel("PAUSED!",260,200);
