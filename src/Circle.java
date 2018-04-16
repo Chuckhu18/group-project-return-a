@@ -45,7 +45,7 @@ public class Circle {
 				inSize + outSize, inSize + outSize);
 
 		// TODO: calculate center of circle to correctly center the text
-		// Update 04/06: Getting closer to good values
+		// Update 04/014: Getting closer to good values
 		text = new GLabel(Character.toString(letter), x - (inSize / 5), (y + inSize / 5));
 		text.setFont(new Font("Arial",0,40)); // Makes text easier to read
 
@@ -200,12 +200,13 @@ public class Circle {
 	}
 	
 	/**
-	 * Updates the text of the label
+	 * Updates the text of the label when removing the circles
 	 * @param text Text to use as the label
 	 * @param color Color to make the text
 	 */
 	public void updateLabel(String str, Color color) {
 		text.setLabel(str);
 		text.setColor(color);
+		removeCircles();
 	}
 }
