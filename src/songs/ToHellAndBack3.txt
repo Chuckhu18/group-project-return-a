@@ -1,8 +1,8 @@
 To Hell And Back
-20.0
+18.7
 0.1
-94
-272
+87
+83
 abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
-12;95
-2;-2
+18
+2

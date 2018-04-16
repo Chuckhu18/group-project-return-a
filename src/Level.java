@@ -233,20 +233,11 @@ public class Level extends GraphicsPane {
 		numTicks++;
 
 		// Create a new circle every interval of time specified by the song's Tempo
-		/*
-		 * TODO: Fix the slow drift over the course of the song where it gets slowly out of sync
-		 */
 		if (numTicks == Math.floor(nextCircleSpawn)) {
 			System.out.println(nextCircleSpawn);
 			createCircle(); // Make a new circle
 			circleCount++;
 			nextCircleSpawn+=tempo;
-			
-			
-			/*
-			 * TODO:
-			 * Fix slow drift away from the tempo of the song
-			 */
 		}
 		
 		// If there are tempo changes ahead in the song
