@@ -77,7 +77,7 @@ public class MainApplication extends GraphicsApplication {
 		level = new Level(this);
 		switchToScreen(level);
 		level.run();
-		level.restartAudio();
+		level.startAudioFile();
 	}
 	public void playGame() {
 		time.start();
@@ -97,5 +97,13 @@ public class MainApplication extends GraphicsApplication {
 	}
 	public void setDiffChoice(int diffChoice) {
 		this.diffChoice = diffChoice;
+	}
+	
+	public int getWindowWidth() {
+		return WINDOW_WIDTH;
+	}
+	
+	public int getWindowHeight() {
+		return WINDOW_HEIGHT;
 	}
 }
