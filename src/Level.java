@@ -9,25 +9,33 @@ import acm.program.*;
 
 public class Level extends GraphicsPane implements KeyListener {
 	
-	// ***Instance variables***
+	// Screen variables
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
-	public static final int MAX_HEALTH = 10000; // Never set to less than 2000 or casual HP loss breaks
-	int score, health = MAX_HEALTH, numTicks = 0;
+	
+	// System variables
+	private int numTicks = 0; // How many timer ticks have gone by
 	MainApplication program;
 	private Random rand;
-	private Song song;
-	private Circle circle;
-	private ArrayList<Circle> circles; // Stores the circles being displayed on the screen
-	private ArrayList<Character> characters; // Stores the characters to feed into the circles
 	private AudioPlayer audioPlayer;
 	private boolean isPaused;
 	private boolean hasWon = false; // is set to true when the player has won the game
 	private int vicCount = 0; // Used to stop the game from immediately ending after last circle
+	
+	// Player-related variables
+	public static final int MAX_HEALTH = 10000; // Never set to less than 2000 or casual HP loss breaks
+	private int health = MAX_HEALTH;
+	private int score = 0;
+	
+	// Song and circle variables
+	private Song song;
+	private Circle circle;
+	private ArrayList<Circle> circles; // Stores the circles being displayed on the screen
+	private ArrayList<Character> characters; // Stores the characters to feed into the circles
+	private int circleCount; // counts how many circles have spawned since the last important event
+	private int tempo; // How often to spawn circles
 	private ArrayList<Integer> tempoChangeTimes; // times to change tempo
 	private ArrayList<Integer> tempoChangeValues; // how much to change tempo by
-	private int circleCount; // counts how many circles have spawned since the last important event
-	private int tempo;
 	private int nextCircleSpawn; // saves when to spawn the next circle
 
 	
@@ -38,8 +46,9 @@ public class Level extends GraphicsPane implements KeyListener {
 	 * ToHellAndBack
 	 * hotelCali
 	 */
-	String folder = "sounds";
-	String filename = "hotelCali";
+	private String folder = "sounds/";
+	private String filename = "hotelCali";
+	private String diffNum = "1";
 	
 	// UI elements
 	private GLabel scoreLabel; // holds the score for now
@@ -68,6 +77,9 @@ public class Level extends GraphicsPane implements KeyListener {
 	public Level(MainApplication app) {
 		super();
 		program = app;
+		filename = app.getSongChoice();
+		diffNum = Integer.toString(app.getDiffChoice()+1);
+		
 		//run();
 	}
 
@@ -204,7 +216,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		 * TODO:
 		 * Make it load the difficulty from the previous screen
 		 */
-		song = new Song(filename+"1"); 
+		song = new Song(filename+diffNum); 
 		
 		
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
@@ -238,6 +250,11 @@ public class Level extends GraphicsPane implements KeyListener {
 			createCircle(); // Make a new circle
 			circleCount++;
 			nextCircleSpawn+=tempo;
+			
+			/*
+			 * TODO:
+			 * Fix slow drift away from the tempo of the song
+			 */
 		}
 		
 		// If there are tempo changes ahead in the song
@@ -273,15 +290,11 @@ public class Level extends GraphicsPane implements KeyListener {
 					if(circle.getRemoveCounter() == 0) {
 						if(circle.isGood()) { // If it is a good circle
 							// Add the text displaying that you missed
-							circle.getLabel().setLabel("MISS");
-							circle.getLabel().setColor(Color.BLACK);
-							circle.removeCircles();
+							circle.updateLabel("MISS",Color.BLACK);
 							health-=(MAX_HEALTH/10);
 						}
 						else { // Bad circles
-							circle.getLabel().setLabel("NICE");
-							circle.getLabel().setColor(Color.BLUE);
-							circle.removeCircles();
+							circle.updateLabel("NICE",Color.BLUE);
 							health+=MAX_HEALTH/15;
 						}
 					}
@@ -291,8 +304,8 @@ public class Level extends GraphicsPane implements KeyListener {
 				}
 
 				if (circle.getRemoveCounter() >= 20) {
-					circles.remove(circle);
 					circle.removeLabel();
+					circles.remove(circle);
 				}
 			}
 		}
@@ -303,7 +316,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		scoreLabel.setLabel("Your Score:" + Integer.toString(score)); // updates score label every tick
 		scoreLabel.sendToFront(); // makes sure this is always on top of circles
 		
-		if (health < MAX_HEALTH) health = MAX_HEALTH; // Stop HP from growing above 100
+		if (health > MAX_HEALTH) health = MAX_HEALTH; // Stop HP from growing above 100
 		
 		// Updates health bar display every tick
 		healthBar.setSize(emptyHPBar.getWidth() * (health/(double) MAX_HEALTH),emptyHPBar.getHeight());
@@ -404,23 +417,21 @@ public class Level extends GraphicsPane implements KeyListener {
 				else { // You clicked on a "bad" circle
 					text = "BAD";
 					cirColor = Color.RED;
-					score+=25;
 					health-=MAX_HEALTH/15;
 				}
 				
 				// hide the GOvals after updating the label
 				circle.updateLabel(text, cirColor);
-				circle.removeCircles();
 				
 				found = true; // Remember that we found the circle
 			}
 		}
 		
-		if(found) { // if match was found
-			System.out.println("Circle "+e.getKeyChar()+" removed!"); // Print to console no match was found
-		}else { // if not found
-			System.out.println("No match for "+e.getKeyChar()+"!"); // Print to console no match was found
+		if(!found) { // if match was found
+			//System.out.println("No match for "+e.getKeyChar()+"!"); // Print to console no match was found
 			if(vicCount==0) health-=MAX_HEALTH/20; // Take health off if the game is still running
+		}else { // if not found
+			System.out.println("Circle "+e.getKeyChar()+" removed!"); // Print to console a match was found
 		}
 	}// keyPressed
 

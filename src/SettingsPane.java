@@ -52,7 +52,7 @@ private int difficultyChoice = 0;
 		difficultyChoices.add(hard);
 		songChoices.add(hotelCalifornia);
 		songChoices.add(gucciGang);
-		
+		songChoice="hotelCali";
 		
 	}
 	
@@ -66,9 +66,9 @@ private int difficultyChoice = 0;
 		program.add(prevDiff);
 		program.add(difficulty);
 		program.add(settingsHeading);
-		program.add(easy);
 		program.add(hard);
 		program.add(medium);
+		program.add(easy);
 		program.add(hotelCalifornia);
 		program.add(play);
 		program.add(back);
@@ -95,6 +95,8 @@ private int difficultyChoice = 0;
 		GObject obj = program.getElementAt(e.getX(), e.getY());
 		if (obj ==play) {
 			hideContents();
+			program.setDiffChoice(difficultyChoice);
+			program.setSongChoice(songChoice);
 			program.switchToLevel();
 		}
 		if (obj == nextDiff) {
