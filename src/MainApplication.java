@@ -19,9 +19,8 @@ public class MainApplication extends GraphicsApplication {
 	private GLabel youWin = new GLabel("YOU WIN", 100, 100);
 	private GLabel youLose = new GLabel("YOU LOSE", 100, 100);
 	public Timer time;
-	
-	
-
+	private String songChoice;
+	private int diffChoice;
 
 	public void init() {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -55,9 +54,6 @@ public class MainApplication extends GraphicsApplication {
 		
 		// Player has run out of health before end of song
 		if(level.getHealth() <= 0) {
-			System.out.println("\nYou lost!\nFinal score   : " + level.getScore());
-			System.out.println("\n~~Score References~~\nPerfect score : 2700\nAmazing score : 1350");
-			System.out.println("Great score   : 675\nGood score    : 270\nBad score     : 27");
 			switchToEndofGame();
 		}
 		
@@ -65,9 +61,6 @@ public class MainApplication extends GraphicsApplication {
 		if(level.getHasWon()) {
 
 			time.stop();
-			System.out.println("\nYou won! Final score : " + level.getScore());
-			System.out.println("\n~~Score References~~\nPerfect score : 2700\nAmazing score : 1350");
-			System.out.println("Great score   : 675\nGood score    : 270\nBad score     : 27");
 			//add(youWin);
 			//youWin.sendToFront();
 			switchToEndofGame();
@@ -103,4 +96,17 @@ public class MainApplication extends GraphicsApplication {
 	}
 	// ***member methods***
 
+	
+	public String getSongChoice() {
+		return songChoice;
+	}
+	public void setSongChoice(String songChoice) {
+		this.songChoice = songChoice;
+	}
+	public int getDiffChoice() {
+		return diffChoice;
+	}
+	public void setDiffChoice(int diffChoice) {
+		this.diffChoice = diffChoice;
+	}
 }

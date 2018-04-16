@@ -46,8 +46,9 @@ public class Level extends GraphicsPane implements KeyListener {
 	 * ToHellAndBack
 	 * hotelCali
 	 */
-	String folder = "sounds/";
-	String filename = "hotelCali";
+	private String folder = "sounds/";
+	private String filename = "hotelCali";
+	private String diffNum = "1";
 	
 	// UI elements
 	private GLabel scoreLabel; // holds the score for now
@@ -71,6 +72,9 @@ public class Level extends GraphicsPane implements KeyListener {
 	public Level(MainApplication app) {
 		super();
 		program = app;
+		filename = app.getSongChoice();
+		diffNum = Integer.toString(app.getDiffChoice()+1);
+		
 		//run();
 	}
 
@@ -196,7 +200,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		 * TODO:
 		 * Make it load the difficulty from the previous screen
 		 */
-		song = new Song(filename+"1"); 
+		song = new Song(filename+diffNum); 
 		
 		
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
