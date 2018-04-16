@@ -46,10 +46,11 @@ public class Level extends GraphicsPane implements KeyListener {
 	private GRect healthBar; // displays HP percentage
 	private GRect emptyHPBar; // Empty HP Bar to show full
 	private GRect backRect; // Grey box the circles spawn inside of
-	private GImage pause;
 	private GLabel paused;
+	private GButton pause;
 	private GButton cont;
-
+	private GButton restart;
+	private GButton change;
 	
 	// Used for circle generation to prevent overlapping
 	private double lastXloc = 0;
@@ -163,13 +164,13 @@ public class Level extends GraphicsPane implements KeyListener {
 		program.setFocusable(true);
 		program.requestFocus();
 		
-
-		pause = new GImage("pauseButton.jpg", 727, 15);
-		pause.setSize(pause.getWidth()/3, pause.getHeight()/3);
-		cont = new GButton("Resume", 200, 250, 100, 60);
+		restart = new GButton("Restart", 200, 300, 100, 40);
+		change = new GButton("Change Settings", 200, 350, 100, 40);
+		pause = new GButton("Pause <space>", 675, 15,100,30);
+		cont = new GButton("Resume [Esc]", 200, 250, 100, 40);
 		cont.setColor(Color.CYAN);
 		cont.setFillColor(Color.BLACK);
-		paused = new GLabel("paused!",100,200);
+		paused = new GLabel("PAUSED!",260,200);
 		paused.setFont("Arial-60");
 
 		
@@ -348,6 +349,13 @@ public class Level extends GraphicsPane implements KeyListener {
 		
 		String text = "";
 		Color cirColor = Color.BLACK;
+		if ((e.getKeyChar() == KeyEvent.VK_SPACE) && !isPaused)
+		{
+			pauseGame();
+		}
+		if((e.getKeyChar() == KeyEvent.VK_ESCAPE) && isPaused) {
+			unPauseGame();
+		}
 		
 		// Iterate through all circles on the screen
 		for(Circle circle : circles) {
@@ -428,20 +436,36 @@ public class Level extends GraphicsPane implements KeyListener {
 		GObject obj = program.getElementAt(e.getX(), e.getY());
 		System.out.println("Mouse clicked at ("+e.getX()+","+e.getY()+")!");
 		if (obj == pause) {
-			pauseAudio();
-			program.time.stop();
-			program.add(cont);
-			program.add(paused);
+			pauseGame();
 		}
 		if (obj == cont) {
-			program.time.restart();
-			resumeAudio();
-			program.remove(cont);
-			program.remove(paused);
+			unPauseGame();
+		}
+		if (obj == restart) {
+			program.switchToLevel();
+		}
+		if (obj == change) {
+			program.switchToSettings();
 		}
 	}// mouseClicked
 
-
+	public void pauseGame() {
+		pauseAudio();
+		program.time.stop();
+		program.add(cont);
+		program.add(paused);
+		program.add(restart);
+		program.add(change);
+	}
+	
+	public void unPauseGame() {
+		program.time.restart();
+		resumeAudio();
+		program.remove(cont);
+		program.remove(paused);
+		program.remove(restart);
+		program.remove(change);
+	}
 
 	// ***getters***
 	public int getScore() {
@@ -470,6 +494,10 @@ public class Level extends GraphicsPane implements KeyListener {
 		program.remove(healthBar);
 		program.remove(scoreLabel);
 		program.remove(pause);
+		program.remove(paused);
+		program.remove(change);
+		program.remove(restart);
+		program.remove(cont);
 	}
 
 }// Level
