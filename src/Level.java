@@ -177,13 +177,13 @@ public class Level extends GraphicsPane implements KeyListener {
 		program.requestFocus();
 		
 		restart = new GButton("Restart", 235, 300, 100, 40);
-		restart.setFillColor(Color.GRAY);
-		restart.setColor(Color.CYAN);
+		restart.setFillColor(Color.YELLOW);
 		change = new GButton("Change Settings", 335, 300, 100, 40);
+		change.setFillColor(Color.BLACK);
+		change.setColor(Color.CYAN);
 		pause = new GButton("Pause <space>", 675, 15,100,30);
 		cont = new GButton("Resume [Esc]", 435, 300, 100, 40);
-		cont.setColor(Color.CYAN);
-		cont.setFillColor(Color.BLACK);
+		cont.setFillColor(Color.GREEN);
 		paused = new GLabel("PAUSED!",260,200);
 		paused.setFont("Arial-60");
 
@@ -473,6 +473,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		program.add(paused);
 		program.add(restart);
 		program.add(change);
+		program.remove(pause);
 	}
 	
 	public void unPauseGame() {
@@ -482,6 +483,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		program.remove(paused);
 		program.remove(restart);
 		program.remove(change);
+		program.add(pause);
 	}
 
 	// ***getters***
