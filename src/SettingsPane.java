@@ -102,6 +102,9 @@ private int songChoice = 99999;
 		
 		program.add(play);
 		program.add(back);
+		
+		difficultyChoices.get(Math.abs(difficultyChoice%3)).sendToFront();
+		songChoices.get(Math.abs(songChoice%3)).sendToFront();
 	}
 
 	@Override
