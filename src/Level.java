@@ -515,6 +515,11 @@ public class Level extends GraphicsPane implements KeyListener {
 		program.remove(change);
 		program.remove(restart);
 		program.remove(cont);
+		
+		for(Circle circle : circles) {
+			circle.removeCircles();
+			circle.removeLabel();
+			}
 	}
 
 }// Level

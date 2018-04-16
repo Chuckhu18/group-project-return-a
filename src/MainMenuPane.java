@@ -23,14 +23,14 @@ public class MainMenuPane extends GraphicsPane {
 		program = app;
 		backRect.setFillColor(Color.GRAY);
 		backRect.setFilled(true);
-		toSettings = new GImage("playbutton.png", 600, 300); // this is going to create another button and then
+		toSettings = new GImage("playbutton.png", 560, 300); // this is going to create another button and then
 		toSettings.setSize(toSettings.getWidth()/2, toSettings.getHeight()/2);													// filling it in with information
-		howTo = new GImage("howTobutton.png", 120, 300); // instiating, an object is an instance of a clas, initialize the
+		howTo = new GImage("howTobutton.png", 80, 300); // instiating, an object is an instance of a clas, initialize the
 														// object in the
 		howToBack = new GImage("leftArrowbutton copy.png",20,170);
 		howToBack.setSize(howToBack.getWidth()/2, howToBack.getHeight()/2);
 		howTo.setSize(howTo.getWidth()/2, howTo.getHeight()/2);
-		mainMenu = new GImage("LOGO.png", 150,100);
+		mainMenu = new GImage("LOGO.png", 100,100);
 		mainMenu.setSize(mainMenu.getWidth()/5, mainMenu.getHeight()/5);
 	}
 

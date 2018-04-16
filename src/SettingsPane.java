@@ -43,10 +43,12 @@ private int difficultyChoice = 0;
 		hard = new GButton("HARD", 200,208, 100, 25, Color.RED);
 		
 		nextDiff = new GButton(">", 305,208,25,25,Color.CYAN);
-		prevDiff = new GButton("<", 170, 208, 25, 25, Color.GRAY);
+		prevDiff = new GButton("<", 170, 208, 25, 25, Color.BLACK);
+		prevDiff.setColor(Color.CYAN);
 		
-		play = new GButton("PLAY", 350, 350, 50, 25, Color.CYAN);
-		back = new GButton("BACK", 350, 400, 50, 25, Color.GRAY);
+		play = new GButton("PLAY", 400, 350, 50, 25, Color.CYAN);
+		back = new GButton("BACK", 300, 350, 50, 25, Color.BLACK);
+		back.setColor(Color.CYAN);
 		song = new GLabel("Song: ",67,195);
 		song.setFont("Arial-24");
 		hotelCalifornia = new GButton ("Hotel California", 200, 180, 100,25);
