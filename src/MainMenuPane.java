@@ -21,6 +21,8 @@ public class MainMenuPane extends GraphicsPane {
 	public MainMenuPane(MainApplication app) { // always call this app
 		super();
 		program = app;
+		backRect.setFillColor(Color.GRAY);
+		backRect.setFilled(true);
 		toSettings = new GImage("playbutton.png", 600, 300); // this is going to create another button and then
 		toSettings.setSize(toSettings.getWidth()/2, toSettings.getHeight()/2);													// filling it in with information
 		howTo = new GImage("howTobutton.png", 120, 300); // instiating, an object is an instance of a clas, initialize the
@@ -37,6 +39,7 @@ public class MainMenuPane extends GraphicsPane {
 									// contents to the menu page
 		// TODO Auto-generated method stub
 		// 800 x 480
+		program.add(backRect);
 		program.add(mainMenu);
 		program.add(toSettings);
 		program.add(howTo);
@@ -46,6 +49,7 @@ public class MainMenuPane extends GraphicsPane {
 	@Override
 	public void hideContents() {
 		// TODO Auto-generated method stub
+		program.remove(backRect);
 		program.remove(toSettings);
 		program.remove(howTo);
 		program.remove(howtoPlay);

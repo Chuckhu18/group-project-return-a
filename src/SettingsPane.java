@@ -30,6 +30,9 @@ private int difficultyChoice = 0;
 		super();
 		program = app;
 		
+		backRect.setFillColor(Color.GRAY);
+		backRect.setFilled(true);
+		
 		settingsHeading = new GLabel("SETTINGS",250, 100);
 		settingsHeading.setFont("Arial-36");
 		
@@ -61,6 +64,7 @@ private int difficultyChoice = 0;
 	@Override
 	public void showContents() {
 		// TODO Auto-generated method stub
+		program.add(backRect);
 		program.add(song);
 		program.add(nextDiff);
 		program.add(prevDiff);
@@ -78,6 +82,7 @@ private int difficultyChoice = 0;
 	@Override
 	public void hideContents() {
 		// TODO Auto-generated method stub
+		program.remove(backRect);
 		program.remove(song);
 		program.remove(difficulty);
 		program.remove(settingsHeading);

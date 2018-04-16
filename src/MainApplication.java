@@ -85,15 +85,12 @@ public class MainApplication extends GraphicsApplication {
 		level = new Level(this);
 		switchToScreen(level);
 		level.run();
-		time.restart();
+		level.restartAudio();
 	}
 	public void playGame() {
 		time.start();
 	}
-	private void playRandomSound() {
-		AudioPlayer audio = AudioPlayer.getInstance();
-		audio.playSound(MUSIC_FOLDER, SOUND_FILES[count % SOUND_FILES.length]);
-	}
+ 
 	// ***member methods***
 
 	

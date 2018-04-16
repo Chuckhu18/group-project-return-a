@@ -54,7 +54,7 @@ public class Level extends GraphicsPane implements KeyListener {
 	private GLabel scoreLabel; // holds the score for now
 	private GRect healthBar; // displays HP percentage
 	private GRect emptyHPBar; // Empty HP Bar to show full
-	private GRect backRect; // Grey box the circles spawn inside of
+	//private GRect backRect; // Grey box the circles spawn inside of
 	private GLabel paused;
 	private GButton pause;
 	private GButton cont;
@@ -189,7 +189,7 @@ public class Level extends GraphicsPane implements KeyListener {
 
 		
 		// Initializes background rectangle
-		backRect = new GRect(10, 10, WINDOW_WIDTH-20, WINDOW_HEIGHT-20);
+		//backRect = new GRect(10, 10, WINDOW_WIDTH-20, WINDOW_HEIGHT-20);
 		backRect.setFillColor(Color.GRAY);
 		backRect.setFilled(true);
 		
@@ -232,7 +232,6 @@ public class Level extends GraphicsPane implements KeyListener {
 
 		// start audio and timer
 		audioPlayer = AudioPlayer.getInstance();
-		startAudioFile();
 		program.time.start();
 	}
 
@@ -354,8 +353,11 @@ public class Level extends GraphicsPane implements KeyListener {
 	}// resume
 
 	public void restartAudio() {
-		audioPlayer.stopSound(folder, filename);
-		audioPlayer.playSound(folder, filename);
+		if (!isPaused) {
+			audioPlayer.stopSound(folder, filename + ".mp3");
+			audioPlayer.playSound(folder, filename + ".mp3");
+			isPaused = false;
+		}
 	}// restart
 
 	@Override
@@ -455,16 +457,18 @@ public class Level extends GraphicsPane implements KeyListener {
 			unPauseGame();
 		}
 		if (obj == restart) {
+			audioPlayer.pauseSound(folder, filename);
 			program.switchToLevel();
 		}
 		if (obj == change) {
+			pauseAudio();
 			program.switchToSettings();
 		}
 	}// mouseClicked
 
 	public void pauseGame() {
-		pauseAudio();
 		program.time.stop();
+		pauseAudio();
 		program.add(cont);
 		program.add(paused);
 		program.add(restart);

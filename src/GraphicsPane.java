@@ -10,10 +10,14 @@
  * and using showContents and hideContents
  */
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import acm.graphics.GRect;
+
 public abstract class GraphicsPane implements Interfaceable {
+	GRect backRect = new GRect(10, 10, 800-20, 480-20);
 	@Override
 	public abstract void showContents();
 
