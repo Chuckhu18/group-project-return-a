@@ -344,6 +344,10 @@ public class Level extends GraphicsPane implements KeyListener {
 		audioPlayer.pauseSound(folder, filename + ".mp3");
 		isPaused = true;
 	}// pause
+	
+	public void stopAudio() {
+		audioPlayer.stopSound(folder, filename + ".mp3");
+	}
 
 	public void resumeAudio() {
 		if (isPaused) {
@@ -441,10 +445,6 @@ public class Level extends GraphicsPane implements KeyListener {
 
 
 
-
-	
-
-
 	@Override
 	public void mousePressed(MouseEvent e) {
 
@@ -457,11 +457,11 @@ public class Level extends GraphicsPane implements KeyListener {
 			unPauseGame();
 		}
 		if (obj == restart) {
-			audioPlayer.pauseSound(folder, filename);
+			stopAudio();
 			program.switchToLevel();
 		}
 		if (obj == change) {
-			pauseAudio();
+			stopAudio();
 			program.switchToSettings();
 		}
 	}// mouseClicked
@@ -519,7 +519,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		for(Circle circle : circles) {
 			circle.removeCircles();
 			circle.removeLabel();
-			}
+		}
 	}
 
 }// Level

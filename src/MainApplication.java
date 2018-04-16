@@ -52,17 +52,9 @@ public class MainApplication extends GraphicsApplication {
 		 * instantly closing the game
 		 */
 		
-		// Player has run out of health before end of song
-		if(level.getHealth() <= 0) {
-			switchToEndofGame();
-		}
-		
-		// Player has cleared all of the defined circles
-		if(level.getHasWon()) {
-
+		// Player has either won or lost
+		if(level.getHealth() <= 0 || level.getHasWon()) {
 			time.stop();
-			//add(youWin);
-			//youWin.sendToFront();
 			switchToEndofGame();
 		}	
 		
@@ -78,7 +70,7 @@ public class MainApplication extends GraphicsApplication {
 		switchToScreen(settings);
 	}
 	public void switchToEndofGame() {
-		level.pauseAudio();
+		level.stopAudio();
 		switchToScreen(end);
 	}
 	public void switchToLevel() {
