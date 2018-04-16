@@ -44,14 +44,6 @@ public class MainApplication extends GraphicsApplication {
 		//Execute the timer functions from level
 		level.action();
 		
-		/*
-		 * These check to see if the player has won or lost
-		 * TODO: 
-		 * gracefully close Level and send the important
-		 * data to the score display screen instead of
-		 * instantly closing the game
-		 */
-		
 		// Player has either won or lost
 		if(level.getHealth() <= 0 || level.getHasWon()) {
 			time.stop();

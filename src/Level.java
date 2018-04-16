@@ -32,10 +32,10 @@ public class Level extends GraphicsPane {
 	private ArrayList<Circle> circles; // Stores the circles being displayed on the screen
 	private ArrayList<Character> characters; // Stores the characters to feed into the circles
 	private int circleCount; // counts how many circles have spawned since the last important event
-	private int tempo; // How often to spawn circles
+	private double tempo; // How often to spawn circles
 	private ArrayList<Integer> tempoChangeTimes; // times to change tempo
 	private ArrayList<Integer> tempoChangeValues; // how much to change tempo by
-	private int nextCircleSpawn; // saves when to spawn the next circle
+	private double nextCircleSpawn; // saves when to spawn the next circle
 
 	
 	// Used to load song from file to play
@@ -236,10 +236,12 @@ public class Level extends GraphicsPane {
 		/*
 		 * TODO: Fix the slow drift over the course of the song where it gets slowly out of sync
 		 */
-		if (numTicks == nextCircleSpawn) {
+		if (numTicks == Math.floor(nextCircleSpawn)) {
+			System.out.println(nextCircleSpawn);
 			createCircle(); // Make a new circle
 			circleCount++;
 			nextCircleSpawn+=tempo;
+			
 			
 			/*
 			 * TODO:
@@ -427,8 +429,6 @@ public class Level extends GraphicsPane {
 		if(!found) { // if match was found
 			//System.out.println("No match for "+e.getKeyChar()+"!"); // Print to console no match was found
 			if(vicCount==0) health-=MAX_HEALTH/20; // Take health off if the game is still running
-		}else { // if not found
-			System.out.println("Circle "+e.getKeyChar()+" removed!"); // Print to console a match was found
 		}
 	}// keyPressed
 
@@ -438,7 +438,6 @@ public class Level extends GraphicsPane {
 	public void mousePressed(MouseEvent e) {
 
 		GObject obj = program.getElementAt(e.getX(), e.getY());
-		System.out.println("Mouse clicked at ("+e.getX()+","+e.getY()+")!");
 		if (obj == pause) {
 			pauseGame();
 		}
