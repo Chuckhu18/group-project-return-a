@@ -13,7 +13,7 @@ public class MainMenuPane extends GraphicsPane {
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
 	GImage howTo;
-	GParagraph howtoPlay = new GParagraph("", 20, 20);
+	GParagraph howtoPlay = new GParagraph("", 20, 50);
 	GImage howToBack;
 
 	// TODO: implement the settings menu object
@@ -27,7 +27,7 @@ public class MainMenuPane extends GraphicsPane {
 		toSettings.setSize(toSettings.getWidth()/2, toSettings.getHeight()/2);													// filling it in with information
 		howTo = new GImage("howTobutton.png", 80, 300); // instiating, an object is an instance of a clas, initialize the
 														// object in the
-		howToBack = new GImage("leftArrowbutton copy.png",20,170);
+		howToBack = new GImage("leftArrowbutton copy.png",20,190);
 		howToBack.setSize(howToBack.getWidth()/2, howToBack.getHeight()/2);
 		howTo.setSize(howTo.getWidth()/2, howTo.getHeight()/2);
 		mainMenu = new GImage("LOGO.png", 100,100);
@@ -68,6 +68,7 @@ public class MainMenuPane extends GraphicsPane {
 		}
 		if (obj == howTo) {
 			hideContents();
+			program.add(backRect);
 			howtoPlay.setText("Press GO to play. \n\n"
 					+ "*** You must click on the program at the beginning to play (we are working on it) ***\n\n"
 					+ "Press the corresponding key on the keyboard to the ones on the screen. \n"
