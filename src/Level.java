@@ -38,7 +38,7 @@ public class Level extends GraphicsPane implements KeyListener {
 	 * ToHellAndBack
 	 * hotelCali
 	 */
-	String folder = "sounds/";
+	String folder = "sounds";
 	String filename = "hotelCali";
 	
 	// UI elements
@@ -46,6 +46,10 @@ public class Level extends GraphicsPane implements KeyListener {
 	private GRect healthBar; // displays HP percentage
 	private GRect emptyHPBar; // Empty HP Bar to show full
 	private GRect backRect; // Grey box the circles spawn inside of
+	private GImage pause;
+	private GLabel paused;
+	private GButton cont;
+
 	
 	// Used for circle generation to prevent overlapping
 	private double lastXloc = 0;
@@ -159,6 +163,16 @@ public class Level extends GraphicsPane implements KeyListener {
 		program.setFocusable(true);
 		program.requestFocus();
 		
+
+		pause = new GImage("pauseButton.jpg", 727, 15);
+		pause.setSize(pause.getWidth()/3, pause.getHeight()/3);
+		cont = new GButton("Resume", 200, 250, 100, 60);
+		cont.setColor(Color.CYAN);
+		cont.setFillColor(Color.BLACK);
+		paused = new GLabel("paused!",100,200);
+		paused.setFont("Arial-60");
+
+		
 		// Initializes background rectangle
 		backRect = new GRect(10, 10, WINDOW_WIDTH-20, WINDOW_HEIGHT-20);
 		backRect.setFillColor(Color.GRAY);
@@ -180,6 +194,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		program.add(scoreLabel);
 		program.add(emptyHPBar);
 		program.add(healthBar);
+		program.add(pause);
 		
 		rand = new Random();
 
@@ -311,13 +326,13 @@ public class Level extends GraphicsPane implements KeyListener {
 	}// startAudioFile
 
 	public void pauseAudio() {
-		audioPlayer.pauseSound(folder, filename);
+		audioPlayer.pauseSound(folder, filename + ".mp3");
 		isPaused = true;
 	}// pause
 
 	public void resumeAudio() {
 		if (isPaused) {
-			audioPlayer.playSound(folder, filename);
+			audioPlayer.playSound(folder, filename + ".mp3");
 			isPaused = false;
 		}
 	}// resume
@@ -401,10 +416,32 @@ public class Level extends GraphicsPane implements KeyListener {
 		}
 	}// keyPressed
 
+
+
+
+	
+
+
 	@Override
 	public void mousePressed(MouseEvent e) {
+
+		GObject obj = program.getElementAt(e.getX(), e.getY());
 		System.out.println("Mouse clicked at ("+e.getX()+","+e.getY()+")!");
+		if (obj == pause) {
+			pauseAudio();
+			program.time.stop();
+			program.add(cont);
+			program.add(paused);
+		}
+		if (obj == cont) {
+			program.time.restart();
+			resumeAudio();
+			program.remove(cont);
+			program.remove(paused);
+		}
 	}// mouseClicked
+
+
 
 	// ***getters***
 	public int getScore() {
@@ -432,6 +469,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		program.remove(emptyHPBar);
 		program.remove(healthBar);
 		program.remove(scoreLabel);
+		program.remove(pause);
 	}
 
 }// Level
