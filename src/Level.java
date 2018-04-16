@@ -7,7 +7,7 @@ import javax.swing.Timer;
 import acm.graphics.*;
 import acm.program.*;
 
-public class Level extends GraphicsPane implements KeyListener {
+public class Level extends GraphicsPane {
 	
 	// Screen variables
 	public static final int WINDOW_WIDTH = 800;
@@ -29,7 +29,6 @@ public class Level extends GraphicsPane implements KeyListener {
 	
 	// Song and circle variables
 	private Song song;
-	private Circle circle;
 	private ArrayList<Circle> circles; // Stores the circles being displayed on the screen
 	private ArrayList<Character> characters; // Stores the characters to feed into the circles
 	private int circleCount; // counts how many circles have spawned since the last important event
@@ -92,19 +91,15 @@ public class Level extends GraphicsPane implements KeyListener {
 		// make sure circles are not created outside the screen
 		// make sure circles are not overlapped
 
-		int tries = 0;
 		while(Math.abs(xloc - lastXloc) < 100 || Math.abs(xloc - lastXloc2) < 100) {
 			xloc = WINDOW_WIDTH * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 			
-			tries+=1;
 			//System.out.println(tries);
 			//if(tries>10) break;
 		}
-		tries = 0;
 		while(Math.abs(yloc - lastYloc) < 100 || Math.abs(yloc - lastYloc2) < 100 ) {
 			yloc = WINDOW_HEIGHT *(rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 			
-			tries+=1;
 			//System.out.println(tries);
 			//if(tries>10) break;
 		}
@@ -173,8 +168,6 @@ public class Level extends GraphicsPane implements KeyListener {
 
 	public void run() {
 		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
-		program.setFocusable(true);
-		program.requestFocus();
 		
 		restart = new GButton("Restart", 235, 300, 100, 40);
 		restart.setFillColor(Color.YELLOW);
@@ -214,10 +207,6 @@ public class Level extends GraphicsPane implements KeyListener {
 		rand = new Random();
 
 		// loads file for song we want to play
-		/*
-		 * TODO:
-		 * Make it load the difficulty from the previous screen
-		 */
 		song = new Song(filename+diffNum); 
 		
 		
@@ -507,7 +496,6 @@ public class Level extends GraphicsPane implements KeyListener {
 
 	@Override
 	public void hideContents() {
-		// TODO Auto-generated method stub
 		program.remove(backRect);
 		program.remove(emptyHPBar);
 		program.remove(healthBar);
@@ -522,6 +510,7 @@ public class Level extends GraphicsPane implements KeyListener {
 			circle.removeCircles();
 			circle.removeLabel();
 		}
+		program.time.stop();
 	}
 
 }// Level
