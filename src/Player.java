@@ -35,10 +35,11 @@ public class Player extends GraphicsProgram{
 		
 	}
 	
-	public void testFunc() {
+	public static void testFunc() {
 		scores.add("Chuck");
 		scores.add("1000");
 		scores.add("666");
+		scores.add("1234");
 	}
 
 	// private static BufferedWriter bw = null;
@@ -80,11 +81,7 @@ public class Player extends GraphicsProgram{
 		//creating a score list
 		scores = new ArrayList<String>();
 		
-		scores.add("Chuck");
-		scores.add("1000");
-		scores.add("9999");
-		scores.add("123");
-		scores.add("5678");
+		testFunc();
 		
 		//Save created array list to file "player.txt" with ; for each element.
 		saveScoresToFile();

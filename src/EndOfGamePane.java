@@ -10,7 +10,7 @@ public class EndOfGamePane extends GraphicsPane{
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
 	//public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
-	public static final String FILENAME = "player.txt";
+	public static final String FILENAME = "../"+"player.txt";
 	
 	private MainApplication program;
 	GButton playAgain;
@@ -49,8 +49,8 @@ public class EndOfGamePane extends GraphicsPane{
 		}
 		//scoresToDisplay = playerInfo.ReadScoreFromFile();
 		scoresLabels.setLabel(scoresToDisplay);
-//		String readfromfile = Player.ReadScoreFromFile();
-////		scoresLabels.setLabel(readfromfile);
+		String readfromfile = Player.ReadScoreFromFile();
+		scoresLabels.setLabel(readfromfile);
 	}
 	
 //	public static String ReadScoreFromFile() {
