@@ -35,7 +35,7 @@ public class MainMenuPane extends GraphicsPane {
 		howTo.setSize(howTo.getWidth()/2, howTo.getHeight()/2);
 		mainMenu = new GImage("LOGO.png", 150,100);
 		mainMenu.setSize(mainMenu.getWidth()/5, mainMenu.getHeight()/5);
-		userInput = new GLabel("", 50, 30);
+		userInput = new GLabel("hello", 50, 30);
 		
 	}
 
@@ -44,9 +44,9 @@ public class MainMenuPane extends GraphicsPane {
 									// contents to the menu page
 		// TODO Auto-generated method stub
 		// 800 x 480
-		userInput.setLocation(500, 300);
-		userInput.addActionListener(program);
-		program.add(userInput);
+//		userInput.setLocation(500, 300);
+//		userInput.addActionListener(program);
+//		program.add(userInput);
 		program.add(mainMenu);
 		program.add(toSettings);
 		program.add(howTo);
