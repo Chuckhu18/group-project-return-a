@@ -17,7 +17,7 @@ public class MainMenuPane extends GraphicsPane {
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
 	GImage howTo;
-	GParagraph howtoPlay = new GParagraph("", 20, 20);
+	GParagraph howtoPlay = new GParagraph("", 20, 50);
 	GImage howToBack;
 	GLabel userInput;
 
@@ -26,14 +26,16 @@ public class MainMenuPane extends GraphicsPane {
 	public MainMenuPane(MainApplication app) { // always call this app
 		super();
 		program = app;
-		toSettings = new GImage("playbutton.png", 600, 300); // this is going to create another button and then
+		backRect.setFillColor(Color.GRAY);
+		backRect.setFilled(true);
+		toSettings = new GImage("playbutton.png", 560, 300); // this is going to create another button and then
 		toSettings.setSize(toSettings.getWidth()/2, toSettings.getHeight()/2);													// filling it in with information
-		howTo = new GImage("howTobutton.png", 120, 300); // instiating, an object is an instance of a clas, initialize the
+		howTo = new GImage("howTobutton.png", 80, 300); // instiating, an object is an instance of a clas, initialize the
 														// object in the
-		howToBack = new GImage("leftArrowbutton copy.png",20,170);
+		howToBack = new GImage("leftArrowbutton copy.png",20,190);
 		howToBack.setSize(howToBack.getWidth()/2, howToBack.getHeight()/2);
 		howTo.setSize(howTo.getWidth()/2, howTo.getHeight()/2);
-		mainMenu = new GImage("LOGO.png", 150,100);
+		mainMenu = new GImage("LOGO.png", 100,100);
 		mainMenu.setSize(mainMenu.getWidth()/5, mainMenu.getHeight()/5);
 		userInput = new GLabel("hello", 50, 30);
 		
@@ -44,9 +46,12 @@ public class MainMenuPane extends GraphicsPane {
 									// contents to the menu page
 		// TODO Auto-generated method stub
 		// 800 x 480
+
 //		userInput.setLocation(500, 300);
 //		userInput.addActionListener(program);
 //		program.add(userInput);
+
+		program.add(backRect);
 		program.add(mainMenu);
 		program.add(toSettings);
 		program.add(howTo);
@@ -56,6 +61,7 @@ public class MainMenuPane extends GraphicsPane {
 	@Override
 	public void hideContents() {
 		// TODO Auto-generated method stub
+		program.remove(backRect);
 		program.remove(toSettings);
 		program.remove(howTo);
 		program.remove(howtoPlay);
@@ -74,6 +80,7 @@ public class MainMenuPane extends GraphicsPane {
 		}
 		if (obj == howTo) {
 			hideContents();
+			program.add(backRect);
 			howtoPlay.setText("Press GO to play. \n\n"
 					+ "*** You must click on the program at the beginning to play (we are working on it) ***\n\n"
 					+ "Press the corresponding key on the keyboard to the ones on the screen. \n"

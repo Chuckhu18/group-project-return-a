@@ -7,28 +7,35 @@ import javax.swing.Timer;
 import acm.graphics.*;
 import acm.program.*;
 
-public class Level extends GraphicsPane implements KeyListener {
+public class Level extends GraphicsPane {
 	
-	// ***Instance variables***
+	// Screen variables
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
-	public static final int MAX_HEALTH = 10000; // Never set to less than 2000 or casual HP loss breaks
-	int score, health = MAX_HEALTH, numTicks = 0;
+	
+	// System variables
+	private int numTicks = 0; // How many timer ticks have gone by
 	MainApplication program;
 	private Random rand;
-	private Song song;
-	private Circle circle;
-	private ArrayList<Circle> circles; // Stores the circles being displayed on the screen
-	private ArrayList<Character> characters; // Stores the characters to feed into the circles
 	private AudioPlayer audioPlayer;
 	private boolean isPaused;
 	private boolean hasWon = false; // is set to true when the player has won the game
 	private int vicCount = 0; // Used to stop the game from immediately ending after last circle
+	
+	// Player-related variables
+	public static final int MAX_HEALTH = 10000; // Never set to less than 2000 or casual HP loss breaks
+	private int health = MAX_HEALTH;
+	private int score = 0;
+	
+	// Song and circle variables
+	private Song song;
+	private ArrayList<Circle> circles; // Stores the circles being displayed on the screen
+	private ArrayList<Character> characters; // Stores the characters to feed into the circles
+	private int circleCount; // counts how many circles have spawned since the last important event
+	private double tempo; // How often to spawn circles
 	private ArrayList<Integer> tempoChangeTimes; // times to change tempo
 	private ArrayList<Integer> tempoChangeValues; // how much to change tempo by
-	private int circleCount; // counts how many circles have spawned since the last important event
-	private int tempo;
-	private int nextCircleSpawn; // saves when to spawn the next circle
+	private double nextCircleSpawn; // saves when to spawn the next circle
 
 	
 	// Used to load song from file to play
@@ -38,14 +45,20 @@ public class Level extends GraphicsPane implements KeyListener {
 	 * ToHellAndBack
 	 * hotelCali
 	 */
-	String folder = "sounds/";
-	String filename = "hotelCali";
+	private String folder = "sounds/";
+	private String filename = "hotelCali";
+	private String diffNum = "1";
 	
 	// UI elements
 	private GLabel scoreLabel; // holds the score for now
 	private GRect healthBar; // displays HP percentage
 	private GRect emptyHPBar; // Empty HP Bar to show full
-	private GRect backRect; // Grey box the circles spawn inside of
+	//private GRect backRect; // Grey box the circles spawn inside of
+	private GLabel paused;
+	private GButton pause;
+	private GButton cont;
+	private GButton restart;
+	private GButton change;
 	
 	// Used for circle generation to prevent overlapping
 	private double lastXloc = 0;
@@ -63,6 +76,9 @@ public class Level extends GraphicsPane implements KeyListener {
 	public Level(MainApplication app) {
 		super();
 		program = app;
+		filename = app.getSongChoice();
+		diffNum = Integer.toString(app.getDiffChoice()+1);
+		
 		//run();
 	}
 
@@ -75,19 +91,15 @@ public class Level extends GraphicsPane implements KeyListener {
 		// make sure circles are not created outside the screen
 		// make sure circles are not overlapped
 
-		int tries = 0;
 		while(Math.abs(xloc - lastXloc) < 100 || Math.abs(xloc - lastXloc2) < 100) {
 			xloc = WINDOW_WIDTH * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 			
-			tries+=1;
 			//System.out.println(tries);
 			//if(tries>10) break;
 		}
-		tries = 0;
 		while(Math.abs(yloc - lastYloc) < 100 || Math.abs(yloc - lastYloc2) < 100 ) {
 			yloc = WINDOW_HEIGHT *(rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
 			
-			tries+=1;
 			//System.out.println(tries);
 			//if(tries>10) break;
 		}
@@ -156,11 +168,21 @@ public class Level extends GraphicsPane implements KeyListener {
 
 	public void run() {
 		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
-		program.setFocusable(true);
-		program.requestFocus();
+		
+		restart = new GButton("Restart", 235, 300, 100, 40);
+		restart.setFillColor(Color.YELLOW);
+		change = new GButton("Change Settings", 335, 300, 100, 40);
+		change.setFillColor(Color.BLACK);
+		change.setColor(Color.CYAN);
+		pause = new GButton("Pause <space>", 675, 15,100,30);
+		cont = new GButton("Resume [Esc]", 435, 300, 100, 40);
+		cont.setFillColor(Color.GREEN);
+		paused = new GLabel("PAUSED!",260,200);
+		paused.setFont("Arial-60");
+
 		
 		// Initializes background rectangle
-		backRect = new GRect(10, 10, WINDOW_WIDTH-20, WINDOW_HEIGHT-20);
+		//backRect = new GRect(10, 10, WINDOW_WIDTH-20, WINDOW_HEIGHT-20);
 		backRect.setFillColor(Color.GRAY);
 		backRect.setFilled(true);
 		
@@ -180,15 +202,12 @@ public class Level extends GraphicsPane implements KeyListener {
 		program.add(scoreLabel);
 		program.add(emptyHPBar);
 		program.add(healthBar);
+		program.add(pause);
 		
 		rand = new Random();
 
 		// loads file for song we want to play
-		/*
-		 * TODO:
-		 * Make it load the difficulty from the previous screen
-		 */
-		song = new Song(filename+"1"); 
+		song = new Song(filename+diffNum); 
 		
 		
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
@@ -202,7 +221,6 @@ public class Level extends GraphicsPane implements KeyListener {
 
 		// start audio and timer
 		audioPlayer = AudioPlayer.getInstance();
-		startAudioFile();
 		program.time.start();
 	}
 
@@ -215,10 +233,8 @@ public class Level extends GraphicsPane implements KeyListener {
 		numTicks++;
 
 		// Create a new circle every interval of time specified by the song's Tempo
-		/*
-		 * TODO: Fix the slow drift over the course of the song where it gets slowly out of sync
-		 */
-		if (numTicks == nextCircleSpawn) {
+		if (numTicks == Math.floor(nextCircleSpawn)) {
+			System.out.println(nextCircleSpawn);
 			createCircle(); // Make a new circle
 			circleCount++;
 			nextCircleSpawn+=tempo;
@@ -257,15 +273,11 @@ public class Level extends GraphicsPane implements KeyListener {
 					if(circle.getRemoveCounter() == 0) {
 						if(circle.isGood()) { // If it is a good circle
 							// Add the text displaying that you missed
-							circle.getLabel().setLabel("MISS");
-							circle.getLabel().setColor(Color.BLACK);
-							circle.removeCircles();
+							circle.updateLabel("MISS",Color.BLACK);
 							health-=(MAX_HEALTH/10);
 						}
 						else { // Bad circles
-							circle.getLabel().setLabel("NICE");
-							circle.getLabel().setColor(Color.BLUE);
-							circle.removeCircles();
+							circle.updateLabel("NICE",Color.BLUE);
 							health+=MAX_HEALTH/15;
 						}
 					}
@@ -275,8 +287,8 @@ public class Level extends GraphicsPane implements KeyListener {
 				}
 
 				if (circle.getRemoveCounter() >= 20) {
-					circles.remove(circle);
 					circle.removeLabel();
+					circles.remove(circle);
 				}
 			}
 		}
@@ -287,7 +299,7 @@ public class Level extends GraphicsPane implements KeyListener {
 		scoreLabel.setLabel("Your Score:" + Integer.toString(score)); // updates score label every tick
 		scoreLabel.sendToFront(); // makes sure this is always on top of circles
 		
-		if (health < MAX_HEALTH) health = MAX_HEALTH; // Stop HP from growing above 100
+		if (health > MAX_HEALTH) health = MAX_HEALTH; // Stop HP from growing above 100
 		
 		// Updates health bar display every tick
 		healthBar.setSize(emptyHPBar.getWidth() * (health/(double) MAX_HEALTH),emptyHPBar.getHeight());
@@ -311,20 +323,27 @@ public class Level extends GraphicsPane implements KeyListener {
 	}// startAudioFile
 
 	public void pauseAudio() {
-		audioPlayer.pauseSound(folder, filename);
+		audioPlayer.pauseSound(folder, filename + ".mp3");
 		isPaused = true;
 	}// pause
+	
+	public void stopAudio() {
+		audioPlayer.stopSound(folder, filename + ".mp3");
+	}
 
 	public void resumeAudio() {
 		if (isPaused) {
-			audioPlayer.playSound(folder, filename);
+			audioPlayer.playSound(folder, filename + ".mp3");
 			isPaused = false;
 		}
 	}// resume
 
 	public void restartAudio() {
-		audioPlayer.stopSound(folder, filename);
-		audioPlayer.playSound(folder, filename);
+		if (!isPaused) {
+			audioPlayer.stopSound(folder, filename + ".mp3");
+			audioPlayer.playSound(folder, filename + ".mp3");
+			isPaused = false;
+		}
 	}// restart
 
 	@Override
@@ -333,6 +352,13 @@ public class Level extends GraphicsPane implements KeyListener {
 		
 		String text = "";
 		Color cirColor = Color.BLACK;
+		if ((e.getKeyChar() == KeyEvent.VK_SPACE) && !isPaused)
+		{
+			pauseGame();
+		}
+		if((e.getKeyChar() == KeyEvent.VK_ESCAPE) && isPaused) {
+			unPauseGame();
+		}
 		
 		// Iterate through all circles on the screen
 		for(Circle circle : circles) {
@@ -381,30 +407,63 @@ public class Level extends GraphicsPane implements KeyListener {
 				else { // You clicked on a "bad" circle
 					text = "BAD";
 					cirColor = Color.RED;
-					score+=25;
 					health-=MAX_HEALTH/15;
 				}
 				
 				// hide the GOvals after updating the label
 				circle.updateLabel(text, cirColor);
-				circle.removeCircles();
 				
 				found = true; // Remember that we found the circle
 			}
 		}
 		
-		if(found) { // if match was found
-			System.out.println("Circle "+e.getKeyChar()+" removed!"); // Print to console no match was found
-		}else { // if not found
-			System.out.println("No match for "+e.getKeyChar()+"!"); // Print to console no match was found
+		if(!found) { // if match was found
+			//System.out.println("No match for "+e.getKeyChar()+"!"); // Print to console no match was found
 			if(vicCount==0) health-=MAX_HEALTH/20; // Take health off if the game is still running
 		}
 	}// keyPressed
 
+
+
 	@Override
 	public void mousePressed(MouseEvent e) {
-		System.out.println("Mouse clicked at ("+e.getX()+","+e.getY()+")!");
+
+		GObject obj = program.getElementAt(e.getX(), e.getY());
+		if (obj == pause) {
+			pauseGame();
+		}
+		if (obj == cont) {
+			unPauseGame();
+		}
+		if (obj == restart) {
+			stopAudio();
+			program.switchToLevel();
+		}
+		if (obj == change) {
+			stopAudio();
+			program.switchToSettings();
+		}
 	}// mouseClicked
+
+	public void pauseGame() {
+		program.time.stop();
+		pauseAudio();
+		program.add(cont);
+		program.add(paused);
+		program.add(restart);
+		program.add(change);
+		program.remove(pause);
+	}
+	
+	public void unPauseGame() {
+		program.time.restart();
+		resumeAudio();
+		program.remove(cont);
+		program.remove(paused);
+		program.remove(restart);
+		program.remove(change);
+		program.add(pause);
+	}
 
 	// ***getters***
 	public int getScore() {
@@ -427,11 +486,21 @@ public class Level extends GraphicsPane implements KeyListener {
 
 	@Override
 	public void hideContents() {
-		// TODO Auto-generated method stub
 		program.remove(backRect);
 		program.remove(emptyHPBar);
 		program.remove(healthBar);
 		program.remove(scoreLabel);
+		program.remove(pause);
+		program.remove(paused);
+		program.remove(change);
+		program.remove(restart);
+		program.remove(cont);
+		
+		for(Circle circle : circles) {
+			circle.removeCircles();
+			circle.removeLabel();
+		}
+		program.time.stop();
 	}
 
 }// Level

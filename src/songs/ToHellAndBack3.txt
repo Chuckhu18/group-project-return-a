@@ -4,5 +4,5 @@ To Hell And Back
 87
 83
 abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
-18;80;17
-2;-2;2
+18
+2

@@ -11,7 +11,7 @@ public class Song {
 	private String songName; // Name of song
 	private double circleSize; // Starting size of the outside circles
 	private double shrinkSpeed; // How fast the circles shrink
-	private int tempo; // How often circles are created
+	private double tempo; // How often circles are created
 	private String circleList; // list of characters that will appear on the screen
 	private int startDelay; // How many ticks to delay the music starting
 	private ArrayList<Integer> tempoChangeTimes =  new ArrayList<Integer>(); // timestamps when we should change tempo
@@ -62,7 +62,7 @@ public class Song {
 		return shrinkSpeed;
 	}
 
-	public int getTempo() {
+	public double getTempo() {
 		return tempo;
 	}
 	
@@ -97,7 +97,7 @@ public class Song {
 	    songName = reader.readLine();
 	    circleSize = Double.parseDouble(reader.readLine());
 	    shrinkSpeed = Double.parseDouble(reader.readLine());
-	    tempo = Integer.parseInt(reader.readLine());
+	    tempo = Double.parseDouble(reader.readLine());
 	    startDelay = Integer.parseInt(reader.readLine());
 	    circleList = reader.readLine();
 	    

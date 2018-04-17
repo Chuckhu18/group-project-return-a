@@ -19,9 +19,8 @@ public class MainApplication extends GraphicsApplication {
 	private GLabel youWin = new GLabel("YOU WIN", 100, 100);
 	private GLabel youLose = new GLabel("YOU LOSE", 100, 100);
 	public Timer time;
-	
-	
-
+	private String songChoice;
+	private int diffChoice;
 
 	public void init() {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -45,31 +44,9 @@ public class MainApplication extends GraphicsApplication {
 		//Execute the timer functions from level
 		level.action();
 		
-		/*
-		 * These check to see if the player has won or lost
-		 * TODO: 
-		 * gracefully close Level and send the important
-		 * data to the score display screen instead of
-		 * instantly closing the game
-		 */
-		
-		// Player has run out of health before end of song
-		if(level.getHealth() <= 0) {
-			System.out.println("\nYou lost!\nFinal score   : " + level.getScore());
-			System.out.println("\n~~Score References~~\nPerfect score : 2700\nAmazing score : 1350");
-			System.out.println("Great score   : 675\nGood score    : 270\nBad score     : 27");
-			switchToEndofGame();
-		}
-		
-		// Player has cleared all of the defined circles
-		if(level.getHasWon()) {
-
+		// Player has either won or lost
+		if(level.getHealth() <= 0 || level.getHasWon()) {
 			time.stop();
-			System.out.println("\nYou won! Final score : " + level.getScore());
-			System.out.println("\n~~Score References~~\nPerfect score : 2700\nAmazing score : 1350");
-			System.out.println("Great score   : 675\nGood score    : 270\nBad score     : 27");
-			//add(youWin);
-			//youWin.sendToFront();
 			switchToEndofGame();
 		}	
 		
@@ -85,22 +62,40 @@ public class MainApplication extends GraphicsApplication {
 		switchToScreen(settings);
 	}
 	public void switchToEndofGame() {
-		level.pauseAudio();
+		level.stopAudio();
 		switchToScreen(end);
 	}
 	public void switchToLevel() {
 		level = new Level(this);
 		switchToScreen(level);
 		level.run();
-		time.restart();
+		level.startAudioFile();
 	}
 	public void playGame() {
 		time.start();
 	}
-	private void playRandomSound() {
-		AudioPlayer audio = AudioPlayer.getInstance();
-		audio.playSound(MUSIC_FOLDER, SOUND_FILES[count % SOUND_FILES.length]);
-	}
+ 
 	// ***member methods***
 
+	
+	public String getSongChoice() {
+		return songChoice;
+	}
+	public void setSongChoice(String songChoice) {
+		this.songChoice = songChoice;
+	}
+	public int getDiffChoice() {
+		return diffChoice;
+	}
+	public void setDiffChoice(int diffChoice) {
+		this.diffChoice = diffChoice;
+	}
+	
+	public int getWindowWidth() {
+		return WINDOW_WIDTH;
+	}
+	
+	public int getWindowHeight() {
+		return WINDOW_HEIGHT;
+	}
 }
