@@ -41,15 +41,15 @@ public class EndOfGamePane extends GraphicsPane{
 		scoresLabels = new GLabel("Scores will be showing here", 200,200);
 		titleLabel.setFont(new Font("Serif", Font.BOLD, 24));
 		
-		playerInfo.testFunc();
+		Player.testFunc();
 		
-		int arrSize = playerInfo.getScore().size();
-		for(int i = 0; i < arrSize; i++) {
-			scoresToDisplay += playerInfo.getScore().get(i) + " ";
-		}
+//		int arrSize = playerInfo.getScore().size();
+//		for(int i = 0; i < arrSize; i++) {
+//			scoresToDisplay += playerInfo.getScore().get(i) + " ";
+//		}
 		//scoresToDisplay = playerInfo.ReadScoreFromFile();
-		scoresLabels.setLabel(scoresToDisplay);
-		String readfromfile = Player.ReadScoreFromFile();
+//		scoresLabels.setLabel(scoresToDisplay);
+		String readfromfile = Player.ReadScoreFromFile(FILENAME);
 		scoresLabels.setLabel(readfromfile);
 	}
 	

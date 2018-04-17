@@ -25,7 +25,7 @@ public class Player extends GraphicsProgram{
 	private static ArrayList<String> scores;
 	private static ArrayList<GLabel> labels;
 	private static GLabel label;
-	public static final String FILENAME = "../" + "player.txt";
+	public static final String FILENAME = "player.txt";
 	
 	public Player() {
 		name = "Chuck";
@@ -39,7 +39,7 @@ public class Player extends GraphicsProgram{
 		scores.add("Chuck");
 		scores.add("1000");
 		scores.add("666");
-		scores.add("1234");
+		scores.add("123477777");
 	}
 
 	// private static BufferedWriter bw = null;
@@ -86,7 +86,7 @@ public class Player extends GraphicsProgram{
 		//Save created array list to file "player.txt" with ; for each element.
 		saveScoresToFile();
 		//Read all elements from the player.txt file.
-		String readfromfile = ReadScoreFromFile();
+		String readfromfile = ReadScoreFromFile(FILENAME);
 		System.out.println("Printing again: " + readfromfile );
 	}
 
@@ -157,10 +157,10 @@ public class Player extends GraphicsProgram{
 
 	}
 	*/
-	public static String ReadScoreFromFile() {
+	public static String ReadScoreFromFile(String filename) {
 		String sCurrentLine = "";
 		String returnLine = "";
-		try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			System.out.println("Printing what's in the player.txt:");
 			
 			while ((sCurrentLine = br.readLine()) != null) {
