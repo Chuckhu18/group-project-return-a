@@ -15,15 +15,14 @@ public class EndOfGamePane extends GraphicsPane{
 	private MainApplication program;
 	GButton playAgain;
 	GButton mainMenu;
-	GLabel highScores;
+	GLabel titleLabel;
 	//private static ArrayList<GLabel> scoresLabels;
-	private String scoresToDisplay;
+	private String scoresToDisplay = "";
 	GLabel scoresLabels;
 	GRect scoreRect;
 	GImage background;
 	
 	Player playerInfo;
-	
 	
 	public EndOfGamePane(MainApplication app) {
 		program = app;
@@ -32,48 +31,44 @@ public class EndOfGamePane extends GraphicsPane{
 		scoreRect.setFillColor(Color.WHITE);
 		scoreRect.setFilled(true);
 		
-		highScores = new GLabel("HIGH SCORES", 320, 80);
-		highScores.setFont(new Font("Serif", Font.BOLD, 24));
+		titleLabel = new GLabel("HIGH SCORES", 320, 80);
+		titleLabel.setFont(new Font("Serif", Font.BOLD, 24));
 		
 		playAgain = new GButton("PLAY AGAIN", 220, 410, 80, 30, Color.GRAY);
 		mainMenu = new GButton("MAIN MENU", 480, 410, 80, 30, Color.CYAN);
 		
+		playerInfo = new Player();
+		scoresLabels = new GLabel("Scores will be showing here", 200,200);
+		titleLabel.setFont(new Font("Serif", Font.BOLD, 24));
 		
-//		for (int i = 0; i < playerInfo.getScore().size(); i++) {
-//			GLabel scoresLabels = new GLabel((String) playerInfo.getScore().get(i), 100, i * 80 + 200);
-//			scoresLabels.setFont(new Font("Arial",0,18));
-//			program.add(scoresLabels);
-//		}
-		GLabel scoresLabels = new GLabel(" ", 100,100);
+		playerInfo.testFunc();
 		
-		//int size = playerInfo.getScore().size();
-		//playerInfo.addScore("chuck");
-		//playerInfo.addScore("9999");
-		//for(int i = 0; i < 3; i++) {
-		//	scoresToDisplay += playerInfo.getScore().get(i) + " ";
-		//}
+		int arrSize = playerInfo.getScore().size();
+		for(int i = 0; i < arrSize; i++) {
+			scoresToDisplay += playerInfo.getScore().get(i) + " ";
+		}
 		//scoresToDisplay = playerInfo.ReadScoreFromFile();
-		//scoresLabels.setLabel(scoresToDisplay);
-		//scoresLabels.setLabel(ReadScoreFromFile());
+		scoresLabels.setLabel(scoresToDisplay);
+//		String readfromfile = Player.ReadScoreFromFile();
+////		scoresLabels.setLabel(readfromfile);
 	}
 	
-	public static String ReadScoreFromFile() {
-		String sCurrentLine ="";
-		try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
-
-			System.out.println("Printing what's in the player.txt:");
-			
-			while ((sCurrentLine = br.readLine()) != null) {
-				System.out.println(sCurrentLine);
-				sCurrentLine += sCurrentLine;
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return sCurrentLine;
-
-	}
+//	public static String ReadScoreFromFile() {
+//		String sCurrentLine ="";
+//		try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
+//
+//			System.out.println("Printing what's in the player.txt:");
+//			
+//			while ((sCurrentLine = br.readLine()) != null) {
+//				System.out.println(sCurrentLine);
+//				sCurrentLine += sCurrentLine;
+//			}
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		return sCurrentLine;
+//	}
 
 	@Override
 	public void showContents() {
@@ -82,10 +77,10 @@ public class EndOfGamePane extends GraphicsPane{
 		program.add(background);
 		program.add(playAgain);
 		program.add(mainMenu);
+		program.add(titleLabel);
 		program.add(scoreRect);
-		program.add(highScores);
-		//program.add(scoresLabels);
 		
+		program.add(scoresLabels);
 	}
 
 	@Override
@@ -93,11 +88,11 @@ public class EndOfGamePane extends GraphicsPane{
 		// TODO Auto-generated method stub
 		program.remove(playAgain);
 		program.remove(mainMenu);
+		program.remove(titleLabel);
 		program.remove(scoreRect);
-		program.remove(highScores);
 		program.remove(background);
-//		program.remove(scoreRect);
-//		program.remove(scoresLabels);
+		
+		program.remove(scoresLabels);
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
