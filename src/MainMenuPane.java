@@ -1,6 +1,10 @@
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import acm.graphics.*;
 import acm.program.*;
@@ -15,6 +19,7 @@ public class MainMenuPane extends GraphicsPane {
 	GImage howTo;
 	GParagraph howtoPlay = new GParagraph("", 20, 20);
 	GImage howToBack;
+	GLabel userInput;
 
 	// TODO: implement the settings menu object
 	// private SettingsMenu settings = new SettingsMenu(program);
@@ -30,6 +35,8 @@ public class MainMenuPane extends GraphicsPane {
 		howTo.setSize(howTo.getWidth()/2, howTo.getHeight()/2);
 		mainMenu = new GImage("LOGO.png", 150,100);
 		mainMenu.setSize(mainMenu.getWidth()/5, mainMenu.getHeight()/5);
+		userInput = new GLabel("", 50, 30);
+		
 	}
 
 	@Override
@@ -37,6 +44,9 @@ public class MainMenuPane extends GraphicsPane {
 									// contents to the menu page
 		// TODO Auto-generated method stub
 		// 800 x 480
+		userInput.setLocation(500, 300);
+		userInput.addActionListener(program);
+		program.add(userInput);
 		program.add(mainMenu);
 		program.add(toSettings);
 		program.add(howTo);
