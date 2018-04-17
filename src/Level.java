@@ -61,17 +61,14 @@ public class Level extends GraphicsPane {
 	private GButton change;
 	
 	// Used for circle generation to prevent overlapping
-	private double lastXloc = 0;
-	private double lastYloc = 0;
-	private double lastXloc2 = 0;
-	private double lastYloc2 = 0;
-	//private double lastXloc3 = 0;
-	//private double lastYloc3 = 0;
+	private double lastXloc[] = {9999, 9999, 9999, 9999, 9999, 9999};
+	private double lastYloc[] = {9999, 9999, 9999, 9999, 9999, 9999};
+	private int count = 0;
+	private int temp = 0;
 	
 	// Used to generate circles inside of bounds
-	private int temp = 1;
 	private double rangeMin = 0.9;
-	private double rangeMax = 0.1;
+	private double rangeMax = 0.2;
 	
 	public Level(MainApplication app) {
 		super();
@@ -84,36 +81,36 @@ public class Level extends GraphicsPane {
 
 	public void createCircle() {
 		// Generate random coordinate to put the circle at within the bounds of the screen
-		double xloc = WINDOW_WIDTH * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
-		double yloc = WINDOW_HEIGHT *(rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
+		double xloc = getNewLoc(WINDOW_WIDTH);
+		double yloc = getNewLoc(WINDOW_HEIGHT);
+		//System.out.println(count);
 		
-		// keep circle created in side the screen by 100*60 pixel
-		// make sure circles are not created outside the screen
-		// make sure circles are not overlapped
+		/*
+		 * keep circle created in side the screen by 100*60 pixel
+		 * make sure circles are not created outside the screen
+		 * make sure circles are not overlapped
+		 */
+		int breakk = 0;
+		while(ifLocAvailable(WINDOW_WIDTH, xloc, lastXloc) == '0') {
+			xloc = getNewLoc(WINDOW_WIDTH);
+			System.out.println("X>>>>>>>>"+ Double.toString(xloc));
+			breakk++;
+			if(breakk > 10) {break;}
+		}
+		while(ifLocAvailable(WINDOW_HEIGHT,yloc, lastYloc) == '0') {
+			yloc = getNewLoc(WINDOW_HEIGHT);
+			System.out.println("Y>>>>>>>>"+ Double.toString(yloc));
+			breakk++;
+			if(breakk > 10) {break;}
+		}
 
-		while(Math.abs(xloc - lastXloc) < 100 || Math.abs(xloc - lastXloc2) < 100) {
-			xloc = WINDOW_WIDTH * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
-			
-			//System.out.println(tries);
-			//if(tries>10) break;
-		}
-		while(Math.abs(yloc - lastYloc) < 100 || Math.abs(yloc - lastYloc2) < 100 ) {
-			yloc = WINDOW_HEIGHT *(rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
-			
-			//System.out.println(tries);
-			//if(tries>10) break;
+		lastXloc[count] = xloc;
+		lastYloc[count] = yloc;
+		count++;
+		if (count == lastXloc.length) {
+			count = 0;
 		}
 		
-		if(temp == 1) {
-			lastXloc = xloc;
-			lastYloc = yloc;
-		}
-		else{
-			lastXloc2 = xloc;
-			lastYloc2 = yloc;
-		}
-		
-		temp = temp*-1;
 		
 		/*
 		 * Makes some circles randomly "bad"
@@ -148,6 +145,24 @@ public class Level extends GraphicsPane {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * help method for generating random location
+	 */
+	private double getNewLoc(int base) {
+		double newloc = base * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
+		return newloc;
+	}
+	
+	private char ifLocAvailable(int base, double in, double[] last) {
+		for (int i = 0; i < last.length; i++) {
+			if (Math.abs(in - last[i]) < 140) {
+				System.out.println("========" + Double.toString(Math.abs(in-last[i])) );
+				return '0';
+			}
+		}
+		return '1';
 	}
 
 	/**
@@ -294,7 +309,7 @@ public class Level extends GraphicsPane {
 		}
 		
 		if(numTicks % 3 == 0 && vicCount == 0) // Every 2 ticks of the timer take some health off
-			health-=MAX_HEALTH/2000;
+			health+=MAX_HEALTH/200;
 		
 		scoreLabel.setLabel("Your Score:" + Integer.toString(score)); // updates score label every tick
 		scoreLabel.sendToFront(); // makes sure this is always on top of circles
