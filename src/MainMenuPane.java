@@ -15,6 +15,8 @@ public class MainMenuPane extends GraphicsPane {
 	GImage howTo;
 	GParagraph howtoPlay = new GParagraph("", 20, 50);
 	GImage howToBack;
+	
+	GButton scoreBoard;
 
 	// TODO: implement the settings menu object
 	// private SettingsMenu settings = new SettingsMenu(program);
@@ -32,6 +34,9 @@ public class MainMenuPane extends GraphicsPane {
 		howTo.setSize(howTo.getWidth()/2, howTo.getHeight()/2);
 		mainMenu = new GImage("LOGO.png", 100,100);
 		mainMenu.setSize(mainMenu.getWidth()/5, mainMenu.getHeight()/5);
+		
+		//adding score board on the menu
+		scoreBoard = new GButton("Score Board", 320, 300, 140, 35);
 	}
 
 	@Override
@@ -44,6 +49,8 @@ public class MainMenuPane extends GraphicsPane {
 		program.add(toSettings);
 		program.add(howTo);
 		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // the size of the applet is:
+		
+		program.add(scoreBoard);
 	}
 
 	@Override
@@ -55,6 +62,8 @@ public class MainMenuPane extends GraphicsPane {
 		program.remove(howtoPlay);
 		program.remove(howToBack);
 		program.remove(mainMenu);
+		
+		program.remove(scoreBoard);
 	}
 
 	@Override

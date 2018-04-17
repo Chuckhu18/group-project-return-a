@@ -18,6 +18,7 @@ public class EndOfGamePane extends GraphicsPane{
 	GLabel titleLabel;
 	//private static ArrayList<GLabel> scoresLabels;
 	private String scoresToDisplay = "";
+	GLabel nameLabel;
 	GLabel scoresLabels;
 	GRect scoreRect;
 	GImage background;
@@ -31,17 +32,24 @@ public class EndOfGamePane extends GraphicsPane{
 		scoreRect.setFillColor(Color.WHITE);
 		scoreRect.setFilled(true);
 		
-		titleLabel = new GLabel("HIGH SCORES", 320, 80);
-		titleLabel.setFont(new Font("Serif", Font.BOLD, 24));
+		titleLabel = new GLabel("HIGH SCORES", 310, 80);
+		titleLabel.setFont(new Font("Serif", Font.BOLD, 30));
 		
 		playAgain = new GButton("PLAY AGAIN", 220, 410, 80, 30, Color.GRAY);
 		mainMenu = new GButton("MAIN MENU", 480, 410, 80, 30, Color.CYAN);
 		
 		playerInfo = new Player();
-		scoresLabels = new GLabel("Scores will be showing here", 200,200);
-		titleLabel.setFont(new Font("Serif", Font.BOLD, 24));
+
+		nameLabel = new GLabel("",200,180);
+		nameLabel.setFont(new Font("Serif", Font.BOLD, 24));
+		
+		scoresLabels = new GLabel("", 300,180);
+		scoresLabels.setFont(new Font("Serif", Font.BOLD, 24));
+		
 		
 		Player.testFunc();
+		
+		nameLabel.setLabel(playerInfo.getName());
 		
 //		int arrSize = playerInfo.getScore().size();
 //		for(int i = 0; i < arrSize; i++) {
@@ -79,7 +87,7 @@ public class EndOfGamePane extends GraphicsPane{
 		program.add(mainMenu);
 		program.add(titleLabel);
 		program.add(scoreRect);
-		
+		program.add(nameLabel);
 		program.add(scoresLabels);
 	}
 
@@ -91,7 +99,7 @@ public class EndOfGamePane extends GraphicsPane{
 		program.remove(titleLabel);
 		program.remove(scoreRect);
 		program.remove(background);
-		
+		program.remove(nameLabel);
 		program.remove(scoresLabels);
 	}
 	@Override

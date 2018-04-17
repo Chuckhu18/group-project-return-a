@@ -28,18 +28,15 @@ public class Player extends GraphicsProgram{
 	public static final String FILENAME = "player.txt";
 	
 	public Player() {
-		name = "Chuck";
-		
 		//creating a score list
 		scores = new ArrayList<String>();
-		
 	}
 	
 	public static void testFunc() {
-		scores.add("Chuck");
+		name = "Chuck";
 		scores.add("1000");
 		scores.add("666");
-		scores.add("123477777");
+		scores.add("12347");
 	}
 
 	// private static BufferedWriter bw = null;
@@ -91,7 +88,7 @@ public class Player extends GraphicsProgram{
 	}
 
 	public String getName() {
-		return name;
+		return Player.name;
 	}
 
 	public ArrayList<String> getScore() {
@@ -120,7 +117,7 @@ public class Player extends GraphicsProgram{
 			
 			//bw.write( name +";");
 			for (String str : scores) {
-				bw.write(str+",");
+				bw.write(str+" ");
 				System.out.println("writing: " + str);
 			}
 			System.out.println("Done writing");
