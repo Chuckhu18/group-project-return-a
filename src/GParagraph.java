@@ -16,6 +16,9 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.awt.event.KeyEvent;
+import com.sun.jdi.event.Event;
+import java.awt.event.KeyAdapter;
 import acm.graphics.GCompound;
 import acm.graphics.GLabel;
 
@@ -26,6 +29,7 @@ public class GParagraph extends GCompound {
 	private String allText;
 	private double labelHeight;
 	private List<GLabel> labels;
+	private GLabel input;
 
 	public GParagraph(String label, double x, double y) {
 		super();
@@ -35,6 +39,7 @@ public class GParagraph extends GCompound {
 		allText = label;
 		labels.add(new GLabel("", startX, startY));
 		processLabels();
+		//input = new GLabel("",50,20);
 	}
 
 	public void setColor(Color c) {
@@ -96,5 +101,18 @@ public class GParagraph extends GCompound {
 
 	private String[] breakIntoLines(String label) {
 		return label.split(NEWLINE);
+	}
+	//@Override
+	public void keyPressed(KeyEvent e) {
+		//double keyPressed = input.getX();
+		//String temp = e.toString();
+		input.setLabel("Press enter to enter name");
+		String label = input.getLabel();
+		if (e.getKeyCode() == 13) {
+			input.setLabel(Character.toString(e.getKeyChar()));
+			if (label.length() > 0) {
+				
+			}
+		}
 	}
 }

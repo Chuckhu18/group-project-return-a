@@ -1,6 +1,10 @@
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import acm.graphics.*;
 import acm.program.*;
@@ -17,6 +21,8 @@ public class MainMenuPane extends GraphicsPane {
 	GImage howToBack;
 	
 	GButton scoreBoard;
+
+	GLabel userInput;
 
 	// TODO: implement the settings menu object
 	// private SettingsMenu settings = new SettingsMenu(program);
@@ -37,13 +43,19 @@ public class MainMenuPane extends GraphicsPane {
 		
 		//adding score board on the menu
 		scoreBoard = new GButton("Score Board", 320, 300, 140, 35);
-	}
+		userInput = new GLabel("hello", 50, 30);
+			}
 
 	@Override
 	public void showContents() { // this is like your main method in this class. THis is going to add all the
 									// contents to the menu page
 		// TODO Auto-generated method stub
 		// 800 x 480
+
+//		userInput.setLocation(500, 300);
+//		userInput.addActionListener(program);
+//		program.add(userInput);
+
 		program.add(backRect);
 		program.add(mainMenu);
 		program.add(toSettings);
