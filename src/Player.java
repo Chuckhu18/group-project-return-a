@@ -16,7 +16,6 @@ public class Player{
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
 	public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
-	
 	Song song;
 	//Level l = new Level();
 	private static String name;
@@ -38,6 +37,12 @@ public class Player{
 		scores.add("9999");
 		
 	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String n) {
+		name = n;
+	}
 
 	// private static BufferedWriter bw = null;
 	// private static FileWriter fw = null;
@@ -55,9 +60,6 @@ public class Player{
 		System.out.println("Printing again: " + readfromfile );
 	}
 
-	public String getName() {
-		return Player.name;
-	}
 
 	public ArrayList<String> getScore() {
 		return scores;

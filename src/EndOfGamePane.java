@@ -48,7 +48,7 @@ public class EndOfGamePane extends GraphicsPane{
 		
 		
 		Player.testFunc();
-		
+		//TODO: change this to get the name from main menu
 		nameLabel.setLabel(playerInfo.getName());
 		
 //		int arrSize = playerInfo.getScore().size();
