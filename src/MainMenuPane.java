@@ -31,9 +31,9 @@ public class MainMenuPane extends GraphicsPane {
 		program = app;
 		backRect.setFillColor(Color.GRAY);
 		backRect.setFilled(true);
-		toSettings = new GImage("playbutton.png", 560, 300); // this is going to create another button and then
+		toSettings = new GImage("playbutton.png", 460, 300); // this is going to create another button and then
 		toSettings.setSize(toSettings.getWidth()/2, toSettings.getHeight()/2);													// filling it in with information
-		howTo = new GImage("howTobutton.png", 80, 300); // instiating, an object is an instance of a clas, initialize the
+		howTo = new GImage("howTobutton.png", 180, 300); // instiating, an object is an instance of a clas, initialize the
 														// object in the
 		howToBack = new GImage("leftArrowbutton copy.png",20,190);
 		howToBack.setSize(howToBack.getWidth()/2, howToBack.getHeight()/2);
@@ -42,7 +42,7 @@ public class MainMenuPane extends GraphicsPane {
 		mainMenu.setSize(mainMenu.getWidth()/5, mainMenu.getHeight()/5);
 		
 		//adding score board on the menu
-		scoreBoard = new GButton("Score Board", 320, 300, 140, 35);
+		//scoreBoard = new GButton("Score Board", 320, 300, 140, 35);
 		userInput = new GLabel("hello", 50, 30);
 			}
 
@@ -62,7 +62,7 @@ public class MainMenuPane extends GraphicsPane {
 		program.add(howTo);
 		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // the size of the applet is:
 		
-		program.add(scoreBoard);
+		//program.add(scoreBoard);
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class MainMenuPane extends GraphicsPane {
 		program.remove(howToBack);
 		program.remove(mainMenu);
 		
-		program.remove(scoreBoard);
+		//program.remove(scoreBoard);
 	}
 
 	@Override
