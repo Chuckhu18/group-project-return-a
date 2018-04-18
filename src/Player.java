@@ -18,7 +18,6 @@ public class Player extends GraphicsProgram{
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
 	public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
-	
 	Song song;
 	Level s;
 	private static String name;
@@ -37,6 +36,12 @@ public class Player extends GraphicsProgram{
 		scores.add("1000");
 		scores.add("666");
 		scores.add("12347");
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String n) {
+		name = n;
 	}
 
 	// private static BufferedWriter bw = null;
@@ -87,9 +92,6 @@ public class Player extends GraphicsProgram{
 		System.out.println("Printing again: " + readfromfile );
 	}
 
-	public String getName() {
-		return Player.name;
-	}
 
 	public ArrayList<String> getScore() {
 		return this.scores;

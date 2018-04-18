@@ -103,16 +103,5 @@ public class GParagraph extends GCompound {
 		return label.split(NEWLINE);
 	}
 	//@Override
-	public void keyPressed(KeyEvent e) {
-		//double keyPressed = input.getX();
-		//String temp = e.toString();
-		input.setLabel("Press enter to enter name");
-		String label = input.getLabel();
-		if (e.getKeyCode() == 13) {
-			input.setLabel(Character.toString(e.getKeyChar()));
-			if (label.length() > 0) {
-				
-			}
-		}
-	}
+	
 }
