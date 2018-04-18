@@ -11,21 +11,18 @@
 import java.awt.Font;
 import java.io.*;
 import java.util.ArrayList;
-import acm.graphics.*;
-import acm.program.GraphicsProgram;
 
-public class Player extends GraphicsProgram{
+public class Player{
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
 	public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
 	
 	Song song;
-	Level s;
+	//Level l = new Level();
 	private static String name;
 	private static ArrayList<String> scores;
-	private static ArrayList<GLabel> labels;
-	private static GLabel label;
 	public static final String FILENAME = "player.txt";
+	public static String currentPlayerFile = "";
 	
 	public Player() {
 		//creating a score list
@@ -34,56 +31,27 @@ public class Player extends GraphicsProgram{
 	
 	public static void testFunc() {
 		name = "Chuck";
-		scores.add("1000");
-		scores.add("666");
-		scores.add("12347");
+		currentPlayerFile = name + ".txt";
+		//scores.add(Integer.toString(l.getScore()));
+		scores.add("100");
+		scores.add("123");
+		scores.add("9999");
+		
 	}
 
 	// private static BufferedWriter bw = null;
 	// private static FileWriter fw = null;
 	
-/*  //Created own screen for testing
-	public void init() {
-		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	}
-	
-	public void run() {
-		GRect rect = new GRect(10, 10, 800-20, 480-20);
-		scores = new ArrayList<String>();
-		name = "Chuck";
-		//scores.add(Integer.toString(s.getScore()));
-		scores.add("9999");
-		//scores.add("99");
-		
-		saveScoresToFile();
-		ReadScoreFromFile();
-
-		GLabel nameLabel = new GLabel(name, 100, 100);
-		nameLabel.setFont(new Font("Arial",0,30));
-		add(nameLabel);
-		
-		for (int i = 0; i < scores.size(); i++) {
-			GLabel scoreLabel = new GLabel(scores.get(i), 100, i * 80 + 200);
-			scoreLabel.setFont(new Font("Arial",0,30));
-			add(scoreLabel);
-		}
-		
-		add(rect);
-		
-	}
-	*/
-	
 	public static void main(String[] args) {
-		name = "Chuck";
 		//creating a score list
 		scores = new ArrayList<String>();
 		
 		testFunc();
 		
 		//Save created array list to file "player.txt" with ; for each element.
-		saveScoresToFile();
+		saveScoresToFile(currentPlayerFile);
 		//Read all elements from the player.txt file.
-		String readfromfile = ReadScoreFromFile(FILENAME);
+		String readfromfile = ReadScoreFromFile(currentPlayerFile);
 		System.out.println("Printing again: " + readfromfile );
 	}
 
@@ -92,27 +60,21 @@ public class Player extends GraphicsProgram{
 	}
 
 	public ArrayList<String> getScore() {
-		return this.scores;
+		return scores;
 	}
-	
-	/*
-	public void addScore(Song song, int scoreAdd) {
-		System.out.println("The song is " + song.getSongName());
-	}
-*/
 
 	public void addScore(String scoreAdd) {
 		scores.add(scoreAdd);
 	}
 
 
-	public static void saveScoresToFile() {
+	public static void saveScoresToFile(String f) {
 		BufferedWriter bw = null;
 		FileWriter fw = null;
 
 		System.out.println("Writing file ...");
 		try {
-			fw = new FileWriter(FILENAME);
+			fw = new FileWriter(f);
 			bw = new BufferedWriter(fw);
 			
 			//bw.write( name +";");
@@ -158,7 +120,7 @@ public class Player extends GraphicsProgram{
 		String sCurrentLine = "";
 		String returnLine = "";
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-			System.out.println("Printing what's in the player.txt:");
+			System.out.println("Printing what's in the "+filename);
 			
 			while ((sCurrentLine = br.readLine()) != null) {
 				System.out.println(sCurrentLine);
