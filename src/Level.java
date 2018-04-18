@@ -314,7 +314,7 @@ public class Level extends GraphicsPane {
 		}
 		
 		if(numTicks % 3 == 0 && vicCount == 0) // Every 2 ticks of the timer take some health off
-			health+=MAX_HEALTH/20;
+			health-=MAX_HEALTH/2000;
 		
 		scoreLabel.setLabel("Your Score:" + Integer.toString(score)); // updates score label every tick
 		scoreLabel.sendToFront(); // makes sure this is always on top of circles
