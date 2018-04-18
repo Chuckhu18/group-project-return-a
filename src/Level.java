@@ -1,4 +1,5 @@
 import java.awt.event.*;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -6,6 +7,7 @@ import java.util.Random;
 import javax.swing.Timer;
 import acm.graphics.*;
 import acm.program.*;
+
 
 public class Level extends GraphicsPane {
 	
@@ -61,10 +63,8 @@ public class Level extends GraphicsPane {
 	private GButton change;
 	
 	// Used for circle generation to prevent overlapping
-	private double lastXloc[] = {9999, 9999, 9999, 9999, 9999, 9999};
-	private double lastYloc[] = {9999, 9999, 9999, 9999, 9999, 9999};
-	private int count = 0;
-	private int temp = 0;
+	private ArrayList<Double> lastX = new ArrayList<Double>();
+	private ArrayList<Double> lastY = new ArrayList<Double>();
 	
 	// Used to generate circles inside of bounds
 	private double rangeMin = 0.9;
@@ -83,6 +83,7 @@ public class Level extends GraphicsPane {
 		// Generate random coordinate to put the circle at within the bounds of the screen
 		double xloc = getNewLoc(WINDOW_WIDTH);
 		double yloc = getNewLoc(WINDOW_HEIGHT);
+		
 		//System.out.println(count);
 		
 		/*
@@ -90,25 +91,21 @@ public class Level extends GraphicsPane {
 		 * make sure circles are not created outside the screen
 		 * make sure circles are not overlapped
 		 */
-		int breakk = 0;
-		while(ifLocAvailable(WINDOW_WIDTH, xloc, lastXloc) == '0') {
+		
+		while(ifLocNotAvailable(xloc, lastX)) {
 			xloc = getNewLoc(WINDOW_WIDTH);
-			System.out.println("X>>>>>>>>"+ Double.toString(xloc));
-			breakk++;
-			if(breakk > 10) {break;}
+			//System.out.println("X>>>>>>>>"+ Double.toString(xloc));
 		}
-		while(ifLocAvailable(WINDOW_HEIGHT,yloc, lastYloc) == '0') {
+		while(ifLocNotAvailable(yloc, lastY)) {
 			yloc = getNewLoc(WINDOW_HEIGHT);
-			System.out.println("Y>>>>>>>>"+ Double.toString(yloc));
-			breakk++;
-			if(breakk > 10) {break;}
+			//System.out.println("Y>>>>>>>>"+ Double.toString(yloc));
 		}
-
-		lastXloc[count] = xloc;
-		lastYloc[count] = yloc;
-		count++;
-		if (count == lastXloc.length) {
-			count = 0;
+		
+		lastX.add(xloc);
+		lastY.add(yloc);
+		if (lastX.size() > 4) {
+			lastX.remove(0);
+			lastY.remove(0);
 		}
 		
 		
@@ -155,15 +152,23 @@ public class Level extends GraphicsPane {
 		return newloc;
 	}
 	
-	private char ifLocAvailable(int base, double in, double[] last) {
-		for (int i = 0; i < last.length; i++) {
-			if (Math.abs(in - last[i]) < 140) {
-				System.out.println("========" + Double.toString(Math.abs(in-last[i])) );
-				return '0';
+	/*Tried to use getElementA() method to check if there are any elements near by
+	private boolean ifLocAvailable(double xin, double yin) {
+		if (getElementAt(xin, yin) != null)
+		return true;
+	}*/
+	
+	private boolean ifLocNotAvailable(double in, ArrayList<Double> last) {
+		for(int i = 0; i < last.size(); i++ ) {
+			if(Math.abs(in - last.get(i)) <= 45) {
+				//System.out.println("========" + Double.toString(Math.abs(in - last.get(i))) );
+				return true;
 			}
 		}
-		return '1';
+		return false;
 	}
+	
+	
 
 	/**
 	 * Creates an ArrayListof characters from given string
