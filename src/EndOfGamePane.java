@@ -20,12 +20,21 @@ public class EndOfGamePane extends GraphicsPane{
 	GLabel titleLabel, yourScoresLabel, allScoresLabel;
 	
 	GLabel nameLabel;
-	private ArrayList<GLabel> scoresLabels = new ArrayList<GLabel>();;
+	private ArrayList<GLabel> scoresLabels;
 	GRect scoreRect1,scoreRect2;
 	
 	GImage background;
 	
 	Player playerInfo;
+	
+	GLabel get1;
+	GLabel get2;
+	GLabel get3;
+	
+	GLabel get4;
+	GLabel get5;
+	GLabel get6;
+	GLabel get7;
 	
 	public EndOfGamePane(MainApplication app) {
 		program = app;
@@ -65,7 +74,7 @@ public class EndOfGamePane extends GraphicsPane{
 		*/
 		playerInfo = new Player();
 		
-		//playerInfo.testFunc();
+		//Player.testFunc();
 		//TODO: change this to get the name from main menu
 		//nameLabel.setLabel(playerInfo.getName());
 		
@@ -79,12 +88,30 @@ public class EndOfGamePane extends GraphicsPane{
 		ArrayList<String> currentScores = new ArrayList<String>();
 		ArrayList<String> allScores = new ArrayList<String>();
 		
+		scoresLabels = new ArrayList<GLabel>();
+		
 		//currentScores = Player.ReadScoresFromFile(FILEDIRECTORY + playerInfo.getName() + ".txt");
+		currentScores = playerInfo.ReadScoresFromFile(FILEDIRECTORY + "Chuck.txt");
+		allScores = playerInfo.ReadScoresFromFile(FILEDIRECTORY + "allScores.txt");
+		
+		get1 = new GLabel(currentScores.get(0),120,150);
+		get2 = new GLabel(currentScores.get(1),120,180);
+		get3 = new GLabel(currentScores.get(2),120,210);
+		
+		get4 = new GLabel(allScores.get(0),445,150);
+		get5 = new GLabel(allScores.get(1),445,180);
+		get6 = new GLabel(allScores.get(2),445,210);
+		get7 = new GLabel(allScores.get(3),445,240);
+		
+		
+		
+		/*Dont know how to do the arraylist for glabel
 		for(int i = 0; i < currentScores.size(); i++) {
 			scoresLabels.get(i).setLabel(currentScores.get(i));
 			scoresLabels.get(i).setLocation(120, 100*(i+1));
 			//scoresLabels.set(i, new GLabel(currentScores.get(i), 120, 100*(i+1)));
 		}
+		*/
 		
 	}
 
@@ -101,6 +128,14 @@ public class EndOfGamePane extends GraphicsPane{
 		program.add(scoreRect1);
 		program.add(scoreRect2);
 		
+		program.add(get1);
+		program.add(get2);
+		program.add(get3);
+		program.add(get4);
+		program.add(get5);
+		program.add(get6);
+		program.add(get7);
+		
 	}
 
 	@Override
@@ -114,6 +149,14 @@ public class EndOfGamePane extends GraphicsPane{
 		program.remove(scoreRect1);
 		program.remove(scoreRect2);
 		program.remove(background);
+		
+		program.remove(get1);
+		program.remove(get2);
+		program.remove(get3);
+		program.remove(get4);
+		program.remove(get5);
+		program.remove(get6);
+		program.remove(get7);
 		
 	}
 	@Override

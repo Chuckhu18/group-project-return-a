@@ -35,8 +35,10 @@ public class Player{
 		//creating a score array list
 		scores = new ArrayList<String>();
 		allScores = new ArrayList<String>();
-		Player player = new Player();
 		testFunc();
+		Player player = new Player();
+		//initialize files with created scores
+		player.saveScoresToFile(scores,currentPlayerFile);
 		
 		//TODO: the name should get from user input in main menu 
 		/*
@@ -48,27 +50,10 @@ public class Player{
 		*/
 		
 		//read all elements from name.txt file and pull scores out
-		scores = ReadScoresFromFile(currentPlayerFile);
+		scores = player.ReadScoresFromFile(currentPlayerFile);
 		System.out.println("Printing current player scores: " + scores );
 		
-		
 		//add current score to sorted array list from playername.txt file
-//		int lowestScoreIndex = -1;
-//		int lowestScore = 0;
-//		for (int i = 0; i < scores.size(); i++) {
-//			if (lowestScoreIndex < 0) {
-//				lowestScore = Integer.parseInt(scores.get(i));
-//				lowestScoreIndex = i;
-//			}
-//
-//			if (lowestScore > Integer.parseInt(scores.get(i))) {
-//				lowestScore = Integer.parseInt(scores.get(i));
-//				lowestScoreIndex = i;
-//			}
-//		}
-		
-//		System.out.println("Lowest: " + lowestScore );
-//		System.out.println("Lowest i: " + lowestScoreIndex );
 		boolean flag = false;
 		for(int i = 0; i < scores.size(); i++)
 			if(!flag && currentScore > Integer.parseInt(scores.get(i))) {
@@ -79,15 +64,14 @@ public class Player{
 		if (scores.size() > 3) {
 			scores.remove(3);
 		}
+		System.out.println("After replace with current: " + scores );
 		
-		
-		System.out.println("After replace: " + scores );
 		//save the new score array list in the file for current player file
-		saveScoresToFile(scores,currentPlayerFile);
+		player.saveScoresToFile(scores,currentPlayerFile);
 		
 		
-		//allScores =  ReadScoresFromFile(FILENAME);
-		//System.out.println("Printing all scores: " + allScores );
+		allScores =  player.ReadScoresFromFile(FILENAME);
+		System.out.println("Printing all scores: " + allScores );
 		
 		//Save created array list to file "player.txt" with ; for each element.
 		//saveScoresToFile(currentPlayerFile);
@@ -97,22 +81,18 @@ public class Player{
 		name = "Chuck";
 		currentPlayerFile = name + ".txt";
 		currentScore = 1000;
-		//scores.add(Integer.toString(l.getScore()));
 		scores.add("999");
 		scores.add("400");
 		scores.add("200");
 		
 	}
+	
 	public String getName() {
 		return name;
 	}
 	public void setName(String n) {
 		name = n;
 	}
-
-	// private static BufferedWriter bw = null;
-	// private static FileWriter fw = null;
-
 
 	public ArrayList<String> getScore() {
 		return scores;
@@ -122,7 +102,7 @@ public class Player{
 		scores.add(scoreAdd);
 	}
 
-	public static void saveScoresToFile(ArrayList<String> inStr, String f) {
+	public void saveScoresToFile(ArrayList<String> inStr, String f) {
 		BufferedWriter bw = null;
 		FileWriter fw = null;
 
@@ -152,7 +132,7 @@ public class Player{
 		}
 	}
 
-	public static ArrayList<String> ReadScoresFromFile(String filename) {
+	public ArrayList<String> ReadScoresFromFile(String filename) {
 		ArrayList<String> read = new ArrayList<String>();
 		
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
