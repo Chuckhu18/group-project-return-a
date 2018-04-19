@@ -79,7 +79,7 @@ public class EndOfGamePane extends GraphicsPane{
 		ArrayList<String> currentScores = new ArrayList<String>();
 		ArrayList<String> allScores = new ArrayList<String>();
 		
-		currentScores = Player.ReadScoresFromFile(FILEDIRECTORY + playerInfo.getName() + ".txt");
+		//currentScores = Player.ReadScoresFromFile(FILEDIRECTORY + playerInfo.getName() + ".txt");
 		for(int i = 0; i < currentScores.size(); i++) {
 			scoresLabels.get(i).setLabel(currentScores.get(i));
 			scoresLabels.get(i).setLocation(120, 100*(i+1));
