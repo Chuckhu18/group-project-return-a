@@ -19,22 +19,88 @@ public class Player{
 	Song song;
 	//Level l = new Level();
 	private static String name;
+	private static int currentScore;
 	private static ArrayList<String> scores;
-	public static final String FILENAME = "player.txt";
+	private static ArrayList<String> allScores;
+	private static ArrayList<String> allScoresName;
+	public static final String FILENAME = "allScores.txt";
 	public static String currentPlayerFile = "";
 	
 	public Player() {
 		//creating a score list
+		//scores = new ArrayList<String>();
+	}
+	
+	public static void main(String[] args) {
+		//creating a score array list
 		scores = new ArrayList<String>();
+		allScores = new ArrayList<String>();
+		Player player = new Player();
+		testFunc();
+		
+		//TODO: the name should get from user input in main menu 
+		/*
+		if((name + ".txt") != currentPlayerFile) {
+			System.out.println("Creating new player info...");
+			scores.add(Integer.toString(currentScore));
+			saveScoresToFile(scores,currentPlayerFile);
+		}
+		*/
+		
+		//read all elements from name.txt file and pull scores out
+		scores = ReadScoresFromFile(currentPlayerFile);
+		System.out.println("Printing current player scores: " + scores );
+		
+		
+		//add current score to sorted array list from playername.txt file
+//		int lowestScoreIndex = -1;
+//		int lowestScore = 0;
+//		for (int i = 0; i < scores.size(); i++) {
+//			if (lowestScoreIndex < 0) {
+//				lowestScore = Integer.parseInt(scores.get(i));
+//				lowestScoreIndex = i;
+//			}
+//
+//			if (lowestScore > Integer.parseInt(scores.get(i))) {
+//				lowestScore = Integer.parseInt(scores.get(i));
+//				lowestScoreIndex = i;
+//			}
+//		}
+		
+//		System.out.println("Lowest: " + lowestScore );
+//		System.out.println("Lowest i: " + lowestScoreIndex );
+		boolean flag = false;
+		for(int i = 0; i < scores.size(); i++)
+			if(!flag && currentScore > Integer.parseInt(scores.get(i))) {
+				scores.add(i, Integer.toString(currentScore));
+				flag = true;
+			}
+		
+		if (scores.size() > 3) {
+			scores.remove(3);
+		}
+		
+		
+		System.out.println("After replace: " + scores );
+		//save the new score array list in the file for current player file
+		saveScoresToFile(scores,currentPlayerFile);
+		
+		
+		//allScores =  ReadScoresFromFile(FILENAME);
+		//System.out.println("Printing all scores: " + allScores );
+		
+		//Save created array list to file "player.txt" with ; for each element.
+		//saveScoresToFile(currentPlayerFile);
 	}
 	
 	public static void testFunc() {
 		name = "Chuck";
 		currentPlayerFile = name + ".txt";
+		currentScore = 1000;
 		//scores.add(Integer.toString(l.getScore()));
-		scores.add("100");
-		scores.add("123");
-		scores.add("9999");
+		scores.add("999");
+		scores.add("400");
+		scores.add("200");
 		
 	}
 	public String getName() {
@@ -46,19 +112,6 @@ public class Player{
 
 	// private static BufferedWriter bw = null;
 	// private static FileWriter fw = null;
-	
-	public static void main(String[] args) {
-		//creating a score list
-		scores = new ArrayList<String>();
-		
-		testFunc();
-		
-		//Save created array list to file "player.txt" with ; for each element.
-		saveScoresToFile(currentPlayerFile);
-		//Read all elements from the player.txt file.
-		String readfromfile = ReadScoreFromFile(currentPlayerFile);
-		System.out.println("Printing again: " + readfromfile );
-	}
 
 
 	public ArrayList<String> getScore() {
@@ -69,8 +122,7 @@ public class Player{
 		scores.add(scoreAdd);
 	}
 
-
-	public static void saveScoresToFile(String f) {
+	public static void saveScoresToFile(ArrayList<String> inStr, String f) {
 		BufferedWriter bw = null;
 		FileWriter fw = null;
 
@@ -79,9 +131,8 @@ public class Player{
 			fw = new FileWriter(f);
 			bw = new BufferedWriter(fw);
 			
-			//bw.write( name +";");
-			for (String str : scores) {
-				bw.write(str+" ");
+			for (String str : inStr) {
+				bw.write(str+"\n");
 				System.out.println("writing: " + str);
 			}
 			System.out.println("Done writing");
@@ -101,28 +152,29 @@ public class Player{
 		}
 	}
 
-/*	public static void ReadScoreFromFile() {
-		try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
-
+	public static ArrayList<String> ReadScoresFromFile(String filename) {
+		ArrayList<String> read = new ArrayList<String>();
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			String sCurrentLine;
-			
-			System.out.println("Printing what's in the player.txt:");
+			System.out.println("Printing what's in the "+filename+": ");
 			
 			while ((sCurrentLine = br.readLine()) != null) {
+				read.add(sCurrentLine);
 				System.out.println(sCurrentLine);
 			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		return read;
 	}
-	*/
-	public static String ReadScoreFromFile(String filename) {
+	
+	public static String ReadScoreFromFile(String filenam) {
 		String sCurrentLine = "";
 		String returnLine = "";
-		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-			System.out.println("Printing what's in the "+filename);
+		try (BufferedReader br = new BufferedReader(new FileReader(filenam))) {
+			System.out.println("Printing what's in the "+ filenam);
 			
 			while ((sCurrentLine = br.readLine()) != null) {
 				System.out.println(sCurrentLine);

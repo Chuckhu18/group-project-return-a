@@ -9,47 +9,65 @@ import acm.graphics.*;
 public class EndOfGamePane extends GraphicsPane{
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
-	//public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
+	public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
 	public static final String FILENAME = "../"+"player.txt";
+	public static final String FILEDIRECTORY = "../";
+	public static String currentPlayerFile = "";
 	
 	private MainApplication program;
 	GButton playAgain;
 	GButton mainMenu;
-	GLabel titleLabel;
-	//private static ArrayList<GLabel> scoresLabels;
-	private String scoresToDisplay = "";
+	GLabel titleLabel, yourScoresLabel, allScoresLabel;
+	
 	GLabel nameLabel;
-	GLabel scoresLabels;
-	GRect scoreRect;
+	private ArrayList<GLabel> scoresLabels = new ArrayList<GLabel>();;
+	GRect scoreRect1,scoreRect2;
+	
 	GImage background;
 	
 	Player playerInfo;
 	
 	public EndOfGamePane(MainApplication app) {
 		program = app;
+		//adding background picture
 		background = new GImage("back.jpg",0,0);
-		scoreRect = new GRect (150,100,500,300);
-		scoreRect.setFillColor(Color.WHITE);
-		scoreRect.setFilled(true);
+		background.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		
-		titleLabel = new GLabel("HIGH SCORES", 310, 80);
-		titleLabel.setFont(new Font("Serif", Font.BOLD, 30));
+		//adding rectangles for displaying scores
+		scoreRect1 = new GRect (100,120,275,275);
+		scoreRect1.setFillColor(Color.WHITE);
+		scoreRect1.setFilled(true);
 		
+		scoreRect2 = new GRect (425,120,275,275);
+		scoreRect2.setFillColor(Color.WHITE);
+		scoreRect2.setFilled(true);
+		
+		//adding labels
+		titleLabel = new GLabel("HIGH SCORES", 280, 60);
+		titleLabel.setFont(new Font("Serif", Font.BOLD, 40));
+		
+		yourScoresLabel = new GLabel("YOUR SCORES", 130, 120);
+		yourScoresLabel.setFont(new Font("Serif", Font.BOLD, 30));
+		
+		allScoresLabel = new GLabel("ALL SCORES", 450, 120);
+		allScoresLabel.setFont(new Font("Serif", Font.BOLD, 30));
+		
+		//buttons for "play again" and "main menu".
 		playAgain = new GButton("PLAY AGAIN", 220, 410, 80, 30, Color.GRAY);
 		mainMenu = new GButton("MAIN MENU", 480, 410, 80, 30, Color.CYAN);
 		
-		playerInfo = new Player();
-
+		/*
 		nameLabel = new GLabel("",200,180);
 		nameLabel.setFont(new Font("Serif", Font.BOLD, 24));
 		
 		scoresLabels = new GLabel("", 300,180);
 		scoresLabels.setFont(new Font("Serif", Font.BOLD, 24));
+		*/
+		playerInfo = new Player();
 		
-		
-		Player.testFunc();
+		//playerInfo.testFunc();
 		//TODO: change this to get the name from main menu
-		nameLabel.setLabel(playerInfo.getName());
+		//nameLabel.setLabel(playerInfo.getName());
 		
 //		int arrSize = playerInfo.getScore().size();
 //		for(int i = 0; i < arrSize; i++) {
@@ -57,26 +75,18 @@ public class EndOfGamePane extends GraphicsPane{
 //		}
 		//scoresToDisplay = playerInfo.ReadScoreFromFile();
 //		scoresLabels.setLabel(scoresToDisplay);
-		String readfromfile = Player.ReadScoreFromFile(FILENAME);
-		scoresLabels.setLabel(readfromfile);
+		
+		ArrayList<String> currentScores = new ArrayList<String>();
+		ArrayList<String> allScores = new ArrayList<String>();
+		
+		currentScores = Player.ReadScoresFromFile(FILEDIRECTORY + playerInfo.getName() + ".txt");
+		for(int i = 0; i < currentScores.size(); i++) {
+			scoresLabels.get(i).setLabel(currentScores.get(i));
+			scoresLabels.get(i).setLocation(120, 100*(i+1));
+			//scoresLabels.set(i, new GLabel(currentScores.get(i), 120, 100*(i+1)));
+		}
+		
 	}
-	
-//	public static String ReadScoreFromFile() {
-//		String sCurrentLine ="";
-//		try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
-//
-//			System.out.println("Printing what's in the player.txt:");
-//			
-//			while ((sCurrentLine = br.readLine()) != null) {
-//				System.out.println(sCurrentLine);
-//				sCurrentLine += sCurrentLine;
-//			}
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		return sCurrentLine;
-//	}
 
 	@Override
 	public void showContents() {
@@ -86,9 +96,11 @@ public class EndOfGamePane extends GraphicsPane{
 		program.add(playAgain);
 		program.add(mainMenu);
 		program.add(titleLabel);
-		program.add(scoreRect);
-		program.add(nameLabel);
-		program.add(scoresLabels);
+		program.add(yourScoresLabel);
+		program.add(allScoresLabel);
+		program.add(scoreRect1);
+		program.add(scoreRect2);
+		
 	}
 
 	@Override
@@ -97,10 +109,12 @@ public class EndOfGamePane extends GraphicsPane{
 		program.remove(playAgain);
 		program.remove(mainMenu);
 		program.remove(titleLabel);
-		program.remove(scoreRect);
+		program.remove(yourScoresLabel);
+		program.remove(allScoresLabel);
+		program.remove(scoreRect1);
+		program.remove(scoreRect2);
 		program.remove(background);
-		program.remove(nameLabel);
-		program.remove(scoresLabels);
+		
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
