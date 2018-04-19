@@ -68,4 +68,11 @@ public class GButton extends GCompound {
 	public void Add(GButton button) {
 		add(button);
 	}
+	
+	public void setText(String text) {
+		message.setLabel(text);
+		double centerX = this.getWidth() / 2 - message.getWidth() / 2;
+		double centerY = this.getHeight() / 2 + message.getAscent() / 4;
+		message.setLocation(centerX, centerY);
+	}
 }
