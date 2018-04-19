@@ -18,22 +18,18 @@ public class SettingsPane extends GraphicsPane {
 	private GLabel difficulty;
 	private GButton nextDiff;
 	private GButton prevDiff;
-	private GButton easy;
-	private GButton medium;
-	private GButton hard;
+	private GButton diffButton;
 	
-	private GLabel song;
-	private GButton hotelCalifornia;
-	private GButton gucciGang;
-	private GButton THAB;
+	private GLabel songLabel;
 	private GButton nextSong;
 	private GButton prevSong;
+	private GButton songButton;
 	
 	private GButton play;
 	private GButton back;
 	
-	private ArrayList<GButton> difficultyChoices = new ArrayList<GButton>();
-	private ArrayList<GButton> songChoices = new ArrayList<GButton>();
+	private String[] songList = {"Hotel California","To Hell and Back","Gucci Gang"};
+	private String[] diffList = {"Easy","Medium","Hard"};
 	private GLabel settingsHeading;
 	private int difficultyChoice = 99999;
 	private int songChoice = 99999;
@@ -54,13 +50,12 @@ public class SettingsPane extends GraphicsPane {
 		difficulty.setFont("Arial-24");
 		screenObjects.add(difficulty);
 		
-		song = new GLabel("Song: ",67,195);
-		song.setFont("Arial-24");
-		screenObjects.add(song);
+		songLabel = new GLabel("Song: ",67,195);
+		songLabel.setFont("Arial-24");
+		screenObjects.add(songLabel);
 		
-		easy = new GButton("EASY", BOX_X, DIFF_Y, BOX_WIDTH, BOX_HEIGHT,Color.GREEN);
-		medium = new GButton("MEDIUM", BOX_X, DIFF_Y, BOX_WIDTH, BOX_HEIGHT, Color.YELLOW);
-		hard = new GButton("HARD", BOX_X, DIFF_Y, BOX_WIDTH, BOX_HEIGHT, Color.RED);
+		diffButton = new GButton(diffList[Math.abs(difficultyChoice%3)], BOX_X, DIFF_Y, BOX_WIDTH, BOX_HEIGHT,Color.GREEN);
+		screenObjects.add(diffButton);
 		
 		nextDiff = new GButton(">", BOX_X + BOX_WIDTH + 5, DIFF_Y,BOX_HEIGHT,BOX_HEIGHT,Color.CYAN);
 		prevDiff = new GButton("<", BOX_X - BOX_HEIGHT - 5, DIFF_Y, BOX_HEIGHT, BOX_HEIGHT, Color.BLACK);
@@ -76,49 +71,29 @@ public class SettingsPane extends GraphicsPane {
 		screenObjects.add(play);
 		screenObjects.add(back);
 		
-		hotelCalifornia = new GButton ("Hotel California", BOX_X, SONG_Y, BOX_WIDTH, BOX_HEIGHT);
-		gucciGang = new GButton ("Gucci Gang", BOX_X, SONG_Y, BOX_WIDTH, BOX_HEIGHT);
-		THAB = new GButton("To Hell and Back", BOX_X, SONG_Y, BOX_WIDTH, BOX_HEIGHT);
+		songButton = new GButton(songList[Math.abs(songChoice%3)], BOX_X, SONG_Y, BOX_WIDTH, BOX_HEIGHT);
+		screenObjects.add(songButton);
 		
 		nextSong = new GButton(">", nextDiff.getX(), SONG_Y, BOX_HEIGHT, BOX_HEIGHT, Color.CYAN);
 		prevSong = new GButton("<", prevDiff.getX(), SONG_Y, BOX_HEIGHT, BOX_HEIGHT, Color.BLACK);
 		prevSong.setColor(Color.CYAN);
 		screenObjects.add(nextSong);
 		screenObjects.add(prevSong);
-		
-		difficultyChoices.add(easy);
-		difficultyChoices.add(medium);
-		difficultyChoices.add(hard);
-		
-		songChoices.add(hotelCalifornia);
-		songChoices.add(THAB);
-		songChoices.add(gucciGang);
 	}
 	
 	@Override
 	public void showContents() {
+		program.add(backRect);
+		
 		for(GObject obj : screenObjects)
 			program.add(obj);
-		
-		for(GObject obj : difficultyChoices)
-			program.add(obj);
-		
-		for(GObject obj : songChoices)
-			program.add(obj);
-	
-		difficultyChoices.get(Math.abs(difficultyChoice%3)).sendToFront();
-		songChoices.get(Math.abs(songChoice%3)).sendToFront();
 	}
 
 	@Override
 	public void hideContents() {
-		for(GObject obj : screenObjects)
-			program.remove(obj);
-
-		for(GObject obj : difficultyChoices)
-			program.remove(obj);
+		program.remove(backRect);
 		
-		for(GObject obj : songChoices)
+		for(GObject obj : screenObjects)
 			program.remove(obj);
 	}
 	@Override
@@ -152,7 +127,14 @@ public class SettingsPane extends GraphicsPane {
 			hideContents();
 			program.switchToMenu();
 		}
-		difficultyChoices.get(Math.abs(difficultyChoice%3)).sendToFront();
-		songChoices.get(Math.abs(songChoice%3)).sendToFront();
+		
+		switch(Math.abs(difficultyChoice%3)) {
+			case 0: diffButton.setFillColor(Color.GREEN); break;
+			case 1: diffButton.setFillColor(Color.YELLOW); break;
+			case 2: diffButton.setFillColor(Color.RED); break;
+		}
+		
+		songButton.setText(songList[Math.abs(songChoice%3)]);
+		diffButton.setText(diffList[Math.abs(difficultyChoice%3)]);
 	}
 }
