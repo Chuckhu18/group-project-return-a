@@ -15,6 +15,11 @@ public class Level extends GraphicsPane {
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
 	
+	private static final int BUTTON_HEIGHT = 40;
+	private static final int BUTTON_WIDTH = 100;
+	private static final int PAUSE_B_X = 235;
+	private static final int PAUSE_B_Y = 300;
+	
 	// System variables
 	private int numTicks = 0; // How many timer ticks have gone by
 	MainApplication program;
@@ -41,23 +46,20 @@ public class Level extends GraphicsPane {
 
 	
 	// Used to load song from file to play
-	
-	/*
-	 * Valid song names:
-	 * ToHellAndBack
-	 * hotelCali
-	 */
 	private String folder = "sounds/";
 	private String filename = "hotelCali";
 	private String diffNum = "1";
 	
 	// UI elements
+	private ArrayList<GObject> uiObjects = new ArrayList<GObject>();
 	private GLabel scoreLabel; // holds the score for now
 	private GRect healthBar; // displays HP percentage
 	private GRect emptyHPBar; // Empty HP Bar to show full
-	//private GRect backRect; // Grey box the circles spawn inside of
+	private GButton pause; // Pause button in-game
+	
+	// Pause menu objects
+	private ArrayList<GObject> pauseObjects = new ArrayList<GObject>();
 	private GLabel paused;
-	private GButton pause;
 	private GButton cont;
 	private GButton restart;
 	private GButton change;
@@ -75,8 +77,6 @@ public class Level extends GraphicsPane {
 		program = app;
 		filename = app.getSongChoice();
 		diffNum = Integer.toString(app.getDiffChoice()+1);
-		
-		//run();
 	}
 
 	public void createCircle() {
@@ -148,8 +148,7 @@ public class Level extends GraphicsPane {
 	 * help method for generating random location
 	 */
 	private double getNewLoc(int base) {
-		double newloc = base * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble());
-		return newloc;
+		return (base * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble()));
 	}
 	
 	/*Tried to use getElementA() method to check if there are any elements near by
@@ -168,8 +167,6 @@ public class Level extends GraphicsPane {
 		return false;
 	}
 	
-	
-
 	/**
 	 * Creates an ArrayListof characters from given string
 	 * @param str string to turn into ArrayList
@@ -187,56 +184,33 @@ public class Level extends GraphicsPane {
 	}
 
 	public void run() {
-		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Arbitrary numbers so far for screen size
-		
-		restart = new GButton("Restart", 235, 300, 100, 40);
-		restart.setFillColor(Color.YELLOW);
-		change = new GButton("Change Settings", 335, 300, 100, 40);
-		change.setFillColor(Color.BLACK);
-		change.setColor(Color.CYAN);
-		pause = new GButton("Pause <space>", 675, 15,100,30);
-		cont = new GButton("Resume [Esc]", 435, 300, 100, 40);
-		cont.setFillColor(Color.GREEN);
-		paused = new GLabel("PAUSED!",260,200);
-		paused.setFont("Arial-60");
-
-		
-		// Initializes background rectangle
-		//backRect = new GRect(10, 10, WINDOW_WIDTH-20, WINDOW_HEIGHT-20);
-		backRect.setFillColor(Color.GRAY);
-		backRect.setFilled(true);
-		
-		// Initializes score label
-		scoreLabel = new GLabel("Your Score:" + Integer.toString(score),15,30);
-		scoreLabel.setFont(new Font("Arial",0,20));
-		
-		// Initializes bottom-of-screen health bar
-		emptyHPBar = new GRect(10,backRect.getY()+backRect.getHeight(),backRect.getWidth(),10);
-		healthBar = new GRect(emptyHPBar.getX(),emptyHPBar.getY(),emptyHPBar.getWidth(),emptyHPBar.getHeight());
-		emptyHPBar.setFilled(true);
-		healthBar.setFilled(true);
-		healthBar.setFillColor(Color.GREEN);
-		
-		// Adds everything to the screen
-		program.add(backRect);
-		program.add(scoreLabel);
-		program.add(emptyHPBar);
-		program.add(healthBar);
-		program.add(pause);
-		
+		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		rand = new Random();
+		
+		
+		// Create pause menu objects
+		initializePauseMenu();
+		
+		// Create UI element objects
+		initializeUI();
+		
+		program.add(backRect); // Adds the background rectangle
+		
+		// Adds UI elements to the screen
+		for(GObject obj : uiObjects)
+			program.add(obj);
+		
 
 		// loads file for song we want to play
 		song = new Song(filename+diffNum); 
 		
-		
+		// Use the information from the song we chose to create gameplay elements
 		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
 		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
 		tempoChangeTimes = song.getTempoChangeTimes();
 		tempoChangeValues = song.getTempoChangeValues();
 		tempo = song.getTempo();
 		nextCircleSpawn = song.getStartDelay();
-		// Turns the string from Song into an ArrayList of characters to feed into the circles
 		createCharArrList(song.getCircleList());
 
 		// start audio and timer
@@ -343,8 +317,8 @@ public class Level extends GraphicsPane {
 	}// startAudioFile
 
 	public void pauseAudio() {
-		audioPlayer.pauseSound(folder, filename + ".mp3");
 		isPaused = true;
+		audioPlayer.pauseSound(folder, filename + ".mp3");
 	}// pause
 	
 	public void stopAudio() {
@@ -468,21 +442,19 @@ public class Level extends GraphicsPane {
 	public void pauseGame() {
 		program.time.stop();
 		pauseAudio();
-		program.add(cont);
-		program.add(paused);
-		program.add(restart);
-		program.add(change);
-		program.remove(pause);
+		program.remove(pause); // pause button on in-game UI
+		
+		for(GObject obj : pauseObjects)
+			program.add(obj); // buttons on the pause menu
 	}
 	
 	public void unPauseGame() {
 		program.time.restart();
 		resumeAudio();
-		program.remove(cont);
-		program.remove(paused);
-		program.remove(restart);
-		program.remove(change);
 		program.add(pause);
+		
+		for(GObject obj : pauseObjects)
+			program.remove(obj);
 	}
 
 	// ***getters***
@@ -507,20 +479,72 @@ public class Level extends GraphicsPane {
 	@Override
 	public void hideContents() {
 		program.remove(backRect);
-		program.remove(emptyHPBar);
-		program.remove(healthBar);
-		program.remove(scoreLabel);
-		program.remove(pause);
-		program.remove(paused);
-		program.remove(change);
-		program.remove(restart);
-		program.remove(cont);
+				
+		// Clear the pause menu if it was open
+		for(GObject obj : pauseObjects)
+			program.remove(obj);
 		
+		// Clear the UI elements
+		for(GObject obj : uiObjects)
+			program.remove(obj);
+		
+		// Remove any circles left on the screen
 		for(Circle circle : circles) {
 			circle.removeCircles();
 			circle.removeLabel();
 		}
-		program.time.stop();
+		
+		program.time.stop(); // Stop the timer
+		stopAudio();
+	}
+	
+	/**
+	 * This function creates the objects for the pause menu and adds them to an ArrayList for easy access
+	 */
+	private void initializePauseMenu() {
+		restart = new GButton("Restart", PAUSE_B_X, PAUSE_B_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+		restart.setFillColor(Color.YELLOW);
+		pauseObjects.add(restart);
+		
+		change = new GButton("Change Settings", PAUSE_B_X + BUTTON_WIDTH, PAUSE_B_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+		change.setFillColor(Color.BLACK);
+		change.setColor(Color.CYAN);
+		pauseObjects.add(change);
+		
+		cont = new GButton("Resume [Esc]", PAUSE_B_X + BUTTON_WIDTH*2, PAUSE_B_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+		cont.setFillColor(Color.GREEN);
+		pauseObjects.add(cont);
+		
+		paused = new GLabel("PAUSED!",260,200);
+		paused.setFont("Arial-60");
+		pauseObjects.add(paused);
+	}
+	
+	/**
+	 * This function creates the objects for the user interface and adds them to an ArrayList for easy access
+	 */
+	private void initializeUI() {
+		// Initializes background rectangle
+		backRect.setFillColor(Color.GRAY);
+		backRect.setFilled(true);
+				
+		// Initializes pause button
+		pause = new GButton("Pause <space>", 675, 15, BUTTON_WIDTH, BUTTON_HEIGHT);
+		uiObjects.add(pause);
+		
+		// Initializes score label
+		scoreLabel = new GLabel("Your Score:" + Integer.toString(score),15,30);
+		scoreLabel.setFont(new Font("Arial",0,20));
+		uiObjects.add(scoreLabel);
+				
+		// Initializes bottom-of-screen health bar
+		emptyHPBar = new GRect(10,backRect.getY()+backRect.getHeight(),backRect.getWidth(),10);
+		healthBar = new GRect(emptyHPBar.getX(),emptyHPBar.getY(),emptyHPBar.getWidth(),emptyHPBar.getHeight());
+		emptyHPBar.setFilled(true);
+		healthBar.setFilled(true);
+		healthBar.setFillColor(Color.GREEN);
+		uiObjects.add(emptyHPBar);
+		uiObjects.add(healthBar);
 	}
 
 }// Level
