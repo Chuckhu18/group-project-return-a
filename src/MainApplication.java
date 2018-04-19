@@ -62,14 +62,10 @@ public class MainApplication extends GraphicsApplication {
 		switchToScreen(settings);
 	}
 	public void switchToEndofGame() {
-		level.stopAudio();
 		switchToScreen(end);
 	}
 	public void switchToLevel() {
-		level = new Level(this);
 		switchToScreen(level);
-		level.run();
-		level.startAudioFile();
 	}
 	public void playGame() {
 		time.start();
