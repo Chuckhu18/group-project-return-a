@@ -22,7 +22,7 @@ public class Level extends GraphicsPane {
 	
 	// System variables
 	private int numTicks; // How many timer ticks have gone by
-	MainApplication program;
+	private MainApplication program;
 	private Random rand;
 	private AudioPlayer audioPlayer;
 	private boolean isPaused;

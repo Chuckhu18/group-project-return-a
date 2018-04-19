@@ -6,32 +6,37 @@ import acm.graphics.GLabel;
 import acm.graphics.GObject;
 
 public class SettingsPane extends GraphicsPane {
-private static final int BOX_HEIGHT = 25;
-private static final int BOX_WIDTH = BOX_HEIGHT * 4;
-private static final int BOX_X = 200;
-private static final int DIFF_Y = 208;
-private static final int SONG_Y = 180;
+	private static final int BOX_HEIGHT = 25;
+	private static final int BOX_WIDTH = BOX_HEIGHT * 4;
+	private static final int BOX_X = 200;
+	private static final int DIFF_Y = 208;
+	private static final int SONG_Y = 180;
+		
+	private MainApplication program;
 	
-private MainApplication program;
-private GButton nextDiff;
-private GButton prevDiff;
-private GButton play;
-private GLabel song;
-private GLabel difficulty;
-private GButton easy;
-private GButton medium;
-private GButton hard;
-private GButton hotelCalifornia;
-private GButton gucciGang;
-private GButton THAB;
-private GButton nextSong;
-private GButton prevSong;
-private ArrayList<GButton> difficultyChoices = new ArrayList<GButton>();
-private ArrayList<GButton> songChoices = new ArrayList<GButton>();
-private GLabel settingsHeading;
-private GButton back;
-private int difficultyChoice = 99999;
-private int songChoice = 99999;
+	private ArrayList<GObject> screenObjects = new ArrayList<GObject>();
+	private GLabel difficulty;
+	private GButton nextDiff;
+	private GButton prevDiff;
+	private GButton easy;
+	private GButton medium;
+	private GButton hard;
+	
+	private GLabel song;
+	private GButton hotelCalifornia;
+	private GButton gucciGang;
+	private GButton THAB;
+	private GButton nextSong;
+	private GButton prevSong;
+	
+	private GButton play;
+	private GButton back;
+	
+	private ArrayList<GButton> difficultyChoices = new ArrayList<GButton>();
+	private ArrayList<GButton> songChoices = new ArrayList<GButton>();
+	private GLabel settingsHeading;
+	private int difficultyChoice = 99999;
+	private int songChoice = 99999;
 
 	public SettingsPane(MainApplication app) {
 		super();
@@ -43,11 +48,15 @@ private int songChoice = 99999;
 		settingsHeading = new GLabel("SETTINGS", 100, 100);
 		settingsHeading.setLocation((program.getWindowWidth() / 2) - (settingsHeading.getWidth()), 100);
 		settingsHeading.setFont("Arial-36");
+		screenObjects.add(settingsHeading);
+		
 		difficulty = new GLabel("Difficulty: ", 67,225);
 		difficulty.setFont("Arial-24");
+		screenObjects.add(difficulty);
+		
 		song = new GLabel("Song: ",67,195);
 		song.setFont("Arial-24");
-		
+		screenObjects.add(song);
 		
 		easy = new GButton("EASY", BOX_X, DIFF_Y, BOX_WIDTH, BOX_HEIGHT,Color.GREEN);
 		medium = new GButton("MEDIUM", BOX_X, DIFF_Y, BOX_WIDTH, BOX_HEIGHT, Color.YELLOW);
@@ -56,12 +65,16 @@ private int songChoice = 99999;
 		nextDiff = new GButton(">", BOX_X + BOX_WIDTH + 5, DIFF_Y,BOX_HEIGHT,BOX_HEIGHT,Color.CYAN);
 		prevDiff = new GButton("<", BOX_X - BOX_HEIGHT - 5, DIFF_Y, BOX_HEIGHT, BOX_HEIGHT, Color.BLACK);
 		prevDiff.setColor(Color.CYAN);
+		screenObjects.add(nextDiff);
+		screenObjects.add(prevDiff);
 		
 		play = new GButton("PLAY", 100, 100, BOX_WIDTH/2, BOX_HEIGHT, Color.CYAN);
 		back = new GButton("BACK", 100, 100, BOX_WIDTH/2, BOX_HEIGHT, Color.BLACK);
 		play.setLocation((program.getWindowWidth()/2) + BOX_WIDTH/2, 400);
 		back.setLocation((program.getWindowWidth()/2) - BOX_WIDTH/2, 400);
 		back.setColor(Color.CYAN);
+		screenObjects.add(play);
+		screenObjects.add(back);
 		
 		hotelCalifornia = new GButton ("Hotel California", BOX_X, SONG_Y, BOX_WIDTH, BOX_HEIGHT);
 		gucciGang = new GButton ("Gucci Gang", BOX_X, SONG_Y, BOX_WIDTH, BOX_HEIGHT);
@@ -70,64 +83,43 @@ private int songChoice = 99999;
 		nextSong = new GButton(">", nextDiff.getX(), SONG_Y, BOX_HEIGHT, BOX_HEIGHT, Color.CYAN);
 		prevSong = new GButton("<", prevDiff.getX(), SONG_Y, BOX_HEIGHT, BOX_HEIGHT, Color.BLACK);
 		prevSong.setColor(Color.CYAN);
+		screenObjects.add(nextSong);
+		screenObjects.add(prevSong);
 		
 		difficultyChoices.add(easy);
 		difficultyChoices.add(medium);
 		difficultyChoices.add(hard);
+		
 		songChoices.add(hotelCalifornia);
 		songChoices.add(THAB);
 		songChoices.add(gucciGang);
 	}
 	
-	
-	
 	@Override
 	public void showContents() {
-		program.add(backRect);
-		program.add(settingsHeading);
-		program.add(song);
-		program.add(difficulty);
+		for(GObject obj : screenObjects)
+			program.add(obj);
 		
-		program.add(nextDiff);
-		program.add(prevDiff);
-		program.add(hard);
-		program.add(medium);
-		program.add(easy);
+		for(GObject obj : difficultyChoices)
+			program.add(obj);
 		
-		program.add(nextSong);
-		program.add(prevSong);
-		program.add(THAB);
-		program.add(gucciGang);
-		program.add(hotelCalifornia);
-		
-		program.add(play);
-		program.add(back);
-		
+		for(GObject obj : songChoices)
+			program.add(obj);
+	
 		difficultyChoices.get(Math.abs(difficultyChoice%3)).sendToFront();
 		songChoices.get(Math.abs(songChoice%3)).sendToFront();
 	}
 
 	@Override
 	public void hideContents() {
-		program.remove(backRect);
-		program.remove(settingsHeading);
-		program.remove(song);
-		program.remove(difficulty);
+		for(GObject obj : screenObjects)
+			program.remove(obj);
+
+		for(GObject obj : difficultyChoices)
+			program.remove(obj);
 		
-		program.remove(nextDiff);
-		program.remove(prevDiff);
-		program.remove(hard);
-		program.remove(medium);
-		program.remove(easy);
-		
-		program.remove(nextSong);
-		program.remove(prevSong);
-		program.remove(THAB);
-		program.remove(gucciGang);
-		program.remove(hotelCalifornia);
-		
-		program.remove(play);
-		program.remove(back);
+		for(GObject obj : songChoices)
+			program.remove(obj);
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -156,7 +148,6 @@ private int songChoice = 99999;
 		if (obj == prevSong) {
 			songChoice--;
 		}
-		
 		if (obj == back) {
 			hideContents();
 			program.switchToMenu();
