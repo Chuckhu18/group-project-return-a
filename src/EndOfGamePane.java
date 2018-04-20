@@ -130,8 +130,8 @@ public class EndOfGamePane extends GraphicsPane{
 		int nameIndex = -1;
 		for(int i = 0; i < allScores.size(); i++) {
 			splitArr = allScores.get(i).split(",");
-			if(splitArr[0] == currentName) {	nameIndex = i;}
-			
+			if(splitArr[0].equals(currentName)) {	nameIndex = i;}
+	
 			splitName.add(splitArr[0]);
 			splitScore.add(splitArr[1]);
 		}
