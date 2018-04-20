@@ -1,10 +1,6 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Song {
@@ -78,11 +74,14 @@ public class Song {
 		return startDelay;
 	}
 	
+	/**
+	 * Create new Song object from filename
+	 * @param filename filename to load
+	 */
 	public Song(String filename) {
 		try {
 			readSong("songs/"+filename+".txt");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(0);
 		}
@@ -93,7 +92,7 @@ public class Song {
 	    FileReader file = new FileReader(fileName);
 	    BufferedReader reader = new BufferedReader(file);
 	    
-	    // Read in guarenteed aspects of a song
+	    // Read in guaranteed aspects of a song
 	    songName = reader.readLine();
 	    circleSize = Double.parseDouble(reader.readLine());
 	    shrinkSpeed = Double.parseDouble(reader.readLine());
@@ -118,19 +117,4 @@ public class Song {
 
 	   reader.close();
 }
-	
-	//create a constuctor for this partciular manner of input
-	// read from file outsdie of the class and create the song object within this class using the function below
-	
-		
-	public static void main(String[] args) {
-		Song sing = new Song(); // using default constructor
-		try {
-			sing.readSong("src/songs/Song.txt");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.exit(0);
-		}
-	}
 }

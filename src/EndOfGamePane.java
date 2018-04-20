@@ -1,7 +1,6 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
-import java.io.*;
 import java.util.ArrayList;
 
 import acm.graphics.*;
