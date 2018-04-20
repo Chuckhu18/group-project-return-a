@@ -2,13 +2,14 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import acm.graphics.GImage;
 import acm.graphics.GLabel;
 import acm.graphics.GObject;
 
 public class SettingsPane extends GraphicsPane {
 	private static final int BOX_HEIGHT = 25;
 	private static final int BOX_WIDTH = BOX_HEIGHT * 4;
-	private static final int BOX_X = 200;
+	private static final int BOX_X = 350;
 	private static final int DIFF_Y = 208;
 	private static final int SONG_Y = 180;
 		
@@ -16,69 +17,86 @@ public class SettingsPane extends GraphicsPane {
 	
 	private ArrayList<GObject> screenObjects = new ArrayList<GObject>();
 	private GLabel difficulty;
-	private GButton nextDiff;
-	private GButton prevDiff;
+	private GImage nextDiff;
+	private GImage prevDiff;
 	private GButton diffButton;
 	
 	private GLabel songLabel;
-	private GButton nextSong;
-	private GButton prevSong;
+	private GImage nextSong;
+	private GImage prevSong;
 	private GButton songButton;
 	
-	private GButton play;
-	private GButton back;
+	private GImage play;
+	private GImage back;
 	
 	private String[] songList = {"Hotel California","To Hell and Back","Video Killed ... Star"};
 	private String[] diffList = {"Easy","Medium","Hard"};
 	private GLabel settingsHeading;
 	private int difficultyChoice = 99999;
 	private int songChoice = 99999;
+	
+	private ArrayList<GImage> selButtons;
 
 	public SettingsPane(MainApplication app) {
 		super();
 		program = app;
 		
+		selButtons = new ArrayList<GImage>();
+		
 		backRect.setFillColor(Color.GRAY);
 		backRect.setFilled(true);
 		
 		settingsHeading = new GLabel("SETTINGS", 100, 100);
-		settingsHeading.setLocation((program.getWindowWidth() / 2) - (settingsHeading.getWidth()), 100);
 		settingsHeading.setFont("Arial-36");
+		settingsHeading.setLocation((program.getWindowWidth() / 2) - (settingsHeading.getWidth()/2), 100);
+		settingsHeading.setColor(Color.white);
 		screenObjects.add(settingsHeading);
 		
-		difficulty = new GLabel("Difficulty: ", 67,225);
+		difficulty = new GLabel("Difficulty: ", 175,225);
 		difficulty.setFont("Arial-24");
+		difficulty.setColor(Color.WHITE);
 		screenObjects.add(difficulty);
 		
-		songLabel = new GLabel("Song: ",67,195);
+		songLabel = new GLabel("Song: ",175,195);
 		songLabel.setFont("Arial-24");
+		songLabel.setColor(Color.white);
 		screenObjects.add(songLabel);
 		
 		diffButton = new GButton(diffList[Math.abs(difficultyChoice%3)], BOX_X, DIFF_Y, BOX_WIDTH, BOX_HEIGHT,Color.GREEN);
 		screenObjects.add(diffButton);
 		
-		nextDiff = new GButton(">", BOX_X + BOX_WIDTH + 5, DIFF_Y,BOX_HEIGHT,BOX_HEIGHT,Color.CYAN);
-		prevDiff = new GButton("<", BOX_X - BOX_HEIGHT - 5, DIFF_Y, BOX_HEIGHT, BOX_HEIGHT, Color.BLACK);
-		prevDiff.setColor(Color.CYAN);
+		nextDiff = new GImage("rightArrowbutton.png", BOX_X + BOX_WIDTH + 5, DIFF_Y);
+		prevDiff = new GImage("leftArrowbutton copy.png", BOX_X - BOX_HEIGHT - 5, DIFF_Y);
+		selButtons.add(nextDiff);
+		selButtons.add(prevDiff);
+		
 		screenObjects.add(nextDiff);
 		screenObjects.add(prevDiff);
 		
-		play = new GButton("PLAY", 100, 100, BOX_WIDTH/2, BOX_HEIGHT, Color.CYAN);
-		back = new GButton("BACK", 100, 100, BOX_WIDTH/2, BOX_HEIGHT, Color.BLACK);
-		play.setLocation((program.getWindowWidth()/2) + BOX_WIDTH/2, 400);
+		play = new GImage("playbutton.png", 100, 100);
+		back = new GImage("leftArrowbutton copy.png", 100, 100);
+		selButtons.add(back);
 		back.setLocation((program.getWindowWidth()/2) - BOX_WIDTH/2, 400);
-		back.setColor(Color.CYAN);
+		play.setLocation(back.getX()+back.getWidth()/2, back.getY() - play.getHeight()/2);
+		play.setSize(play.getWidth()/2, play.getHeight());
+		
 		screenObjects.add(play);
 		screenObjects.add(back);
 		
 		songButton = new GButton(songList[Math.abs(songChoice%3)], BOX_X, SONG_Y, BOX_WIDTH, BOX_HEIGHT);
 		screenObjects.add(songButton);
 		
-		nextSong = new GButton(">", nextDiff.getX(), SONG_Y, BOX_HEIGHT, BOX_HEIGHT, Color.CYAN);
-		prevSong = new GButton("<", prevDiff.getX(), SONG_Y, BOX_HEIGHT, BOX_HEIGHT, Color.BLACK);
-		prevSong.setColor(Color.CYAN);
+		nextSong = new GImage("rightArrowbutton.png", nextDiff.getX(), SONG_Y);
+		prevSong = new GImage("leftArrowbutton copy.png", prevDiff.getX(), SONG_Y);
+		selButtons.add(nextSong);
+		selButtons.add(prevSong);
 		screenObjects.add(nextSong);
 		screenObjects.add(prevSong);
+		
+		for(GImage image : selButtons) {
+			image.setSize(image.getWidth()/2, image.getHeight()/2);
+			image.move(-5, 0);
+		}
 	}
 	
 	@Override
