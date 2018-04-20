@@ -75,10 +75,11 @@ public class SettingsPane extends GraphicsPane {
 		
 		play = new GImage("playbutton.png", 100, 100);
 		back = new GImage("leftArrowbutton copy.png", 100, 100);
-		selButtons.add(back);
-		back.setLocation((program.getWindowWidth()/2) - BOX_WIDTH/2, 400);
-		play.setLocation(back.getX()+back.getWidth()/2, back.getY() - play.getHeight()/2);
+		
+		back.setLocation((program.getWindowWidth()/2) -100, 350);
+		play.setLocation(back.getX()+back.getWidth()/2+25, back.getY() - play.getHeight()/2+25);
 		play.setSize(play.getWidth()/2, play.getHeight());
+		back.setSize(play.getHeight(), play.getHeight()/1.25);
 		
 		screenObjects.add(play);
 		screenObjects.add(back);

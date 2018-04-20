@@ -118,11 +118,12 @@ public class MainMenuPane extends GraphicsPane {
 		if (obj == howTo) {
 			hideContents();
 			program.add(backRect);
-			howtoPlay.setText("Press GO to play. \n\n"
-					+ "*** You must click on the program at the beginning to play (we are working on it) ***\n\n"
-					+ "Press the corresponding key on the keyboard to the ones on the screen. \n"
-					+ "For maximum points press the letter when the outside circle's diameter is the same as \n"
-					+ " the inside's.");
+			howtoPlay.setText("Enter you name then press the arrow. \n"
+					+ "On the settings screen, choose your song and difficulty then press 'PLAY'.\n"
+					+ "Once the game starts, press the key on the keyboard that corresponds"
+					+ "to the ones on the screen.\n"
+					+ "For maximum points press the correct key when the letter turns white.\n\n"
+					+ "If a circle is red, it is BAD! If you press on a red circle there is a health penalty.");
 			howtoPlay.setFont("Arial-18");
 			howtoPlay.setColor(Color.white);
 			program.add(howtoPlay);
