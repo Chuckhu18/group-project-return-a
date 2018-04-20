@@ -148,7 +148,7 @@ public class MainMenuPane extends GraphicsPane {
 	}
 
 	private void makeSeeable(GLabel label) {
-		label.setColor(Color.BLACK);
+		label.setColor(Color.WHITE);
 		label.setFont("Courier-24");
 	}
 }

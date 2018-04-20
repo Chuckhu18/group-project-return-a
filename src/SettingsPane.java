@@ -169,5 +169,8 @@ public class SettingsPane extends GraphicsPane {
 			
 			program.switchToLevel();
 		}
+		else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			program.switchToMenu();
+		}
 	}
 }
