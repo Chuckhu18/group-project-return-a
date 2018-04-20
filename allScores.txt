@@ -1,4 +1,4 @@
-chuck,480
+chuck,491
 Race,400
 Chuck,310
 Jillian,301
