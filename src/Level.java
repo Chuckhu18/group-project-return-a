@@ -46,8 +46,9 @@ public class Level extends GraphicsPane {
 
 	// Used to load song from file to play
 	private String folder = "sounds/";
-	private String filename = "hotelCali";
-	private String diffNum = "1";
+	private String filename;
+	private String audioFilename;
+	private String diffNum;
 	
 	// UI elements
 	private ArrayList<GObject> uiObjects;
@@ -81,8 +82,6 @@ public class Level extends GraphicsPane {
 		double xloc = getNewLoc(WINDOW_WIDTH);
 		double yloc = getNewLoc(WINDOW_HEIGHT);
 		
-		//System.out.println(count);
-		
 		/*
 		 * keep circle created in side the screen by 100*60 pixel
 		 * make sure circles are not created outside the screen
@@ -91,35 +90,28 @@ public class Level extends GraphicsPane {
 		
 		while(ifLocNotAvailable(xloc, lastX)) {
 			xloc = getNewLoc(WINDOW_WIDTH);
-			//System.out.println("X>>>>>>>>"+ Double.toString(xloc));
 		}
+		
 		while(ifLocNotAvailable(yloc, lastY)) {
 			yloc = getNewLoc(WINDOW_HEIGHT);
-			//System.out.println("Y>>>>>>>>"+ Double.toString(yloc));
 		}
 		
 		lastX.add(xloc);
 		lastY.add(yloc);
+		
 		if (lastX.size() > 4) {
 			lastX.remove(0);
 			lastY.remove(0);
 		}
 		
-		
-		/*
-		 * Makes some circles randomly "bad"
-		 * TODO:
-		 * Make a better implementation
-		 */
-		
+		// Randomly determine if a circle is "bad" or not
 		boolean cirGood = true;
-		
 		if(rand.nextInt(10) == 0) {
 			cirGood = false;
 			System.out.println("Bad circle generated");
 		}
 		
-		
+		// Create and add the circle to the screen if there are characters left to add
 		if (characters.size() > 0) {
 			Circle toAdd = new Circle(characters.remove(0), song.getCircleSize(), xloc, yloc, song.getShrinkSpeed(), cirGood);
 			// Add shapes to screen from the Circle, then add the Circle to the ArrayList
@@ -148,12 +140,6 @@ public class Level extends GraphicsPane {
 		return (base * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble()));
 	}
 	
-	/*Tried to use getElementA() method to check if there are any elements near by
-	private boolean ifLocAvailable(double xin, double yin) {
-		if (getElementAt(xin, yin) != null)
-		return true;
-	}*/
-	
 	private boolean ifLocNotAvailable(double in, ArrayList<Double> last) {
 		for(int i = 0; i < last.size(); i++ ) {
 			if(Math.abs(in - last.get(i)) <= 45) {
@@ -179,8 +165,6 @@ public class Level extends GraphicsPane {
 			}
 		}
 	}
-
-	// ***member methods***
 
 	/**
 	 * Timer function, executed every time the timer ticks
@@ -277,29 +261,29 @@ public class Level extends GraphicsPane {
 
 	public void startAudioFile() {
 		isPaused = false;
-		audioPlayer.playSound(folder, filename+".mp3");
+		audioPlayer.playSound(folder, audioFilename);
 	}// startAudioFile
 
 	public void pauseAudio() {
 		isPaused = true;
-		audioPlayer.pauseSound(folder, filename + ".mp3");
+		audioPlayer.pauseSound(folder, audioFilename);
 	}// pause
 	
 	public void stopAudio() {
-		audioPlayer.stopSound(folder, filename + ".mp3");
+		audioPlayer.stopSound(folder, audioFilename);
 	}
 
 	public void resumeAudio() {
 		if (isPaused) {
-			audioPlayer.playSound(folder, filename + ".mp3");
+			audioPlayer.playSound(folder, audioFilename);
 			isPaused = false;
 		}
 	}// resume
 
 	public void restartAudio() {
 		if (!isPaused) {
-			audioPlayer.stopSound(folder, filename + ".mp3");
-			audioPlayer.playSound(folder, filename + ".mp3");
+			audioPlayer.stopSound(folder, audioFilename);
+			audioPlayer.playSound(folder, audioFilename);
 			isPaused = false;
 		}
 	}// restart
@@ -446,6 +430,7 @@ public class Level extends GraphicsPane {
 		
 		// Load filename and difficulty
 		filename = program.getSongChoice();
+		audioFilename = filename + ".mp3";
 		diffNum = Integer.toString(program.getDiffChoice()+1);
 		
 		// Create pause menu objects
