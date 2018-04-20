@@ -18,25 +18,28 @@ public class Player{
 	public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
 	Song song;
 	//Level l = new Level();
-	private static String name;
+	private String name;
 	private static int currentScore;
 	private static ArrayList<String> scores;
 	private static ArrayList<String> allScores;
 	private static ArrayList<String> allScoresName;
 	public static final String FILENAME = "allScores.txt";
 	public static String currentPlayerFile = "";
+	MainApplication main;
 	
 	public Player() {
-		//creating a score list
-		//scores = new ArrayList<String>();
+		main = new MainApplication();
+		setName(main.getName());
 	}
 	
 	public static void main(String[] args) {
 		//creating a score array list
 		scores = new ArrayList<String>();
 		allScores = new ArrayList<String>();
-		testFunc();
+		
 		Player player = new Player();
+		
+		player.testFunc();
 		//initialize files with created scores
 		player.saveScoresToFile(scores,currentPlayerFile);
 		
@@ -77,7 +80,7 @@ public class Player{
 		//saveScoresToFile(currentPlayerFile);
 	}
 	
-	public static void testFunc() {
+	public void testFunc() {
 		name = "Chuck";
 		currentPlayerFile = name + ".txt";
 		currentScore = 1000;
@@ -88,10 +91,10 @@ public class Player{
 	}
 	
 	public String getName() {
-		return name;
+		return this.name;
 	}
 	public void setName(String n) {
-		name = n;
+		this.name = n;
 	}
 
 	public ArrayList<String> getScore() {
@@ -150,7 +153,7 @@ public class Player{
 		return read;
 	}
 	
-	public static String ReadScoreFromFile(String filenam) {
+	public String ReadScoreFromFile(String filenam) {
 		String sCurrentLine = "";
 		String returnLine = "";
 		try (BufferedReader br = new BufferedReader(new FileReader(filenam))) {

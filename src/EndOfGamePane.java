@@ -12,7 +12,7 @@ public class EndOfGamePane extends GraphicsPane{
 	public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
 	public static final String FILENAME = "../"+"player.txt";
 	public static final String FILEDIRECTORY = "../";
-	public static String currentPlayerFile = "";
+	public static String currentPlayerFile = FILEDIRECTORY + "Chuck.txt";
 	
 	private MainApplication program;
 	GButton playAgain;
@@ -20,21 +20,14 @@ public class EndOfGamePane extends GraphicsPane{
 	GLabel titleLabel, yourScoresLabel, allScoresLabel;
 	
 	GLabel nameLabel;
-	private ArrayList<GLabel> scoresLabels;
+	private ArrayList<GLabel> yourScoresLabels;
+	private ArrayList<GLabel> allScoresLabels;
 	GRect scoreRect1,scoreRect2;
 	
 	GImage background;
 	
 	Player playerInfo;
-	
-	GLabel get1;
-	GLabel get2;
-	GLabel get3;
-	
-	GLabel get4;
-	GLabel get5;
-	GLabel get6;
-	GLabel get7;
+	String currentName;
 	
 	public EndOfGamePane(MainApplication app) {
 		program = app;
@@ -65,54 +58,51 @@ public class EndOfGamePane extends GraphicsPane{
 		playAgain = new GButton("PLAY AGAIN", 220, 410, 80, 30, Color.GRAY);
 		mainMenu = new GButton("MAIN MENU", 480, 410, 80, 30, Color.CYAN);
 		
-		/*
-		nameLabel = new GLabel("",200,180);
-		nameLabel.setFont(new Font("Serif", Font.BOLD, 24));
-		
-		scoresLabels = new GLabel("", 300,180);
-		scoresLabels.setFont(new Font("Serif", Font.BOLD, 24));
-		*/
 		playerInfo = new Player();
+		//playerInfo.testFunc();
 		
-		//Player.testFunc();
-		//TODO: change this to get the name from main menu
-		//nameLabel.setLabel(playerInfo.getName());
+		currentName = playerInfo.getName();
+		int currentScore = 500;
 		
-//		int arrSize = playerInfo.getScore().size();
-//		for(int i = 0; i < arrSize; i++) {
-//			scoresToDisplay += playerInfo.getScore().get(i) + " ";
-//		}
-		//scoresToDisplay = playerInfo.ReadScoreFromFile();
-//		scoresLabels.setLabel(scoresToDisplay);
-		
-		ArrayList<String> currentScores = new ArrayList<String>();
+		ArrayList<String> yourScores = new ArrayList<String>();
 		ArrayList<String> allScores = new ArrayList<String>();
+		yourScores.add("999");
+		yourScores.add("400");
+		yourScores.add("100");
 		
-		scoresLabels = new ArrayList<GLabel>();
+		playerInfo.saveScoresToFile(yourScores,currentPlayerFile);
 		
 		//currentScores = Player.ReadScoresFromFile(FILEDIRECTORY + playerInfo.getName() + ".txt");
-		currentScores = playerInfo.ReadScoresFromFile(FILEDIRECTORY + "Chuck.txt");
+		yourScores = playerInfo.ReadScoresFromFile(currentPlayerFile);
+		System.out.println("Printing current player scores: " + yourScores );
+		
+		// add current score to sorted array list from playername.txt file
+		boolean flag = false;
+		for (int i = 0; i < yourScores.size(); i++)
+			if (!flag && currentScore > Integer.parseInt(yourScores.get(i))) {
+				yourScores.add(i, Integer.toString(currentScore));
+				flag = true;
+			}
+		
+		if (yourScores.size() > 3) {
+			yourScores.remove(3);
+		}
+		System.out.println("After replace with current: " + yourScores);
+		
+		//save the new score array list in the file for current player file
+		playerInfo.saveScoresToFile(yourScores,currentPlayerFile);
+		
 		allScores = playerInfo.ReadScoresFromFile(FILEDIRECTORY + "allScores.txt");
 		
-		get1 = new GLabel(currentScores.get(0),120,150);
-		get2 = new GLabel(currentScores.get(1),120,180);
-		get3 = new GLabel(currentScores.get(2),120,210);
-		
-		get4 = new GLabel(allScores.get(0),445,150);
-		get5 = new GLabel(allScores.get(1),445,180);
-		get6 = new GLabel(allScores.get(2),445,210);
-		get7 = new GLabel(allScores.get(3),445,240);
-		
-		
-		
-		/*Dont know how to do the arraylist for glabel
-		for(int i = 0; i < currentScores.size(); i++) {
-			scoresLabels.get(i).setLabel(currentScores.get(i));
-			scoresLabels.get(i).setLocation(120, 100*(i+1));
-			//scoresLabels.set(i, new GLabel(currentScores.get(i), 120, 100*(i+1)));
+		yourScoresLabels = new ArrayList<GLabel>();
+		allScoresLabels = new ArrayList<GLabel>();
+		for(int i = 0; i < yourScores.size(); i++) {
+			yourScoresLabels.add(new GLabel(yourScores.get(i),120,150+(30*i)));
 		}
-		*/
 		
+		for(int i = 0; i < allScores.size(); i++) {
+			allScoresLabels.add(new GLabel(allScores.get(i),445,150+(30*i)));
+		}
 	}
 
 	@Override
@@ -127,14 +117,14 @@ public class EndOfGamePane extends GraphicsPane{
 		program.add(allScoresLabel);
 		program.add(scoreRect1);
 		program.add(scoreRect2);
+
+		for(int i = 0; i < yourScoresLabels.size(); i++) {
+			program.add(yourScoresLabels.get(i));
+		}
 		
-		program.add(get1);
-		program.add(get2);
-		program.add(get3);
-		program.add(get4);
-		program.add(get5);
-		program.add(get6);
-		program.add(get7);
+		for(int i = 0; i < allScoresLabels.size(); i++) {
+			program.add(allScoresLabels.get(i));
+		}
 		
 	}
 
@@ -150,13 +140,13 @@ public class EndOfGamePane extends GraphicsPane{
 		program.remove(scoreRect2);
 		program.remove(background);
 		
-		program.remove(get1);
-		program.remove(get2);
-		program.remove(get3);
-		program.remove(get4);
-		program.remove(get5);
-		program.remove(get6);
-		program.remove(get7);
+		for(int i = 0; i < yourScoresLabels.size(); i++) {
+			program.remove(yourScoresLabels.get(i));
+		}
+		
+		for(int i = 0; i < allScoresLabels.size(); i++) {
+			program.remove(allScoresLabels.get(i));
+		}
 		
 	}
 	@Override
