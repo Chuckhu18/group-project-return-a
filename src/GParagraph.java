@@ -15,10 +15,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.awt.event.KeyEvent;
-import com.sun.jdi.event.Event;
-import java.awt.event.KeyAdapter;
 import acm.graphics.GCompound;
 import acm.graphics.GLabel;
 
