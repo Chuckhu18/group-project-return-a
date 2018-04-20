@@ -124,7 +124,9 @@ public class EndOfGamePane extends GraphicsPane{
 		String splitArr[];
 		ArrayList<String> splitName = new ArrayList<String>();
 		ArrayList<String> splitScore = new ArrayList<String>();
-		ArrayList<String> newNameScore = new ArrayList<String>();
+		ArrayList<String> newAllScore = new ArrayList<String>();
+		
+		//splitting name and score by ","
 		int nameIndex = -1;
 		for(int i = 0; i < allScores.size(); i++) {
 			splitArr = allScores.get(i).split(",");
@@ -134,21 +136,38 @@ public class EndOfGamePane extends GraphicsPane{
 			splitScore.add(splitArr[1]);
 		}
 		
+		//replace high score if current score is higher than any of in the allScore.txt
 		if(nameIndex != -1 ) {
 			if(currentScore > Integer.parseInt(splitScore.get(nameIndex))) {
 				splitScore.set(nameIndex, Integer.toString(currentScore));
 			}
 		}
 		
-		
-		
+		//combining replaced name and score again as a string
 		for(int i = 0; i < allScores.size(); i++) {
-			newNameScore.set(i, splitName.get(i)+splitScore.get(i));
+			newAllScore.add(splitName.get(i)+","+ splitScore.get(i));
 		}
-
-		for (int i = 0; i < allScores.size(); i++) {
-			allScoresLabels.add(new GLabel(allScores.get(i), 445, 150 + (30 * i)));
+		
+		//if player name not in record add to the high score list
+		if(nameIndex == -1) {
+			newAllScore.add(currentName + "," + currentScore);
 		}
+		
+		//the maximum amount of high scores is 7, which are how many can be displayed on the screen.
+		if(newAllScore.size() > 7) {
+			newAllScore.remove(7);
+		}
+			
+		// save the new high scores to file
+		playerInfo.saveScoresToFile(newAllScore, ALLSCORESFILE);
+		
+		//setup GLabel for new high Scores
+		for (int i = 0; i < newAllScore.size(); i++) {
+			allScoresLabels.add(new GLabel(newAllScore.get(i), 445, 150 + (30 * i)));
+		}
+		
+		
+		
 	}
 
 	@Override
