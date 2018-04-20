@@ -7,7 +7,7 @@ public class Circle {
 	private DecimalFormat df = new DecimalFormat("#.###"); // Used so the toString function prints nicer numbers for location
 	private int removeCounter = 0; // Initialize removeCounter to 0
 	private char letter;
-	private static double inSize = 50.0; // Picking random number for testing, TODO: replace with real values
+	private static double inSize = 50.0; // Size of inner circle
 	private double outSize;
 	private double x, y;
 	private double speed;
