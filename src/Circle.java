@@ -40,43 +40,20 @@ public class Circle {
 		this.speed = speed;
 		this.good = good;
 
+		// Create GOval objects
 		innerCircle = new GOval(x - (inSize / 2), y - (inSize / 2), inSize, inSize);
 		outerCircle = new GOval(innerCircle.getX() - (outSize / 2), innerCircle.getY() - (outSize / 2),
 				inSize + outSize, inSize + outSize);
 
-		// TODO: calculate center of circle to correctly center the text
-		// Update 04/014: Getting closer to good values
-		text = new GLabel(Character.toString(letter), x - (inSize / 5), (y + inSize / 5));
+		// Center the text in the circle
+		text = new GLabel(Character.toString(letter), x, y);
+		text.setLocation(x-text.getWidth(), y + text.getHeight()/1.5);
 		text.setFont(new Font("Arial",0,40)); // Makes text easier to read
 
 		// Makes good circles blue and bad circles red
-		if (good) {
-			innerCircle.setColor(Color.BLUE);
-			outerCircle.setColor(Color.BLUE);
-			text.setColor(Color.BLUE);
-		} else {
-			innerCircle.setColor(Color.RED);
-			outerCircle.setColor(Color.RED);
-			text.setColor(Color.RED);
-		}
+		if (good) setColor(Color.BLUE);
+		else setColor(Color.RED);
 
-	}
-
-	/**
-	 * Full constructor - will never be used in practice TODO: remove before final
-	 * game is done, not sure if it might be needed to test later
-	 */
-	public Circle(char letter, int outSize, int x, int y, int speed, boolean good, GOval innerCircle, GOval outerCircle,
-			GLabel text) {
-		this.letter = letter;
-		this.outSize = outSize;
-		this.x = x;
-		this.y = y;
-		this.speed = speed;
-		this.good = good;
-		this.innerCircle = innerCircle;
-		this.outerCircle = outerCircle;
-		this.text = text;
 	}
 
 	/**
@@ -84,7 +61,6 @@ public class Circle {
 	 * class. Also updates the outer GOval so it reflects this change
 	 */
 	public void shrink() {
-		// TODO: makes circle shrink
 		outSize -= speed;
 
 		// Does math to keep the outer circle centered
@@ -111,6 +87,9 @@ public class Circle {
 		return toReturn;
 	}
 
+	/**
+	 * Hides outer circles so that we can display the Hit/Miss message
+	 */
 	public void removeCircles() {
 		innerCircle.setVisible(false);
 		outerCircle.setVisible(false);
@@ -118,11 +97,51 @@ public class Circle {
 		text.setFont(new Font("Arial",0,16)); // Makes font smaller when circles are removed
 	}
 
+	/**
+	 * Remove the GObjects entirely
+	 */
 	public void removeLabel() {
 		text.setVisible(false);
 		text = null;
 		innerCircle = null;
 		outerCircle = null;
+	}	
+	
+	/**
+	 * Updates color of circle as it shrinks
+	 * @param origSize Original size of circles
+	 */
+	public void updateColor(double origSize) {
+		Color cirColor = text.getColor(); // Default to no change
+		if(good) {
+			if (outSize <= origSize/100) { // PERFECT
+				cirColor = Color.WHITE;
+			} else if(outSize <= origSize/10) { // AMAZING
+				cirColor = Color.CYAN;
+			}
+		}
+		setColor(cirColor);
+	}
+	
+	/**
+	 * Sets the different parts of the circle to be a new color
+	 * @param color Color to set everything to
+	 */
+	public void setColor(Color color) {
+		innerCircle.setColor(color);
+		outerCircle.setColor(color);
+		text.setColor(color);
+	}
+	
+	/**
+	 * Updates the text of the label when removing the circles
+	 * @param text Text to use as the label
+	 * @param color Color to make the text
+	 */
+	public void updateLabel(String str, Color color) {
+		text.setLabel(str);
+		text.setColor(color);
+		removeCircles();
 	}
 
 	public char getLetter() {
@@ -167,46 +186,5 @@ public class Circle {
 	
 	public boolean isGood() {
 		return good;
-	}
-	
-	/**
-	 * Updates color of circle as it shrinks
-	 * @param origSize Original size of circles
-	 */
-	public void updateColor(double origSize) {
-		/*
-		 * TODO: Make color changing smoother
-		 */
-		
-		Color cirColor = text.getColor(); // Default to no change
-		if(good) {
-			if (outSize <= origSize/100) { // PERFECT
-				cirColor = Color.WHITE;
-			} else if(outSize <= origSize/10) { // AMAZING
-				cirColor = Color.CYAN;
-			}
-		}
-		setColor(cirColor);
-	}
-	
-	/**
-	 * Sets the different parts of the circle to be a new color
-	 * @param color Color to set everything to
-	 */
-	public void setColor(Color color) {
-		innerCircle.setColor(color);
-		outerCircle.setColor(color);
-		text.setColor(color);
-	}
-	
-	/**
-	 * Updates the text of the label when removing the circles
-	 * @param text Text to use as the label
-	 * @param color Color to make the text
-	 */
-	public void updateLabel(String str, Color color) {
-		text.setLabel(str);
-		text.setColor(color);
-		removeCircles();
 	}
 }
