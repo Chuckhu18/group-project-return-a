@@ -63,27 +63,20 @@ public class EndOfGamePane extends GraphicsPane{
 	
 	// ***display current player's scores from current player's name .txt file
 	public void displayYourScores() {
-		//playerInfo = new Player();
-		// playerInfo.testFunc();
 		
 		currentName = playerInfo.getName();
-		//currentScore = 500;
 		currentScore = playerInfo.getCurrentScore();
 		
 		currentPlayerNameLabel = new GLabel(currentName + ":", 120, 150);
 		
 		ArrayList<String> yourScores = new ArrayList<String>();
-//		yourScores.add("999");
-//		yourScores.add("400");
-//		yourScores.add("100");
 		
 		yourScores.add(Integer.toString(currentScore));
 		
-		/*
-		 * here checks if the current score is higher than previous scores,
-		 * if so, then replace it with current score
-		 */
-		 
+		//playerInfo.addScoreToList(Integer.toString(currentScore));
+		
+		//here checks if the current score is higher than previous scores,
+		//if so, then replace it with current score
 		currentPlayerFile = FILEDIRECTORY + currentName + ".txt";
 		playerInfo.saveScoresToFile(yourScores, currentPlayerFile);
 
@@ -133,7 +126,10 @@ public class EndOfGamePane extends GraphicsPane{
 		for(int i = 0; i < allScores.size(); i++) {
 			splitArr = allScores.get(i).split(",");
 			if(splitArr[0].equals(currentName)) {	nameIndex = i;}
-			if(!flag2 && currentScore > Integer.parseInt(splitArr[1])) {	scoreIndex = i;}
+			if(!flag2 && currentScore > Integer.parseInt(splitArr[1])) {	
+				scoreIndex = i;
+				flag2 = true;
+				}
 			splitName.add(splitArr[0]);
 			splitScore.add(splitArr[1]);
 		}
@@ -142,16 +138,22 @@ public class EndOfGamePane extends GraphicsPane{
 		if(nameIndex != -1 ) {
 			if(currentScore > Integer.parseInt(splitScore.get(nameIndex))) {
 				splitScore.set(nameIndex, Integer.toString(currentScore));
+				splitName.add(scoreIndex, currentName);
+				splitScore.add(scoreIndex, Integer.toString(currentScore));
+				splitName.remove(nameIndex+1);
+				splitScore.remove(nameIndex+1);
 			}
 		}
 		
-		//combining replaced name and score again as a string
+		//combining replaced name and score as a string
 		for(int i = 0; i < allScores.size(); i++) {
-			newAllScore.add(splitName.get(i)+","+ splitScore.get(i));
+			newAllScore.add(splitName.get(i)+ "," + splitScore.get(i));
 		}
 		
-		//if player name not in record add to the high score list
-		if(nameIndex == -1) {
+		
+		
+		// if player name not in record, add it to the high score list
+		if (nameIndex == -1) {
 			newAllScore.add(scoreIndex, currentName + "," + currentScore);
 		}
 		
@@ -167,8 +169,6 @@ public class EndOfGamePane extends GraphicsPane{
 		for (int i = 0; i < newAllScore.size(); i++) {
 			allScoresLabels.add(new GLabel(newAllScore.get(i), 445, 150 + (30 * i)));
 		}
-		
-		
 		
 	}
 
