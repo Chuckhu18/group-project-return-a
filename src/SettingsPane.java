@@ -100,7 +100,6 @@ public class SettingsPane extends GraphicsPane {
 	public void mousePressed(MouseEvent e) {
 		GObject obj = program.getElementAt(e.getX(), e.getY());
 		if (obj ==play) {
-			hideContents();
 			program.setDiffChoice(Math.abs(difficultyChoice%3));
 			
 			switch(Math.abs(songChoice%3)) {
@@ -124,7 +123,6 @@ public class SettingsPane extends GraphicsPane {
 			songChoice--;
 		}
 		if (obj == back) {
-			hideContents();
 			program.switchToMenu();
 		}
 		

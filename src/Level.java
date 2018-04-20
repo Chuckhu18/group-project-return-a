@@ -238,7 +238,7 @@ public class Level extends GraphicsPane {
 			unPauseGame();
 		}
 		if (obj == restart) {
-			program.switchToLevel();
+			program.restartLevel();
 		}
 		if (obj == change) {
 			program.switchToSettings();

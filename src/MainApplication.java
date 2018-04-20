@@ -67,6 +67,26 @@ public class MainApplication extends GraphicsApplication {
 	public void playGame() {
 		time.start();
 	}
+	
+	/**
+	 * This function exists entirely to fix the "restart audio" bug.
+	 * I am not 100% positive *why* it fixes the bug, but it does.
+	 * My theory is that the reason the audio wouldn't pause after
+	 * restarting the level is that the old audio player was still
+	 * running and therefore things got confused. This fix tells the
+	 * computer to load the settings screen, wait 100 milliseconds,
+	 * then load the level again, and this causes the problem to go
+	 * away. This was by far the weirdest bug we had, but the process
+	 * of fixing it actually helped clean the code up a lot so I'm glad
+	 * we had it in the long run.
+	 * - Race
+	 */
+	public void restartLevel() {
+		switchToScreen(settings);
+		try { Thread.sleep(100); } 
+		catch (InterruptedException e) { e.printStackTrace(); }
+		switchToScreen(level);
+	}
 
 	public String getSongChoice() {
 		return songChoice;
