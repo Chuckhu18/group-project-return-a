@@ -29,6 +29,7 @@ public class EndOfGamePane extends GraphicsPane{
 	Player playerInfo;
 	String currentName;
 	int currentScore;
+	ArrayList<String> yourScores = new ArrayList<String>();
 	
 	public EndOfGamePane(MainApplication app) {
 		program = app;
@@ -69,18 +70,16 @@ public class EndOfGamePane extends GraphicsPane{
 		
 		currentPlayerNameLabel = new GLabel(currentName + ":", 120, 150);
 		
-		ArrayList<String> yourScores = new ArrayList<String>();
-		
 		yourScores.add(Integer.toString(currentScore));
 		
 		//playerInfo.addScoreToList(Integer.toString(currentScore));
 		
-		//here checks if the current score is higher than previous scores,
+		//check if the current score is higher than previous scores,
 		//if so, then replace it with current score
 		currentPlayerFile = FILEDIRECTORY + currentName + ".txt";
 		playerInfo.saveScoresToFile(yourScores, currentPlayerFile);
 
-		yourScores = playerInfo.ReadScoresFromFile(currentPlayerFile);
+		//yourScores = playerInfo.ReadScoresFromFile(currentPlayerFile);
 		System.out.println("Printing current player scores: " + yourScores);
 
 		// add current score to sorted array list from playername.txt file
@@ -122,18 +121,20 @@ public class EndOfGamePane extends GraphicsPane{
 		//splitting name and score by ","
 		int nameIndex = -1;
 		int scoreIndex = -1;
-		boolean flag2 = false; 
-		for(int i = 0; i < allScores.size(); i++) {
+		boolean flag2 = false;
+		for (int i = 0; i < allScores.size(); i++) {
 			splitArr = allScores.get(i).split(",");
-			if(splitArr[0].equals(currentName)) {	nameIndex = i;}
-			if(!flag2 && currentScore > Integer.parseInt(splitArr[1])) {	
+			if (splitArr[0].equals(currentName)) {
+				nameIndex = i;
+			}
+			if (!flag2 && currentScore > Integer.parseInt(splitArr[1])) {
 				scoreIndex = i;
 				flag2 = true;
-				}
+			}
 			splitName.add(splitArr[0]);
 			splitScore.add(splitArr[1]);
 		}
-		
+
 		//replace high score if current score is higher than any of in the allScore.txt
 		if(nameIndex != -1 ) {
 			if(currentScore > Integer.parseInt(splitScore.get(nameIndex))) {
@@ -150,10 +151,8 @@ public class EndOfGamePane extends GraphicsPane{
 			newAllScore.add(splitName.get(i)+ "," + splitScore.get(i));
 		}
 		
-		
-		
 		// if player name not in record, add it to the high score list
-		if (nameIndex == -1) {
+		if (nameIndex == -1 && scoreIndex != -1) {
 			newAllScore.add(scoreIndex, currentName + "," + currentScore);
 		}
 		
