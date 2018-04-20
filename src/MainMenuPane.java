@@ -45,7 +45,7 @@ public class MainMenuPane extends GraphicsPane {
 		howTo.setSize(howTo.getWidth()/2, howTo.getHeight()/2);
 		mainMenu = new GImage("LOGO.png", 100,100);
 		mainMenu.setSize(mainMenu.getWidth()/5, mainMenu.getHeight()/5);
-		enterName = new GLabel ("Press enter to enter name", 400, 330);
+		enterName = new GLabel ("Enter your name", 400, 330);
 		//adding score board on the menu
 		scoreBoard = new GButton("Score Board", 320, 300, 140, 35);
 		input = new GLabel("", 400, 330);
