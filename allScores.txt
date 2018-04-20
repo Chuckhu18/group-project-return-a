@@ -1,5 +1,7 @@
-Chuck,1166
-Race,600
+chuck,480
+Race,400
+Chuck,310
 Jillian,301
 Ryan,300
-test,1
+Chucktest2,231
+Chucktest,105
