@@ -128,10 +128,12 @@ public class EndOfGamePane extends GraphicsPane{
 		
 		//splitting name and score by ","
 		int nameIndex = -1;
+		int scoreIndex = -1;
+		boolean flag2 = false; 
 		for(int i = 0; i < allScores.size(); i++) {
 			splitArr = allScores.get(i).split(",");
 			if(splitArr[0].equals(currentName)) {	nameIndex = i;}
-	
+			if(!flag2 && currentScore > Integer.parseInt(splitArr[1])) {	scoreIndex = i;}
 			splitName.add(splitArr[0]);
 			splitScore.add(splitArr[1]);
 		}
@@ -150,7 +152,7 @@ public class EndOfGamePane extends GraphicsPane{
 		
 		//if player name not in record add to the high score list
 		if(nameIndex == -1) {
-			newAllScore.add(currentName + "," + currentScore);
+			newAllScore.add(scoreIndex, currentName + "," + currentScore);
 		}
 		
 		//the maximum amount of high scores is 7, which are how many can be displayed on the screen.

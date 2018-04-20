@@ -1,6 +1,5 @@
-Chuck,999
+Chuck,1166
 Race,600
 Jillian,301
 Ryan,300
-Cccc,1
-Cccc,436
+test,1
