@@ -83,6 +83,7 @@ public class Level extends GraphicsPane {
 		vicCount = 0;
 		numTicks = 0;
 		health = MAX_HEALTH;
+		hasWon = false;
 		
 		// Load filename and difficulty
 		filename = program.getSongChoice();
