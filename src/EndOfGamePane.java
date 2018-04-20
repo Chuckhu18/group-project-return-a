@@ -70,9 +70,11 @@ public class EndOfGamePane extends GraphicsPane{
 		
 		currentPlayerNameLabel = new GLabel(currentName + ":", 120, 150);
 		
-		yourScores.add(Integer.toString(currentScore));
-		
+		//yourScores.add(Integer.toString(currentScore));
 		//playerInfo.addScoreToList(Integer.toString(currentScore));
+		
+		//initialize score list
+		yourScores.add("0");
 		
 		//check if the current score is higher than previous scores,
 		//if so, then replace it with current score
@@ -80,20 +82,20 @@ public class EndOfGamePane extends GraphicsPane{
 		playerInfo.saveScoresToFile(yourScores, currentPlayerFile);
 
 		//yourScores = playerInfo.ReadScoresFromFile(currentPlayerFile);
-		System.out.println("Printing current player scores: " + yourScores);
+		//System.out.println("Printing current player scores: " + yourScores);
 
 		// add current score to sorted array list from playername.txt file
-		boolean flag = false;
+		boolean flag1 = false;
 		for (int i = 0; i < yourScores.size(); i++)
-			if (!flag && currentScore > Integer.parseInt(yourScores.get(i))) {
+			if (!flag1 && currentScore > Integer.parseInt(yourScores.get(i))) {
 				yourScores.add(i, Integer.toString(currentScore));
-				flag = true;
+				flag1 = true;
 			}
-
-		if (yourScores.size() > 3) {
+		//will remove the lowest current score if arraylist is full
+		while (yourScores.size() > 3) {
 			yourScores.remove(3);
 		}
-		System.out.println("After replace with current: " + yourScores);
+		//System.out.println("After replace with current: " + yourScores);
 
 		// save the new score array list in the file for current player file
 		playerInfo.saveScoresToFile(yourScores, currentPlayerFile);
@@ -157,7 +159,7 @@ public class EndOfGamePane extends GraphicsPane{
 		}
 		
 		//the maximum amount of high scores is 7, which are how many can be displayed on the screen.
-		if(newAllScore.size() > 7) {
+		while(newAllScore.size() > 7) {
 			newAllScore.remove(7);
 		}
 			
