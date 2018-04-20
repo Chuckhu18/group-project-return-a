@@ -10,9 +10,9 @@ public class Song {
 	private double tempo; // How often circles are created
 	private String circleList; // list of characters that will appear on the screen
 	private int startDelay; // How many ticks to delay the music starting
-	private ArrayList<Integer> tempoChangeTimes =  new ArrayList<Integer>(); // timestamps when we should change tempo
-	private ArrayList<Integer> tempoChangeValues =  new ArrayList<Integer>(); // amount to change tempo by
-	
+	private ArrayList<Integer> tempoChangeTimes = new ArrayList<Integer>(); // timestamps when we should change tempo
+	private ArrayList<Integer> tempoChangeValues = new ArrayList<Integer>(); // amount to change tempo by
+
 	/***
 	 * 
 	 * @param s
@@ -61,26 +61,28 @@ public class Song {
 	public double getTempo() {
 		return tempo;
 	}
-	
+
 	public ArrayList<Integer> getTempoChangeTimes() {
 		return tempoChangeTimes;
 	}
-	
+
 	public ArrayList<Integer> getTempoChangeValues() {
 		return tempoChangeValues;
 	}
-	
+
 	public int getStartDelay() {
 		return startDelay;
 	}
-	
+
 	/**
 	 * Create new Song object from filename
-	 * @param filename filename to load
+	 * 
+	 * @param filename
+	 *            filename to load
 	 */
 	public Song(String filename) {
 		try {
-			readSong("songs/"+filename+".txt");
+			readSong("songs/" + filename + ".txt");
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -88,33 +90,32 @@ public class Song {
 	}
 
 	// make this function outside of the class
-	private void readSong(String fileName) throws IOException {		
-	    FileReader file = new FileReader(fileName);
-	    BufferedReader reader = new BufferedReader(file);
-	    
-	    // Read in guaranteed aspects of a song
-	    songName = reader.readLine();
-	    circleSize = Double.parseDouble(reader.readLine());
-	    shrinkSpeed = Double.parseDouble(reader.readLine());
-	    tempo = Double.parseDouble(reader.readLine());
-	    startDelay = Integer.parseInt(reader.readLine());
-	    circleList = reader.readLine();
-	    
-	    
-	    // Read in parts that might not be in every song
-	    String line = reader.readLine();
-	    if(line!=null) {
-	    	String[] list = line.split(";");
-	    	for(int i = 0; i < list.length; i++)
-	    		tempoChangeTimes.add(Integer.parseInt(list[i]));
-	    	line = reader.readLine();
-	    }
-	    if(line!=null) {
-	    	String[] list = line.split(";");
-	    	for(int i = 0; i < list.length; i++)
-	    		tempoChangeValues.add(Integer.parseInt(list[i]));
-	    }
+	private void readSong(String fileName) throws IOException {
+		FileReader file = new FileReader(fileName);
+		BufferedReader reader = new BufferedReader(file);
 
-	   reader.close();
-}
+		// Read in guaranteed aspects of a song
+		songName = reader.readLine();
+		circleSize = Double.parseDouble(reader.readLine());
+		shrinkSpeed = Double.parseDouble(reader.readLine());
+		tempo = Double.parseDouble(reader.readLine());
+		startDelay = Integer.parseInt(reader.readLine());
+		circleList = reader.readLine();
+
+		// Read in parts that might not be in every song
+		String line = reader.readLine();
+		if (line != null) {
+			String[] list = line.split(";");
+			for (int i = 0; i < list.length; i++)
+				tempoChangeTimes.add(Integer.parseInt(list[i]));
+			line = reader.readLine();
+		}
+		if (line != null) {
+			String[] list = line.split(";");
+			for (int i = 0; i < list.length; i++)
+				tempoChangeValues.add(Integer.parseInt(list[i]));
+		}
+
+		reader.close();
+	}
 }
