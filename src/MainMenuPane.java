@@ -23,7 +23,7 @@ public class MainMenuPane extends GraphicsPane {
 	GButton scoreBoard;
 	GLabel input;
 	GLabel enterName;
-	
+
 
 	// TODO: implement the settings menu object
 	// private SettingsMenu settings = new SettingsMenu(program);
@@ -49,10 +49,10 @@ public class MainMenuPane extends GraphicsPane {
 		//adding score board on the menu
 		scoreBoard = new GButton("Score Board", 320, 300, 140, 35);
 		input = new GLabel("", 400, 330);
-		
+
 	}
 
-			
+
 
 	@Override
 	public void showContents() { // this is like your main method in this class. THis is going to add all the
@@ -77,7 +77,7 @@ public class MainMenuPane extends GraphicsPane {
 			program.remove(enterName);
 		}
 		//adds in sequential order
-		
+
 		//program.add(scoreBoard);
 	}
 
@@ -92,7 +92,7 @@ public class MainMenuPane extends GraphicsPane {
 		program.remove(mainMenu);
 		program.remove(enterName);
 		program.remove(input);
-		
+
 		//program.remove(scoreBoard);
 	}
 
@@ -128,17 +128,19 @@ public class MainMenuPane extends GraphicsPane {
 		//No spaces, one word no illegal characters, cant put in symbols 
 		String userInput = input.getLabel();
 		program.remove(enterName);
+
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			
+
 			//hidecontents
-			
+
 		}
 		else if (userInput.length() > 0 && e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 			userInput = userInput.substring(0, userInput.length() - 1);
 		}
 		else {
-			
-			userInput = userInput+e.getKeyChar();
+			if(Character.isLetter(e.getKeyChar()) || Character.isDigit(e.getKeyChar())) {
+				userInput = userInput+e.getKeyChar();
+			}
 		}
 		input.setLabel("");
 		input.setLabel(userInput); //look up windows file name restrictions, can you put a slash in the file etc
@@ -147,7 +149,7 @@ public class MainMenuPane extends GraphicsPane {
 	public String getUserInput() {
 		return input.getLabel();
 	}
-	
+
 	private void makeSeeable(GLabel label) {
 		label.setColor(Color.WHITE);
 		label.setFont("Courier-24");
