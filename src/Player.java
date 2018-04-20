@@ -11,7 +11,7 @@
 import java.io.*;
 import java.util.ArrayList;
 
-public class Player{
+public class Player {
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
 	public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
@@ -21,28 +21,29 @@ public class Player{
 	public static final String FILENAME = "allScores.txt";
 	public static String currentPlayerFile = "";
 	private MainApplication main;
-	
+
 	public Player() {
 		main = new MainApplication();
 		setName(main.getName());
 		setCurrentScore(main.getScore());
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
+
 	public void setName(String n) {
 		this.name = n;
 	}
-	
+
 	public void setCurrentScore(int s) {
-		this.currentScore = s; 
+		this.currentScore = s;
 	}
 
 	public int getCurrentScore() {
 		return this.currentScore;
 	}
-	
+
 	public ArrayList<String> getScoreList() {
 		return this.scores;
 	}
@@ -58,9 +59,9 @@ public class Player{
 		try {
 			fw = new FileWriter(f);
 			bw = new BufferedWriter(fw);
-			
+
 			for (String str : inStr) {
-				bw.write(str+"\n");
+				bw.write(str + "\n");
 			}
 
 		} catch (IOException e) {
@@ -80,10 +81,10 @@ public class Player{
 
 	public ArrayList<String> ReadScoresFromFile(String filename) {
 		ArrayList<String> read = new ArrayList<String>();
-		
+
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			String sCurrentLine;
-			
+
 			while ((sCurrentLine = br.readLine()) != null) {
 				read.add(sCurrentLine);
 			}
