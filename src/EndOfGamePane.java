@@ -78,8 +78,8 @@ public class EndOfGamePane extends GraphicsPane{
 		
 		//check if the current score is higher than previous scores,
 		//if so, then replace it with current score
-		currentPlayerFile = FILEDIRECTORY + currentName + ".txt";
-		playerInfo.saveScoresToFile(yourScores, currentPlayerFile);
+		//currentPlayerFile = FILEDIRECTORY + currentName + ".txt";
+		//playerInfo.saveScoresToFile(yourScores, currentPlayerFile);
 
 		//yourScores = playerInfo.ReadScoresFromFile(currentPlayerFile);
 		//System.out.println("Printing current player scores: " + yourScores);
@@ -98,7 +98,7 @@ public class EndOfGamePane extends GraphicsPane{
 		//System.out.println("After replace with current: " + yourScores);
 
 		// save the new score array list in the file for current player file
-		playerInfo.saveScoresToFile(yourScores, currentPlayerFile);
+		//playerInfo.saveScoresToFile(yourScores, currentPlayerFile);
 
 		//after all scores sorted, then add GLabel for them
 		yourScoresLabels = new ArrayList<GLabel>();
@@ -194,7 +194,9 @@ public class EndOfGamePane extends GraphicsPane{
 		program.add(currentPlayerNameLabel);
 		
 		for(int i = 0; i < yourScoresLabels.size(); i++) {
-			program.add(yourScoresLabels.get(i));
+			if(!yourScoresLabels.get(i).getLabel().equals("0")) {
+				program.add(yourScoresLabels.get(i));
+			}
 		}
 		
 		for(int i = 0; i < allScoresLabels.size(); i++) {
