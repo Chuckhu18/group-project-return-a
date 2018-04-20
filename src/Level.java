@@ -4,9 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.swing.Timer;
 import acm.graphics.*;
-import acm.program.*;
 
 
 public class Level extends GraphicsPane {
@@ -24,7 +22,6 @@ public class Level extends GraphicsPane {
 	private int numTicks; // How many timer ticks have gone by
 	private MainApplication program;
 	private Random rand;
-	private AudioPlayer audioPlayer;
 	private boolean isPaused;
 	private boolean hasWon = false; // is set to true when the player has won the game
 	private int vicCount; // Used to stop the game from immediately ending after last circle
@@ -44,10 +41,9 @@ public class Level extends GraphicsPane {
 	private ArrayList<Integer> tempoChangeValues; // how much to change tempo by
 	private double nextCircleSpawn; // saves when to spawn the next circle
 
-	// Used to load song from file to play
-	private String folder = "sounds/";
-	private String filename = "hotelCali";
-	private String diffNum = "1";
+	// Used to load song
+	private String filename;
+	private String diffNum;
 	
 	// UI elements
 	private ArrayList<GObject> uiObjects;
@@ -74,114 +70,181 @@ public class Level extends GraphicsPane {
 	public Level(MainApplication app) {
 		super();
 		program = app;
+		//audioPlayer = program.getAudioPlayer();
+	}
+	
+	@Override
+	public void showContents() {
+		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		rand = new Random();
+
+		// Initialize counters
+		score = 0;
+		vicCount = 0;
+		numTicks = 0;
+		health = MAX_HEALTH;
+		
+		// Load filename and difficulty
+		filename = program.getSongChoice();
+		diffNum = Integer.toString(program.getDiffChoice()+1);
+		
+		// Create pause menu objects
+		initializePauseMenu();
+		isPaused = false;
+		
+		// Create UI element objects
+		initializeUI();
+		
+		program.add(backRect); // Adds the background rectangle
+		
+		// Adds UI elements to the screen
+		for(GObject obj : uiObjects)
+			program.add(obj);
+		
+		// loads file for song we want to play
+		song = new Song(filename+diffNum); 
+		
+		// Use the information from the song we chose to create gameplay elements
+		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
+		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
+		tempoChangeTimes = song.getTempoChangeTimes();
+		tempoChangeValues = song.getTempoChangeValues();
+		tempo = song.getTempo();
+		nextCircleSpawn = song.getStartDelay();
+		createCharArrList(song.getCircleList());
+
+		// start audio and timer
+		//audioPlayer = program.getAudioPlayer();
+		program.time.start();		
+		
+		program.startAudioFile();
 	}
 
-	public void createCircle() {
-		// Generate random coordinate to put the circle at within the bounds of the screen
-		double xloc = getNewLoc(WINDOW_WIDTH);
-		double yloc = getNewLoc(WINDOW_HEIGHT);
+	@Override
+	public void hideContents() {
+		program.remove(backRect);
+				
+		// Clear the pause menu if it was open
+		for(GObject obj : pauseObjects)
+			program.remove(obj);
 		
-		//System.out.println(count);
+		// Clear the UI elements
+		for(GObject obj : uiObjects)
+			program.remove(obj);
 		
-		/*
-		 * keep circle created in side the screen by 100*60 pixel
-		 * make sure circles are not created outside the screen
-		 * make sure circles are not overlapped
-		 */
-		
-		while(ifLocNotAvailable(xloc, lastX)) {
-			xloc = getNewLoc(WINDOW_WIDTH);
-			//System.out.println("X>>>>>>>>"+ Double.toString(xloc));
-		}
-		while(ifLocNotAvailable(yloc, lastY)) {
-			yloc = getNewLoc(WINDOW_HEIGHT);
-			//System.out.println("Y>>>>>>>>"+ Double.toString(yloc));
+		// Remove any circles left on the screen
+		for(Circle circle : circles) {
+			circle.removeCircles();
+			circle.removeLabel();
 		}
 		
-		lastX.add(xloc);
-		lastY.add(yloc);
-		if (lastX.size() > 4) {
-			lastX.remove(0);
-			lastY.remove(0);
+		program.time.stop(); // Stop the timer
+		program.stopAudio(); // Stop the audio
+		program.setScore(score);
+		
+	}
+	
+	@Override
+	public void keyTyped(KeyEvent e) { // using keyTyped to help ensure valid input
+		boolean found = false; // tracks if we have found a matching circle
+		
+		String text = "";
+		Color cirColor = Color.BLACK;
+		
+		if ((e.getKeyChar() == KeyEvent.VK_SPACE) && !isPaused)
+		{
+			pauseGame();
+			found = true;
 		}
 		
-		
-		/*
-		 * Makes some circles randomly "bad"
-		 * TODO:
-		 * Make a better implementation
-		 */
-		
-		boolean cirGood = true;
-		
-		if(rand.nextInt(10) == 0) {
-			cirGood = false;
-			System.out.println("Bad circle generated");
+		if((e.getKeyChar() == KeyEvent.VK_ESCAPE) && isPaused) {
+			unPauseGame();
+			found = true;
 		}
 		
-		
-		if (characters.size() > 0) {
-			Circle toAdd = new Circle(characters.remove(0), song.getCircleSize(), xloc, yloc, song.getShrinkSpeed(), cirGood);
-			// Add shapes to screen from the Circle, then add the Circle to the ArrayList
-			program.add(toAdd.getInnerCircle());
-			program.add(toAdd.getOuterCircle());
-			program.add(toAdd.getLabel());
-			circles.add(toAdd);
-		}
-		else { // No more characters left to add
-			if (circles.size() <= 0) { // If there are no more circles on screen
-				if(vicCount > 1) { // If the timer is counting down
-					vicCount--;
-				} else if (vicCount == 1) { // If the countdown has counted down all the way
-					hasWon = true; // Declare that the user has won
-				} else { // If countdown has not been started
-					vicCount = 2; // game will wait 2 spawn ticks before ending
+		// Iterate through all circles on the screen
+		for(Circle circle : circles) {
+			// if you pressed a key matching a circle who is still shrinking
+			if(e.getKeyChar() == circle.getLetter() && circle.getRemoveCounter() == 0) { 
+				// Add the text displaying that you pressed it right
+				// Pick which text based on how small the outer circle was
+
+				double size = circle.getOutSize(); // store outer size to a variable for efficiency
+				double init = song.getCircleSize(); // store initial size for math
+				
+				// Note: all numbers are subject to change
+				if(circle.isGood()) { // Do this if the match is good
+					if (size <= (init / 100)) { // If you press in the last hundredth of the timer
+						text = "PERFECT!";
+						cirColor = Color.WHITE;
+						score+=100;
+						health+=MAX_HEALTH/5;
+					}
+					else if (size <= (init / 10)) { // If you press between 9/10 and 99/100
+						text = "AMAZING!";
+						cirColor = Color.CYAN;
+						score+=50;
+						health+=MAX_HEALTH/10;
+					}
+					else if (size <= (init / 5)) {  // If you press between 4/5 and 9/10
+						text = "GREAT";
+						cirColor = Color.GREEN;
+						score+=25;
+						health+=MAX_HEALTH/15;
+					}
+					else if (size <= (init / 2)) { // If you press between 1/2 and 4/5
+						text = "GOOD";
+						cirColor = Color.YELLOW;
+						score+=5;
+						health+=MAX_HEALTH/75;
+						
+					}
+					else { // If you press in the first half of the timer
+						text = "OK";
+						cirColor = Color.ORANGE;
+						score+=1;
+						health+=MAX_HEALTH/250;
+					}
+				} // End of good circle code
+				else { // You clicked on a "bad" circle
+					text = "BAD";
+					cirColor = Color.RED;
+					health-=MAX_HEALTH/15;
 				}
+				
+				// hide the GOvals after updating the label
+				circle.updateLabel(text, cirColor);
+				
+				found = true; // Remember that we found the circle
+			}
+			else if(!Character.isLetter(e.getKeyChar())) {
+				found = true; // Don't punish the player for pressing a non-letter key
 			}
 		}
-	}
-	
-	/**
-	 * help method for generating random location
-	 */
-	private double getNewLoc(int base) {
-		return (base * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble()));
-	}
-	
-	/*Tried to use getElementA() method to check if there are any elements near by
-	private boolean ifLocAvailable(double xin, double yin) {
-		if (getElementAt(xin, yin) != null)
-		return true;
-	}*/
-	
-	private boolean ifLocNotAvailable(double in, ArrayList<Double> last) {
-		for(int i = 0; i < last.size(); i++ ) {
-			if(Math.abs(in - last.get(i)) <= 45) {
-				//System.out.println("========" + Double.toString(Math.abs(in - last.get(i))) );
-				return true;
-			}
+		
+		if(!found) { // if match was found
+			if(vicCount==0) health-=MAX_HEALTH/20; // Take health off if the game is still running
 		}
-		return false;
-	}
-	
-	/**
-	 * Creates an ArrayListof characters from given string
-	 * @param str string to turn into ArrayList
-	 */
-	private void createCharArrList(String str) {
-		characters = new ArrayList<Character>(); // reset ArrayList so we start from scratch
+	}// keyTyped
 
-		for (int i = 0; i < str.length(); i++) {
-			// if the current character in the string is a letter or number (ignores weird
-			// stuff)
-			if (Character.isLetter(str.charAt(i)) || Character.isDigit(str.charAt(i))) {
-				characters.add(str.charAt(i));
-			}
+	@Override
+	public void mousePressed(MouseEvent e) {
+
+		GObject obj = program.getElementAt(e.getX(), e.getY());
+		if (obj == pause) {
+			pauseGame();
 		}
-	}
-
-	// ***member methods***
-
+		if (obj == cont) {
+			unPauseGame();
+		}
+		if (obj == restart) {
+			program.restartLevel();
+		}
+		if (obj == change) {
+			program.switchToSettings();
+		}
+	}// mousePressed
+	
 	/**
 	 * Timer function, executed every time the timer ticks
 	 */
@@ -273,138 +336,11 @@ public class Level extends GraphicsPane {
 		else // under 25%
 			healthBar.setFillColor(Color.RED);
 		
-	}// actionPerformed
-
-	public void startAudioFile() {
-		isPaused = false;
-		audioPlayer.playSound(folder, filename+".mp3");
-	}// startAudioFile
-
-	public void pauseAudio() {
-		isPaused = true;
-		audioPlayer.pauseSound(folder, filename + ".mp3");
-	}// pause
+	}// action()
 	
-	public void stopAudio() {
-		audioPlayer.stopSound(folder, filename + ".mp3");
-	}
-
-	public void resumeAudio() {
-		if (isPaused) {
-			audioPlayer.playSound(folder, filename + ".mp3");
-			isPaused = false;
-		}
-	}// resume
-
-	public void restartAudio() {
-		if (!isPaused) {
-			audioPlayer.stopSound(folder, filename + ".mp3");
-			audioPlayer.playSound(folder, filename + ".mp3");
-			isPaused = false;
-		}
-	}// restart
-
-	@Override
-	public void keyTyped(KeyEvent e) { // using keyTyped to help ensure valid input
-		boolean found = false; // tracks if we have found a matching circle
-		
-		String text = "";
-		Color cirColor = Color.BLACK;
-		
-		if ((e.getKeyChar() == KeyEvent.VK_SPACE) && !isPaused)
-		{
-			pauseGame();
-			found = true;
-		}
-		
-		if((e.getKeyChar() == KeyEvent.VK_ESCAPE) && isPaused) {
-			unPauseGame();
-			found = true;
-		}
-		
-		// Iterate through all circles on the screen
-		for(Circle circle : circles) {
-			// if you pressed a key matching a circle who is still shrinking
-			if(e.getKeyChar() == circle.getLetter() && circle.getRemoveCounter() == 0) { 
-				// Add the text displaying that you pressed it right
-				// Pick which text based on how small the outer circle was
-
-				double size = circle.getOutSize(); // store outer size to a variable for efficiency
-				double init = song.getCircleSize(); // store initial size for math
-				
-				// Note: all numbers are subject to change
-				if(circle.isGood()) { // Do this if the match is good
-					if (size <= (init / 100)) { // If you press in the last hundredth of the timer
-						text = "PERFECT!";
-						cirColor = Color.WHITE;
-						score+=100;
-						health+=MAX_HEALTH/5;
-					}
-					else if (size <= (init / 10)) { // If you press between 9/10 and 99/100
-						text = "AMAZING!";
-						cirColor = Color.CYAN;
-						score+=50;
-						health+=MAX_HEALTH/10;
-					}
-					else if (size <= (init / 5)) {  // If you press between 4/5 and 9/10
-						text = "GREAT";
-						cirColor = Color.GREEN;
-						score+=25;
-						health+=MAX_HEALTH/15;
-					}
-					else if (size <= (init / 2)) { // If you press between 1/2 and 4/5
-						text = "GOOD";
-						cirColor = Color.YELLOW;
-						score+=5;
-						health+=MAX_HEALTH/75;
-						
-					}
-					else { // If you press in the first half of the timer
-						text = "OK";
-						cirColor = Color.ORANGE;
-						score+=1;
-						health+=MAX_HEALTH/250;
-					}
-				} // End of good circle code
-				else { // You clicked on a "bad" circle
-					text = "BAD";
-					cirColor = Color.RED;
-					health-=MAX_HEALTH/15;
-				}
-				
-				// hide the GOvals after updating the label
-				circle.updateLabel(text, cirColor);
-				
-				found = true; // Remember that we found the circle
-			}
-		}
-		
-		if(!found) { // if match was found
-			if(vicCount==0) health-=MAX_HEALTH/20; // Take health off if the game is still running
-		}
-	}// keyPressed
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-
-		GObject obj = program.getElementAt(e.getX(), e.getY());
-		if (obj == pause) {
-			pauseGame();
-		}
-		if (obj == cont) {
-			unPauseGame();
-		}
-		if (obj == restart) {
-			program.switchToLevel();
-		}
-		if (obj == change) {
-			program.switchToSettings();
-		}
-	}// mouseClicked
-
 	public void pauseGame() {
 		program.time.stop();
-		pauseAudio();
+		program.pauseAudio();
 		program.remove(pause); // pause button on in-game UI
 		
 		for(GObject obj : pauseObjects)
@@ -413,94 +349,11 @@ public class Level extends GraphicsPane {
 	
 	public void unPauseGame() {
 		program.time.restart();
-		resumeAudio();
+		program.resumeAudio();
 		program.add(pause);
 		
 		for(GObject obj : pauseObjects)
 			program.remove(obj);
-	}
-
-	// ***getters***
-	public int getScore() {
-		return score;
-	}// getScore
-	
-	public int getHealth() {
-		return health;
-	}// getHealth
-	
-	public boolean getHasWon() {
-		return hasWon;
-	}
-
-	@Override
-	public void showContents() {
-		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		rand = new Random();
-		
-		// Initialize counters
-		score = 0;
-		vicCount = 0;
-		numTicks = 0;
-		health = MAX_HEALTH;
-		
-		// Load filename and difficulty
-		filename = program.getSongChoice();
-		diffNum = Integer.toString(program.getDiffChoice()+1);
-		
-		// Create pause menu objects
-		initializePauseMenu();
-		
-		// Create UI element objects
-		initializeUI();
-		
-		program.add(backRect); // Adds the background rectangle
-		
-		// Adds UI elements to the screen
-		for(GObject obj : uiObjects)
-			program.add(obj);
-		
-		// loads file for song we want to play
-		song = new Song(filename+diffNum); 
-		
-		// Use the information from the song we chose to create gameplay elements
-		circles = new ArrayList<Circle>(); // Initializes ArrayList of Circles
-		characters = new ArrayList<Character>(); // Initializes ArrayList of characters
-		tempoChangeTimes = song.getTempoChangeTimes();
-		tempoChangeValues = song.getTempoChangeValues();
-		tempo = song.getTempo();
-		nextCircleSpawn = song.getStartDelay();
-		createCharArrList(song.getCircleList());
-
-		// start audio and timer
-		audioPlayer = AudioPlayer.getInstance();
-		program.time.start();		
-		
-		startAudioFile();
-	}
-
-	@Override
-	public void hideContents() {
-		program.remove(backRect);
-				
-		// Clear the pause menu if it was open
-		for(GObject obj : pauseObjects)
-			program.remove(obj);
-		
-		// Clear the UI elements
-		for(GObject obj : uiObjects)
-			program.remove(obj);
-		
-		// Remove any circles left on the screen
-		for(Circle circle : circles) {
-			circle.removeCircles();
-			circle.removeLabel();
-		}
-		
-		program.time.stop(); // Stop the timer
-		stopAudio(); // Stop the audio
-		program.setScore(score);
-		
 	}
 	
 	/**
@@ -552,6 +405,108 @@ public class Level extends GraphicsPane {
 		healthBar.setFillColor(Color.GREEN);
 		uiObjects.add(emptyHPBar);
 		uiObjects.add(healthBar);
+	}
+	
+	/**
+	 * Creates an ArrayListof characters from given string
+	 * @param str string to turn into ArrayList
+	 */
+	private void createCharArrList(String str) {
+		characters = new ArrayList<Character>(); // reset ArrayList so we start from scratch
+
+		for (int i = 0; i < str.length(); i++) {
+			// if the current character in the string is a letter or number (ignores weird
+			// stuff)
+			if (Character.isLetter(str.charAt(i)) || Character.isDigit(str.charAt(i))) {
+				characters.add(str.charAt(i));
+			}
+		}
+	}
+	
+	public void createCircle() {
+		// Generate random coordinate to put the circle at within the bounds of the screen
+		double xloc = getNewLoc(WINDOW_WIDTH);
+		double yloc = getNewLoc(WINDOW_HEIGHT);
+		
+		/*
+		 * keep circle created in side the screen by 100*60 pixel
+		 * make sure circles are not created outside the screen
+		 * make sure circles are not overlapped
+		 */
+		
+		while(ifLocNotAvailable(xloc, lastX)) {
+			xloc = getNewLoc(WINDOW_WIDTH);
+		}
+		
+		while(ifLocNotAvailable(yloc, lastY)) {
+			yloc = getNewLoc(WINDOW_HEIGHT);
+		}
+		
+		lastX.add(xloc);
+		lastY.add(yloc);
+		
+		if (lastX.size() > 4) {
+			lastX.remove(0);
+			lastY.remove(0);
+		}
+		
+		// Randomly determine if a circle is "bad" or not
+		boolean cirGood = true;
+		if(rand.nextInt(10) == 0) cirGood = false;
+		
+		// Create and add the circle to the screen if there are characters left to add
+		if (characters.size() > 0) {
+			Circle toAdd = new Circle(characters.remove(0), song.getCircleSize(), xloc, yloc, song.getShrinkSpeed(), cirGood);
+			// Add shapes to screen from the Circle, then add the Circle to the ArrayList
+			program.add(toAdd.getInnerCircle());
+			program.add(toAdd.getOuterCircle());
+			program.add(toAdd.getLabel());
+			circles.add(toAdd);
+		}
+		else { // No more characters left to add
+			if (circles.size() <= 0) { // If there are no more circles on screen
+				if(vicCount > 1) { // If the timer is counting down
+					vicCount--;
+				} else if (vicCount == 1) { // If the countdown has counted down all the way
+					hasWon = true; // Declare that the user has won
+				} else { // If countdown has not been started
+					vicCount = 2; // game will wait 2 spawn ticks before ending
+				}
+			}
+		}
+	}
+	
+	/**
+	 * help method for generating random location
+	 */
+	private double getNewLoc(int base) {
+		return (base * (rangeMin + (rangeMax - rangeMin) * rand.nextDouble()));
+	}
+	
+	private boolean ifLocNotAvailable(double in, ArrayList<Double> last) {
+		for(int i = 0; i < last.size(); i++ ) {
+			if(Math.abs(in - last.get(i)) <= 45) {
+				//System.out.println("========" + Double.toString(Math.abs(in - last.get(i))) );
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+	
+	public boolean getHasWon() {
+		return hasWon;
+	}
+	
+	public void setPaused(boolean p) {
+		isPaused = p;
 	}
 
 }// Level

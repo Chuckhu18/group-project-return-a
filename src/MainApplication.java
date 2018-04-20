@@ -13,15 +13,15 @@ public class MainApplication extends GraphicsApplication {
 
 	private MainMenuPane menu;
 	private Player player;
+	private AudioPlayer audioPlayer;
 
 	private EndOfGamePane end;
 	public Level level;
 	private SettingsPane settings;
-	private int count;
-	private GLabel youWin = new GLabel("YOU WIN", 100, 100);
-	private GLabel youLose = new GLabel("YOU LOSE", 100, 100);
 	public Timer time;
 	private String songChoice;
+	private String audioPath = "sounds/";
+	private String audioFilename;
 	private int diffChoice;
 	private int score = 0;
 
@@ -30,10 +30,7 @@ public class MainApplication extends GraphicsApplication {
 	}
 
 	public void run() {
-		youWin.setColor(Color.PINK);
-		youWin.setFont("Arial-32");
-		youLose.setColor(Color.CYAN);
-		youLose.setFont("Arial-32");
+		audioPlayer = AudioPlayer.getInstance();
 		settings = new SettingsPane(this);
 		time = new Timer(10, this);
 		level = new Level(this);
@@ -55,10 +52,7 @@ public class MainApplication extends GraphicsApplication {
 		
 	}
 	public void switchToMenu() {
-		//playRandomSound();
-		count++;
 		switchToScreen(menu); //should be main changing for tests
-		//switchToScreen(end);//test for EndOfGamePane class
 	}
 	
 	public void switchToSettings() {
@@ -68,15 +62,33 @@ public class MainApplication extends GraphicsApplication {
 		switchToScreen(end);
 	}
 	public void switchToLevel() {
+		audioFilename = songChoice+".mp3";
 		switchToScreen(level);
 	}
 	public void playGame() {
 		time.start();
 	}
- 
-	// ***member methods***
-
 	
+	/**
+	 * This function exists entirely to fix the "restart audio" bug.
+	 * I am not 100% positive *why* it fixes the bug, but it does.
+	 * My theory is that the reason the audio wouldn't pause after
+	 * restarting the level is that the old audio player was still
+	 * running and therefore things got confused. This fix tells the
+	 * computer to load the settings screen, wait 100 milliseconds,
+	 * then load the level again, and this causes the problem to go
+	 * away. This was by far the weirdest bug we had, but the process
+	 * of fixing it actually helped clean the code up a lot so I'm glad
+	 * we had it in the long run.
+	 * - Race
+	 */
+	public void restartLevel() {
+		switchToScreen(settings);
+		try { Thread.sleep(100); } 
+		catch (InterruptedException e) { e.printStackTrace(); }
+		switchToScreen(level);
+	}
+
 	public String getSongChoice() {
 		return songChoice;
 	}
@@ -111,5 +123,27 @@ public class MainApplication extends GraphicsApplication {
 	
 	public void setScore(int s){
 		score = s;
+	}
+	
+	public AudioPlayer getAudioPlayer() {
+		return audioPlayer;
+	}
+	
+	public void startAudioFile() {
+		audioPlayer.playSound(audioPath, audioFilename);
+	}
+
+	public void pauseAudio() {
+		level.setPaused(true);
+		audioPlayer.pauseSound(audioPath, audioFilename);
+	}
+	
+	public void stopAudio() {
+		audioPlayer.stopSound(audioPath, audioFilename);
+	}
+
+	public void resumeAudio() {
+		level.setPaused(false);
+		audioPlayer.playSound(audioPath, audioFilename);
 	}
 }
