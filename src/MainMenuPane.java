@@ -131,17 +131,16 @@ public class MainMenuPane extends GraphicsPane {
 
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 
-			//hidecontents
+			hideContents();
+			program.switchToSettings();
 
 		}
 		else if (userInput.length() > 0 && e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 			userInput = userInput.substring(0, userInput.length() - 1);
 		}
-		else {
-			if(Character.isLetter(e.getKeyChar()) || Character.isDigit(e.getKeyChar())) {
+		else if(Character.isLetter(e.getKeyChar()) || Character.isDigit(e.getKeyChar())) {
 				userInput = userInput+e.getKeyChar();
 			}
-		}
 		input.setLabel("");
 		input.setLabel(userInput); //look up windows file name restrictions, can you put a slash in the file etc
 		player.setName(userInput);
