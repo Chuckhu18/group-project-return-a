@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class Player {
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
-	public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
 	private String name;
 	private int currentScore;
 	private ArrayList<String> scores;
