@@ -2,6 +2,6 @@ test,2668
 test2,1355
 Chuck,1306
 chuck,828
+Chuck,679
 Ryan,678
 Race,400
-chucktest,378
