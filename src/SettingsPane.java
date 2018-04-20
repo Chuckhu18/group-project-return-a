@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
@@ -153,5 +154,20 @@ public class SettingsPane extends GraphicsPane {
 		
 		songButton.setText(songList[Math.abs(songChoice%3)]);
 		diffButton.setText(diffList[Math.abs(difficultyChoice%3)]);
+	}
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+
+			program.setDiffChoice(Math.abs(difficultyChoice%3));
+			
+			switch(Math.abs(songChoice%3)) {
+				case 0: program.setSongChoice("hotelCali"); break;
+				case 1: program.setSongChoice("ToHellAndBack"); break;
+				case 2: program.setSongChoice("VTKTRS"); break;
+			}
+			
+			program.switchToLevel();
+		}
 	}
 }
