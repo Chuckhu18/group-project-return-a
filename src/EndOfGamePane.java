@@ -8,7 +8,6 @@ import acm.graphics.*;
 public class EndOfGamePane extends GraphicsPane {
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
-	public static final int NUM_PIXELS = WINDOW_WIDTH * WINDOW_HEIGHT;
 	public static final String ALLSCORESFILE = "../allScores.txt";
 	public static final String FILEDIRECTORY = "../";
 	public static String currentPlayerFile = "";
@@ -93,9 +92,6 @@ public class EndOfGamePane extends GraphicsPane {
 		while (yourScores.size() > 3) {
 			yourScores.remove(3);
 		}
-
-		// save the new score array list in the file for current player file
-		//playerInfo.saveScoresToFile(yourScores, currentPlayerFile);
 
 		// after all scores sorted, then add GLabel for them
 		yourScoresLabels = new ArrayList<GLabel>();
@@ -224,7 +220,6 @@ public class EndOfGamePane extends GraphicsPane {
 			program.switchToMenu();
 		}
 		if (obj == playAgain) {
-			// program.level = new Level(program);
 			program.switchToLevel();
 		}
 	}
