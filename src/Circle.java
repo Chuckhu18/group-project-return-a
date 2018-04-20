@@ -73,21 +73,6 @@ public class Circle {
 	}
 
 	/**
-	 * For testing purposes display the contents of this circle as a string
-	 * 
-	 * @return
-	 */
-	public String toString() {
-		String toReturn = "";
-
-		toReturn += "Letter: " + letter + ", Size (in,out): (" + inSize + "," + df.format(new Double(inSize + outSize))
-				+ "), ";
-		toReturn += "X/Y Location: (" + df.format(x) + "," + df.format(y) + "), Speed: " + speed + ", Good: " + good;
-
-		return toReturn;
-	}
-
-	/**
 	 * Hides outer circles so that we can display the Hit/Miss message
 	 */
 	public void removeCircles() {
