@@ -28,7 +28,7 @@ public class SettingsPane extends GraphicsPane {
 	private GButton play;
 	private GButton back;
 	
-	private String[] songList = {"Hotel California","To Hell and Back","Gucci Gang"};
+	private String[] songList = {"Hotel California","To Hell and Back","Video Killed ... Star"};
 	private String[] diffList = {"Easy","Medium","Hard"};
 	private GLabel settingsHeading;
 	private int difficultyChoice = 99999;
@@ -106,7 +106,7 @@ public class SettingsPane extends GraphicsPane {
 			switch(Math.abs(songChoice%3)) {
 				case 0: program.setSongChoice("hotelCali"); break;
 				case 1: program.setSongChoice("ToHellAndBack"); break;
-				case 2: program.setSongChoice("gucciGang"); break;
+				case 2: program.setSongChoice("VTKTRS"); break;
 			}
 			
 			program.switchToLevel();
