@@ -12,13 +12,11 @@ public class MainApplication extends GraphicsApplication {
 
 	private MainMenuPane menu;
 	private Player player;
+	private AudioPlayer audioPlayer;
 
 	private EndOfGamePane end;
 	public Level level;
 	private SettingsPane settings;
-	private int count;
-	private GLabel youWin = new GLabel("YOU WIN", 100, 100);
-	private GLabel youLose = new GLabel("YOU LOSE", 100, 100);
 	public Timer time;
 	private String songChoice;
 	private int diffChoice;
@@ -29,15 +27,12 @@ public class MainApplication extends GraphicsApplication {
 	}
 
 	public void run() {
-		youWin.setColor(Color.PINK);
-		youWin.setFont("Arial-32");
-		youLose.setColor(Color.CYAN);
-		youLose.setFont("Arial-32");
 		settings = new SettingsPane(this);
 		time = new Timer(10, this);
 		level = new Level(this);
 		menu = new MainMenuPane(this);
 		end = new EndOfGamePane(this);
+		audioPlayer = AudioPlayer.getInstance();
 		switchToMenu();
 		
 	}
@@ -54,10 +49,7 @@ public class MainApplication extends GraphicsApplication {
 		
 	}
 	public void switchToMenu() {
-		//playRandomSound();
-		count++;
 		switchToScreen(menu); //should be main changing for tests
-		//switchToScreen(end);//test for EndOfGamePane class
 	}
 	
 	public void switchToSettings() {
@@ -72,10 +64,7 @@ public class MainApplication extends GraphicsApplication {
 	public void playGame() {
 		time.start();
 	}
- 
-	// ***member methods***
 
-	
 	public String getSongChoice() {
 		return songChoice;
 	}
@@ -110,5 +99,9 @@ public class MainApplication extends GraphicsApplication {
 	
 	public void setScore(int s){
 		score = s;
+	}
+	
+	public AudioPlayer getAudioPlayer() {
+		return audioPlayer;
 	}
 }

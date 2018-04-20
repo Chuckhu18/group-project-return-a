@@ -458,7 +458,7 @@ public class Level extends GraphicsPane {
 		createCharArrList(song.getCircleList());
 
 		// start audio and timer
-		audioPlayer = AudioPlayer.getInstance();
+		audioPlayer = program.getAudioPlayer();
 		program.time.start();		
 		
 		startAudioFile();
