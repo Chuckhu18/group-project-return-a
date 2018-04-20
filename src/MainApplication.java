@@ -19,6 +19,8 @@ public class MainApplication extends GraphicsApplication {
 	private SettingsPane settings;
 	public Timer time;
 	private String songChoice;
+	private String audioPath = "sounds/";
+	private String audioFilename;
 	private int diffChoice;
 	private int score = 0;
 
@@ -27,12 +29,12 @@ public class MainApplication extends GraphicsApplication {
 	}
 
 	public void run() {
+		audioPlayer = AudioPlayer.getInstance();
 		settings = new SettingsPane(this);
 		time = new Timer(10, this);
 		level = new Level(this);
 		menu = new MainMenuPane(this);
 		end = new EndOfGamePane(this);
-		audioPlayer = AudioPlayer.getInstance();
 		switchToMenu();
 		
 	}
@@ -59,6 +61,7 @@ public class MainApplication extends GraphicsApplication {
 		switchToScreen(end);
 	}
 	public void switchToLevel() {
+		audioFilename = songChoice+".mp3";
 		switchToScreen(level);
 	}
 	public void playGame() {
@@ -103,5 +106,23 @@ public class MainApplication extends GraphicsApplication {
 	
 	public AudioPlayer getAudioPlayer() {
 		return audioPlayer;
+	}
+	
+	public void startAudioFile() {
+		audioPlayer.playSound(audioPath, audioFilename);
+	}
+
+	public void pauseAudio() {
+		level.setPaused(true);
+		audioPlayer.pauseSound(audioPath, audioFilename);
+	}
+	
+	public void stopAudio() {
+		audioPlayer.stopSound(audioPath, audioFilename);
+	}
+
+	public void resumeAudio() {
+		level.setPaused(false);
+		audioPlayer.playSound(audioPath, audioFilename);
 	}
 }
