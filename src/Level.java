@@ -499,6 +499,7 @@ public class Level extends GraphicsPane {
 		
 		program.time.stop(); // Stop the timer
 		stopAudio(); // Stop the audio
+		program.setScore(score);
 	}
 	
 	/**

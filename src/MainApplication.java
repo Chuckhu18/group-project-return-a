@@ -21,6 +21,7 @@ public class MainApplication extends GraphicsApplication {
 	public Timer time;
 	private String songChoice;
 	private int diffChoice;
+	private int score = 0;
 
 	public void init() {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -93,5 +94,13 @@ public class MainApplication extends GraphicsApplication {
 	
 	public int getWindowHeight() {
 		return WINDOW_HEIGHT;
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	
+	public void setScore(int s){
+		score = s;
 	}
 }
