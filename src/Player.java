@@ -100,16 +100,16 @@ public class Player{
 		BufferedWriter bw = null;
 		FileWriter fw = null;
 
-		System.out.println("Writing file ...");
+		//System.out.println("Writing file ...");
 		try {
 			fw = new FileWriter(f);
 			bw = new BufferedWriter(fw);
 			
 			for (String str : inStr) {
 				bw.write(str+"\n");
-				System.out.println("writing: " + str);
+				//System.out.println("writing: " + str);
 			}
-			System.out.println("Done writing");
+			//System.out.println("Done writing");
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -119,7 +119,7 @@ public class Player{
 					bw.close();
 				if (fw != null)
 					fw.close();
-				System.out.println("bw fw closed");
+				//System.out.println("bw fw closed");
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
@@ -131,11 +131,11 @@ public class Player{
 		
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			String sCurrentLine;
-			System.out.println("Printing what's in the "+filename+": ");
+			//System.out.println("Printing what's in the "+filename+": ");
 			
 			while ((sCurrentLine = br.readLine()) != null) {
 				read.add(sCurrentLine);
-				System.out.println(sCurrentLine);
+				//System.out.println(sCurrentLine);
 			}
 
 		} catch (IOException e) {

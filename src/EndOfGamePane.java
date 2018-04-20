@@ -61,7 +61,7 @@ public class EndOfGamePane extends GraphicsPane{
 		
 	}
 	
-	// ***print out from current player's name .txt file
+	// ***display current player's scores from current player's name .txt file
 	public void displayYourScores() {
 		playerInfo = new Player();
 		// playerInfo.testFunc();
@@ -81,7 +81,7 @@ public class EndOfGamePane extends GraphicsPane{
 		
 		/*
 		 * here checks if the current score is higher than previous scores,
-		 * if so, then replace it
+		 * if so, then replace it with current score
 		 */
 		 
 		currentPlayerFile = FILEDIRECTORY + currentName + ".txt";
@@ -114,12 +114,37 @@ public class EndOfGamePane extends GraphicsPane{
 		
 	}
 	
-	//	***print out from allScore.txt file
+	//	***display from allScores.txt file
 	public void displayAllScores() {
 		ArrayList<String> allScores = new ArrayList<String>();
 		allScoresLabels = new ArrayList<GLabel>();
 		
 		allScores = playerInfo.ReadScoresFromFile(ALLSCORESFILE);
+		
+		String splitArr[];
+		ArrayList<String> splitName = new ArrayList<String>();
+		ArrayList<String> splitScore = new ArrayList<String>();
+		ArrayList<String> newNameScore = new ArrayList<String>();
+		int nameIndex = -1;
+		for(int i = 0; i < allScores.size(); i++) {
+			splitArr = allScores.get(i).split(",");
+			if(splitArr[0] == currentName) {	nameIndex = i;}
+			
+			splitName.add(splitArr[0]);
+			splitScore.add(splitArr[1]);
+		}
+		
+		if(nameIndex != -1 ) {
+			if(currentScore > Integer.parseInt(splitScore.get(nameIndex))) {
+				splitScore.set(nameIndex, Integer.toString(currentScore));
+			}
+		}
+		
+		
+		
+		for(int i = 0; i < allScores.size(); i++) {
+			newNameScore.set(i, splitName.get(i)+splitScore.get(i));
+		}
 
 		for (int i = 0; i < allScores.size(); i++) {
 			allScoresLabels.add(new GLabel(allScores.get(i), 445, 150 + (30 * i)));
