@@ -145,10 +145,17 @@ public class MainMenuPane extends GraphicsPane {
 		input.setLabel("");
 		input.setLabel(userInput); //look up windows file name restrictions, can you put a slash in the file etc
 		player.setName(userInput);
+		program.setPlayer(player);
 	}
 	public String getUserInput() {
 		return input.getLabel();
 	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+
 
 	private void makeSeeable(GLabel label) {
 		label.setColor(Color.WHITE);

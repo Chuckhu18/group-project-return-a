@@ -11,6 +11,8 @@ public class MainApplication extends GraphicsApplication {
 	public static final String MUSIC_FOLDER = "sounds";
 
 	private MainMenuPane menu;
+	private Player player;
+
 	private EndOfGamePane end;
 	public Level level;
 	private SettingsPane settings;
@@ -79,6 +81,13 @@ public class MainApplication extends GraphicsApplication {
 	}
 	public void setSongChoice(String songChoice) {
 		this.songChoice = songChoice;
+	}
+	public Player getPlayer() {
+		return player;
+	}
+	
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 	public int getDiffChoice() {
 		return diffChoice;
