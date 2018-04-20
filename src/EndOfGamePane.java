@@ -63,7 +63,7 @@ public class EndOfGamePane extends GraphicsPane{
 	
 	// ***print out from current player's name .txt file
 	public void displayYourScores() {
-		playerInfo = new Player();
+		//playerInfo = new Player();
 		// playerInfo.testFunc();
 		
 		currentName = playerInfo.getName();
@@ -138,6 +138,8 @@ public class EndOfGamePane extends GraphicsPane{
 		program.add(allScoresLabel);
 		program.add(scoreRect1);
 		program.add(scoreRect2);
+		playerInfo = program.getPlayer();
+		playerInfo.setCurrentScore(program.getScore());
 		
 		displayYourScores();
 		displayAllScores();
