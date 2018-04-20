@@ -17,11 +17,14 @@ public class MainMenuPane extends GraphicsPane {
 	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 480;
 	private int counter = 0;
-	private GImage howTo;
-	private GParagraph howtoPlay = new GParagraph("", 20, 50);
-	private GImage howToBack;
-	private GLabel input;
-	private GLabel enterName;
+
+	GImage howTo;
+	GParagraph howtoPlay = new GParagraph("", 20, 50);
+
+	GImage howToBack;
+	GButton scoreBoard;
+	GLabel input;
+	GLabel enterName;
 
 	public MainMenuPane(MainApplication app) { // always call this app
 		super();
@@ -29,12 +32,13 @@ public class MainMenuPane extends GraphicsPane {
 		player.setName("");
 		backRect.setFillColor(Color.GRAY);
 		backRect.setFilled(true);
-
+		
 		toSettings = new GImage("rightArrowbutton.png", 350, 310); // this is going to create another button and then
 
-		toSettings.setSize(toSettings.getWidth()/2, toSettings.getHeight()/2); // filling it in with information
+		toSettings.setSize(toSettings.getWidth()/2, toSettings.getHeight()/2);								// filling it in with information
 
-		howTo = new GImage("howTobutton.png", 80, 300); // instantiating, an object is an instance of a class, initialize the
+		
+		howTo = new GImage("howTobutton.png", 80, 300); // instiating, an object is an instance of a clas, initialize the
 		// object in the
 
 		howToBack = new GImage("leftArrowbutton copy.png",20,190);
@@ -42,9 +46,10 @@ public class MainMenuPane extends GraphicsPane {
 		howTo.setSize(howTo.getWidth()/2, howTo.getHeight()/2);
 		mainMenu = new GImage("LOGO.png", 100,100);
 		mainMenu.setSize(mainMenu.getWidth()/5, mainMenu.getHeight()/5);
-		enterName = new GLabel ("Enter your name (Max 8 chars)", 400, 330);
 		input = new GLabel("", 400, 330);
-
+		enterName = new GLabel ("Enter your name (8 char max)", input.getX(), input.getY());
+		//adding score board on the menu
+		scoreBoard = new GButton("Score Board", 320, 300, 140, 35);
 	}
 
 
@@ -61,14 +66,17 @@ public class MainMenuPane extends GraphicsPane {
 		program.add(mainMenu);
 		program.add(toSettings);
 		program.add(howTo);
-		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		program.setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // the size of the applet is:
+
 		program.add(input);
 		makeSeeable(input);
 		program.add(enterName);
 		makeSeeable(enterName);
 		counter++;
+
 		if(counter > 1) { // If we have been to the screen before
 			program.remove(enterName);
+
 		}
 		//adds in sequential order
 
@@ -107,6 +115,7 @@ public class MainMenuPane extends GraphicsPane {
 					+ "For maximum points press the letter when the outside circle's diameter is the same as \n"
 					+ " the inside's.");
 			howtoPlay.setFont("Arial-18");
+			howtoPlay.setColor(Color.white);
 			program.add(howtoPlay);
 			program.add(howToBack);
 		}
@@ -146,7 +155,7 @@ public class MainMenuPane extends GraphicsPane {
 	}
 
 	private void makeSeeable(GLabel label) {
-		label.setColor(Color.WHITE);
+		label.setColor(Color.BLACK);
 		label.setFont("Courier-24");
 	}
 }
