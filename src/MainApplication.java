@@ -19,6 +19,8 @@ public class MainApplication extends GraphicsApplication {
 	private SettingsPane settings;
 	public Timer time;
 	private String songChoice;
+	private String audioPath = "sounds/";
+	private String audioFilename;
 	private int diffChoice;
 	private int score = 0;
 
@@ -27,12 +29,12 @@ public class MainApplication extends GraphicsApplication {
 	}
 
 	public void run() {
+		audioPlayer = AudioPlayer.getInstance();
 		settings = new SettingsPane(this);
 		time = new Timer(10, this);
 		level = new Level(this);
 		menu = new MainMenuPane(this);
 		end = new EndOfGamePane(this);
-		audioPlayer = AudioPlayer.getInstance();
 		switchToMenu();
 		
 	}
@@ -59,10 +61,31 @@ public class MainApplication extends GraphicsApplication {
 		switchToScreen(end);
 	}
 	public void switchToLevel() {
+		audioFilename = songChoice+".mp3";
 		switchToScreen(level);
 	}
 	public void playGame() {
 		time.start();
+	}
+	
+	/**
+	 * This function exists entirely to fix the "restart audio" bug.
+	 * I am not 100% positive *why* it fixes the bug, but it does.
+	 * My theory is that the reason the audio wouldn't pause after
+	 * restarting the level is that the old audio player was still
+	 * running and therefore things got confused. This fix tells the
+	 * computer to load the settings screen, wait 100 milliseconds,
+	 * then load the level again, and this causes the problem to go
+	 * away. This was by far the weirdest bug we had, but the process
+	 * of fixing it actually helped clean the code up a lot so I'm glad
+	 * we had it in the long run.
+	 * - Race
+	 */
+	public void restartLevel() {
+		switchToScreen(settings);
+		try { Thread.sleep(100); } 
+		catch (InterruptedException e) { e.printStackTrace(); }
+		switchToScreen(level);
 	}
 
 	public String getSongChoice() {
@@ -103,5 +126,23 @@ public class MainApplication extends GraphicsApplication {
 	
 	public AudioPlayer getAudioPlayer() {
 		return audioPlayer;
+	}
+	
+	public void startAudioFile() {
+		audioPlayer.playSound(audioPath, audioFilename);
+	}
+
+	public void pauseAudio() {
+		level.setPaused(true);
+		audioPlayer.pauseSound(audioPath, audioFilename);
+	}
+	
+	public void stopAudio() {
+		audioPlayer.stopSound(audioPath, audioFilename);
+	}
+
+	public void resumeAudio() {
+		level.setPaused(false);
+		audioPlayer.playSound(audioPath, audioFilename);
 	}
 }
