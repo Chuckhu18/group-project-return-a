@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.Timer;
 
 import acm.graphics.GLabel;
+import acm.graphics.GRect;
 
 public class MainApplication extends GraphicsApplication {
 	public static final int WINDOW_WIDTH = 800;
